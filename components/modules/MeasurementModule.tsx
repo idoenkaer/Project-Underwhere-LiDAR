@@ -12,6 +12,7 @@ import { DataImportModule } from '../common/DataImportModule';
 import { CogIcon } from '../icons/CogIcon';
 import { CodeFileIcon } from '../icons/CodeFileIcon';
 import { MapPinCheckIcon } from '../icons/MapPinCheckIcon';
+import ConsentDialog from '../common/ConsentDialog';
 
 const SensorFeedCard: React.FC<{ title: string; imageUrl: string; details: string; imageFilter?: string }> = ({ title, imageUrl, details, imageFilter = '' }) => {
     return (
@@ -160,45 +161,72 @@ const MeasurementModule: React.FC = () => {
     const [state, setState] = useState<'idle' | 'validating' | 'processing' | 'processed' | 'error'>('idle');
     const [error, setError] = useState<{title: string, message: string} | null>(null);
     const [processingTitle, setProcessingTitle] = useState("Preprocessing Scan...");
+    const [showConsent, setShowConsent] = useState(false);
+    const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
 
 
-    const handleUpload = async (file: File) => {
-        setState('validating');
-        setError(null);
-        setProcessingTitle("Preprocessing Scan...");
+    const handleUploadRequest = async (file: File) => {
+        const action = async () => {
+            setState('validating');
+            setError(null);
+            setProcessingTitle("Preprocessing Scan...");
 
-        try {
-            await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate validation delay
-            setState('processing');
-            const result = await processScanFile(file);
-            setState(result);
-        } catch (e) {
-            const message = (e as Error).message;
-            if (message === 'Invalid File Format') {
-                 setError({ title: 'Invalid File Format', message: 'Please upload a valid .LAS, .XYZ or .CSV point cloud file.'});
-            } else if (message === 'Data Out of Range') {
-                 setError({ title: 'Data Out of Range', message: 'File size exceeds 10MB. Scan may contain points outside the expected geophysical area.'});
-            } else {
-                 setError({ title: 'Processing Error', message: 'An unknown error occurred.'});
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate validation delay
+                setState('processing');
+                const result = await processScanFile(file);
+                setState(result);
+            } catch (e) {
+                const message = (e as Error).message;
+                if (message === 'Invalid File Format') {
+                     setError({ title: 'Invalid File Format', message: 'Please upload a valid .LAS, .XYZ or .CSV point cloud file.'});
+                } else if (message === 'Data Out of Range') {
+                     setError({ title: 'Data Out of Range', message: 'File size exceeds 10MB. Scan may contain points outside the expected geophysical area.'});
+                } else {
+                     setError({ title: 'Processing Error', message: 'An unknown error occurred.'});
+                }
+                setState('error');
             }
-            setState('error');
+        };
+        setPendingAction(() => action);
+        setShowConsent(true);
+    };
+    
+    const handleLoadMockRequest = async () => {
+        const action = async () => {
+            setProcessingTitle("Loading Mock Scan...");
+            setState('processing');
+            setError(null);
+            const result = await loadMockScan();
+            setState(result);
+        };
+        setPendingAction(() => action);
+        setShowConsent(true);
+    };
+    
+    const handleImportRequest = async (source: string) => {
+        const action = async () => {
+            setProcessingTitle(`Importing from ${source}...`);
+            setState('processing');
+            setError(null);
+            const result = await importExternalDataset();
+            setState(result);
+        };
+        setPendingAction(() => action);
+        setShowConsent(true);
+    };
+
+    const handleConsentConfirm = () => {
+        if (pendingAction) {
+            pendingAction();
         }
+        setShowConsent(false);
+        setPendingAction(null);
     };
-    
-    const handleLoadMock = async () => {
-        setProcessingTitle("Loading Mock Scan...");
-        setState('processing');
-        setError(null);
-        const result = await loadMockScan();
-        setState(result);
-    };
-    
-    const handleImport = async (source: string) => {
-        setProcessingTitle(`Importing from ${source}...`);
-        setState('processing');
-        setError(null);
-        const result = await importExternalDataset();
-        setState(result);
+
+    const handleConsentCancel = () => {
+        setShowConsent(false);
+        setPendingAction(null);
     };
 
 
@@ -237,9 +265,9 @@ const MeasurementModule: React.FC = () => {
             default:
                 return (
                     <DataImportModule
-                        onUpload={handleUpload}
-                        onLoadMock={handleLoadMock}
-                        onImport={handleImport}
+                        onUpload={handleUploadRequest}
+                        onLoadMock={handleLoadMockRequest}
+                        onImport={handleImportRequest}
                         disabled={state !== 'idle'}
                     />
                 );
@@ -248,6 +276,16 @@ const MeasurementModule: React.FC = () => {
 
     return (
         <div className="space-y-6 animate-fadeIn">
+            {showConsent && (
+                <ConsentDialog
+                    title="Data Processing Consent"
+                    onConfirm={handleConsentConfirm}
+                    onCancel={handleConsentCancel}
+                >
+                    <p>By proceeding, you consent to the local processing of the uploaded or imported data on this device for scientific analysis.</p>
+                    <p>No data will be transmitted to external servers without your explicit permission. You can manage data privacy settings in the Collaboration module.</p>
+                </ConsentDialog>
+            )}
             {state === 'processed' && (
                 <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 flex items-center justify-between">
                      <p className="text-sm text-green-400">Scan processed successfully. All sensors calibrated.</p>

@@ -9,6 +9,11 @@ import { ShareButton } from '../common/ShareButton';
 import { SatelliteIcon } from '../icons/SatelliteIcon';
 import { MountainIcon } from '../icons/MountainIcon';
 import { ArchiveBoxIcon } from '../icons/ArchiveBoxIcon';
+import { IdentificationIcon } from '../icons/IdentificationIcon';
+import { TrashIcon } from '../icons/TrashIcon';
+import ConsentDialog from '../common/ConsentDialog';
+
+type ExportStatus = 'idle' | 'exporting' | 'success';
 
 const ChecklistItem: React.FC<{ isChecked: boolean, onToggle: () => void, children: React.ReactNode }> = ({ isChecked, onToggle, children }) => (
     <li className="flex items-center space-x-3 cursor-pointer" onClick={onToggle}>
@@ -45,6 +50,19 @@ const ResearchModule: React.FC = () => {
         randomness: false,
         validation: false,
     });
+    
+    // New states for privacy features
+    const [anonymizeData, setAnonymizeData] = useState(true);
+    const [optOutSharing, setOptOutSharing] = useState(false);
+    const [deleteStatus, setDeleteStatus] = useState<'idle' | 'deleting' | 'deleted'>('idle');
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    
+    // States for consent-gated exports
+    const [exportStatuses, setExportStatuses] = useState<Record<string, ExportStatus>>({
+        CSV: 'idle', LAS: 'idle', GeoTIFF: 'idle', OBJ: 'idle'
+    });
+    const [showExportConsent, setShowExportConsent] = useState(false);
+    const [pendingExportFormat, setPendingExportFormat] = useState<string | null>(null);
 
     const handleToggleChecklist = (key: keyof typeof checklist) => {
         setChecklist(prev => ({ ...prev, [key]: !prev[key] }));
@@ -83,12 +101,81 @@ const ResearchModule: React.FC = () => {
         setComments([...comments, { user: 'You', text: newComment, time: 'Just now' }]);
         setNewComment('');
     };
+    
+    const handleExportRequest = (format: string) => {
+        setPendingExportFormat(format);
+        setShowExportConsent(true);
+    };
+
+    const handleExportConfirm = () => {
+        if (!pendingExportFormat) return;
+
+        const format = pendingExportFormat;
+        setExportStatuses(prev => ({ ...prev, [format]: 'exporting' }));
+        setShowExportConsent(false);
+        setPendingExportFormat(null);
+
+        setTimeout(() => {
+            setExportStatuses(prev => ({ ...prev, [format]: 'success' }));
+            setTimeout(() => setExportStatuses(prev => ({ ...prev, [format]: 'idle' })), 2500);
+        }, 2000 + Math.random() * 1000);
+    };
+    
+    const handleDeleteRequest = () => {
+        setShowDeleteConfirm(true);
+    };
+
+    const handleDeleteConfirm = () => {
+        setShowDeleteConfirm(false);
+        setDeleteStatus('deleting');
+        // Simulate deletion process
+        setTimeout(() => {
+            setDeleteStatus('deleted');
+            // In a real app, this would trigger a global state reset.
+            // For this demo, we just show the status change.
+            // The user would see the effect upon navigating back to Measurement.
+        }, 2000);
+    };
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn h-full">
+            {showExportConsent && (
+                <ConsentDialog
+                    title="Data Export Consent"
+                    onConfirm={handleExportConfirm}
+                    onCancel={() => setShowExportConsent(false)}
+                >
+                    <p>You are about to export scientific data. This may include sensitive geospatial information.</p>
+                    <p className="font-bold mt-2">Current Settings:</p>
+                    <ul className="list-disc list-inside text-gray-300">
+                        <li>Anonymize Geospatial Data: {anonymizeData ? 'Enabled' : 'Disabled'}</li>
+                    </ul>
+                    <p className="mt-2">Please ensure you comply with all data sharing and privacy policies before distributing this information.</p>
+                </ConsentDialog>
+            )}
+
+            {showDeleteConfirm && (
+                 <ConsentDialog
+                    title="Confirm Data Deletion"
+                    onConfirm={handleDeleteConfirm}
+                    onCancel={() => setShowDeleteConfirm(false)}
+                >
+                    <p className="text-red-300 font-bold">This action is irreversible.</p>
+                    <p>Are you sure you want to permanently delete all locally processed scan data from this session? This includes the point cloud, analysis results, and metadata.</p>
+                </ConsentDialog>
+            )}
             {/* Left Panel: Export, Share, and Ethics */}
             <div className="lg:col-span-1 space-y-8">
-                <ExportButton />
+                <Card icon={IdentificationIcon} title="Authorship & Credentials">
+                    <div className="text-sm space-y-2">
+                        <p className="font-bold text-gray-200">Dr. Evelyn Reed</p>
+                        <p className="text-xs text-cyan-400">Lead Scientist & UI Architect</p>
+                        <p className="mt-2 text-gray-400 text-xs">
+                            Specializing in advanced Lidar data visualization and applied AI for geospatial analysis.
+                        </p>
+                    </div>
+                </Card>
+                <ExportButton onExportRequest={handleExportRequest} statuses={exportStatuses} />
                 <ShareButton onGenerateDemoLink={handleGenerateDemoLink} isGeneratingLink={isGeneratingLink} demoLink={demoLink} onCopyLink={handleCopyLink} copyStatus={copyStatus} />
                 <Card icon={SatelliteIcon} title="Data Federation & Archival">
                     <div className="space-y-3">
@@ -97,13 +184,29 @@ const ResearchModule: React.FC = () => {
                         <IntegrationButton label="Zenodo Archive" description="Publish dataset & get a DOI" icon={ArchiveBoxIcon} href="https://zenodo.org/" />
                     </div>
                 </Card>
-                <Card icon={ShieldCheckIcon} title="Ethics & Open Science">
-                    <div className="space-y-4">
+                <Card icon={ShieldCheckIcon} title="Ethics & User Control">
+                    <div className="space-y-4 text-sm">
                         <div className="flex items-center justify-between">
-                            <label htmlFor="anonymize" className="text-gray-300">Anonymize Scan Data</label>
-                            <input type="checkbox" id="anonymize" className="h-4 w-4 rounded bg-gray-600 border-gray-500 text-cyan-500 focus:ring-cyan-600" />
+                            <label htmlFor="anonymize" className="text-gray-300">Anonymize Geospatial Data</label>
+                            <input type="checkbox" id="anonymize" checked={anonymizeData} onChange={() => setAnonymizeData(!anonymizeData)} className="h-4 w-4 rounded bg-gray-600 border-gray-500 text-cyan-500 focus:ring-cyan-600" />
                         </div>
-                        <button className="w-full p-3 bg-cyan-600/80 hover:bg-cyan-600 rounded-lg transition font-semibold">Generate Compliance Report</button>
+                         <div className="flex items-center justify-between">
+                            <label htmlFor="optout" className="text-gray-300">Opt-out of Data Sharing</label>
+                            <input type="checkbox" id="optout" checked={optOutSharing} onChange={() => setOptOutSharing(!optOutSharing)} className="h-4 w-4 rounded bg-gray-600 border-gray-500 text-cyan-500 focus:ring-cyan-600" />
+                        </div>
+                        <div className="border-t border-gray-700 !my-4"></div>
+                        <button 
+                            onClick={handleDeleteRequest}
+                            disabled={deleteStatus !== 'idle'}
+                            className="w-full p-3 bg-red-800/80 hover:bg-red-700 rounded-lg transition font-semibold flex items-center justify-center space-x-2 disabled:bg-gray-600 disabled:cursor-not-allowed"
+                        >
+                            <TrashIcon className="h-5 w-5" />
+                            <span>
+                                {deleteStatus === 'idle' && 'Delete All Scan Data'}
+                                {deleteStatus === 'deleting' && 'Deleting...'}
+                                {deleteStatus === 'deleted' && 'Data Deleted'}
+                            </span>
+                        </button>
                     </div>
                 </Card>
             </div>

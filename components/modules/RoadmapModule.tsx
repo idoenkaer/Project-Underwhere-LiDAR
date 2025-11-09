@@ -33,6 +33,8 @@ import { ChartTrendingUpIcon } from '../icons/ChartTrendingUpIcon';
 import { BugAntIcon } from '../icons/BugAntIcon';
 import { ServerIcon } from '../icons/ServerIcon';
 import { UserGroupIcon } from '../icons/UserGroupIcon';
+import { GlobeAmericasIcon } from '../icons/GlobeAmericasIcon';
+import { WrenchScrewdriverIcon } from '../icons/WrenchScrewdriverIcon';
 
 
 enum Status {
@@ -158,11 +160,29 @@ const RoadmapModule: React.FC = () => {
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <WrenchScrewdriverIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Backend Integration & Processing Pipelines
+                </h3>
+                <p className="text-sm text-gray-400">
+                    To handle mission-grade data at scale, we will integrate with industry-standard backend tools. This includes leveraging the **PDAL (Point Data Abstraction Library)** for robust Lidar processing pipelines and the **LROSE (Lidar Radar Open Software Environment)** for future radar data integration. This ensures our data processing is both powerful and interoperable with established scientific workflows.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
                     <ServerIcon className="h-6 w-6 mr-3 text-cyan-400" />
                     Scalability & Cloud Architecture
                 </h3>
                 <p className="text-sm text-gray-400">
                     To ensure mission-grade scalability and cost-effective operation, we are planning a cloud-native architecture. This includes a data compression strategy (e.g., LAZ format for Lidar), a distributed processing plan using serverless functions or container orchestration for large-scale analysis, and a comprehensive disaster recovery strategy with geo-redundant storage and automated backups.
+                </p>
+            </div>
+             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <GlobeAmericasIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Ethical Framework & Community Engagement
+                </h3>
+                <p className="text-sm text-gray-400">
+                    To ensure responsible innovation, we are establishing a comprehensive ethical framework. This includes protocols for data privacy, minimizing the environmental impact of field operations, and a commitment to active stakeholder engagement. We will prioritize collaboration with local and indigenous communities, ensuring our research respects their rights, knowledge, and contributes positively to their environment.
                 </p>
             </div>
              <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
@@ -325,15 +345,6 @@ const RoadmapModule: React.FC = () => {
                 </h3>
                 <p className="text-sm text-gray-400">
                     To ensure full functionality can be tested without a live sensor, we will establish robust mock datasets (CSV, LAS) and error injection routines. This allows for the creation of realistic, interactive demo workflows for each module, showcasing core features and resilience.
-                </p>
-            </div>
-            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
-                    <ArrowDownOnSquareIcon className="h-6 w-6 mr-3 text-cyan-400" />
-                    Data Input & Processing Strategy
-                </h3>
-                <p className="text-sm text-gray-400">
-                    Utilize the PDAL (Point Data Abstraction Library) for robust backend Lidar, LAS, and point cloud processing pipelines. Implement support for direct data imports from public APIs like the USGS Lidar Explorer Map and OpenTopography to leverage historical and public datasets for comparative analysis.
                 </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">

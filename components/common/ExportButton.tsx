@@ -15,16 +15,13 @@ const EXPORT_FORMATS = [
     { format: 'OBJ', description: '3D Model', icon: CubeIcon },
 ];
 
-const SingleExportButton: React.FC<{ format: string, description: string, icon: React.FC<React.SVGProps<SVGSVGElement>> }> = ({ format, description, icon: Icon }) => {
-    const [status, setStatus] = useState<ExportStatus>('idle');
-
-    const handleExport = () => {
-        setStatus('exporting');
-        setTimeout(() => {
-            setStatus('success');
-            setTimeout(() => setStatus('idle'), 2500);
-        }, 2000 + Math.random() * 1000);
-    };
+const SingleExportButton: React.FC<{
+    format: string;
+    description: string;
+    icon: React.FC<React.SVGProps<SVGSVGElement>>;
+    status: ExportStatus;
+    onExport: () => void;
+}> = ({ format, description, icon: Icon, status, onExport }) => {
     
     const content = {
         idle: <><div className="flex-1 text-left">
@@ -41,18 +38,24 @@ const SingleExportButton: React.FC<{ format: string, description: string, icon: 
     };
 
     return (
-    <button onClick={handleExport} disabled={status !== 'idle'} className="flex items-center justify-between w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition disabled:cursor-not-allowed">
-        <Icon className="h-6 w-6 mr-4 text-gray-300" />
-        {content[status]}
-    </button>
-)};
+        <button onClick={onExport} disabled={status !== 'idle'} className="flex items-center justify-between w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition disabled:cursor-not-allowed">
+            <Icon className="h-6 w-6 mr-4 text-gray-300" />
+            {content[status]}
+        </button>
+    )
+};
 
-export const ExportButton: React.FC = () => {
+export const ExportButton: React.FC<{ onExportRequest: (format: string) => void, statuses: Record<string, ExportStatus> }> = ({ onExportRequest, statuses }) => {
     return (
         <Card icon={DownloadIcon} title="Data Export">
             <div className="space-y-3">
                 {EXPORT_FORMATS.map(f => (
-                   <SingleExportButton key={f.format} {...f} />
+                   <SingleExportButton
+                        key={f.format}
+                        {...f}
+                        status={statuses[f.format] || 'idle'}
+                        onExport={() => onExportRequest(f.format)}
+                    />
                 ))}
             </div>
         </Card>
