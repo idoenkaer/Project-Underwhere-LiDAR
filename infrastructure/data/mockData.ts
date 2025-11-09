@@ -1,4 +1,3 @@
-// FIX: Populated the mock database with complete data for all modules, resolving data access errors in components.
 import { ScientificDatabase } from '../../types';
 
 export const db: ScientificDatabase = {

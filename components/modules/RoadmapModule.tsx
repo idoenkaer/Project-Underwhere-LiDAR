@@ -99,21 +99,21 @@ const RoadmapModule: React.FC = () => {
                 </div>
             </div>
             
-            <div className="bg-bg-secondary p-6 rounded-sm border border-warning/30">
+            <div className="bg-bg-secondary p-6 rounded-sm border border-green-bright/30">
                 <h3 className="text-xl font-semibold font-mono text-text-accent mb-4 flex items-center">
-                    <UserGroupIcon className="h-6 w-6 mr-3 text-warning" />
-                    Immediate Core Team Expansion
+                    <UserGroupIcon className="h-6 w-6 mr-3 text-green-bright" />
+                    Core Team Expansion: HIRING NOW
                 </h3>
                 <p className="text-text-primary mb-4">
-                    To de-risk the project and ensure the 3-month MVP timeline is met, the immediate hiring of the following domain experts is critical:
+                    To de-risk the project and ensure the 3-month MVP timeline is met, the hiring process for the following domain experts is now underway:
                 </p>
                 <ul className="list-disc list-inside text-text-primary space-y-2 mb-4">
-                    <li><span className="font-bold">Geospatial Scientist:</span> 10+ years of hands-on LiDAR experience.</li>
-                    <li><span className="font-bold">Machine Learning Engineer:</span> Proven track record of shipping production models.</li>
-                    <li><span className="font-bold">Cloud Architect:</span> Expertise in designing and managing petabyte-scale data systems.</li>
+                    <li><span className="font-bold">Open Position:</span> Geospatial Scientist (10+ years LiDAR).</li>
+                    <li><span className="font-bold">Open Position:</span> Machine Learning Engineer (Shipped Models).</li>
+                    <li><span className="font-bold">Open Position:</span> Cloud Architect (Petabyte-Scale Systems).</li>
                 </ul>
-                <div className="bg-warning/20 border-l-4 border-warning text-warning p-4 rounded-r-sm">
-                    <p className="font-bold">This quadruples the initial budget projection but is non-negotiable for success.</p>
+                <div className="bg-green-dark/50 border-l-4 border-green-bright text-green-bright p-4 rounded-r-sm">
+                    <p className="font-bold">Budget approved. Sourcing candidates for these non-negotiable roles is our top priority.</p>
                 </div>
             </div>
             

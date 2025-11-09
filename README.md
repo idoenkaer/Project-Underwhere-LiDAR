@@ -20,21 +20,23 @@ This project serves as a high-fidelity prototype for a next-generation scientifi
 
 ## Key Features
 
--   **Multi-Modal Data Import:** Upload local scan files (`.LAS`, `.XYZ`) or simulate imports from scientific archives like NASA Earthdata and OpenTopography.
--   **Multi-Domain Analysis:** Explore dedicated modules for Environmental, Topographical, Biological, and Physics-based analysis of the Lidar data.
--   **AI-Powered Discovery:** Leverage a simulated Gemini AI assistant to generate novel hypotheses and cross-reference findings with scientific literature.
--   **Advanced Simulations:** Run structural integrity simulations in the Physics module and visualize temporal changes in the Space-Time module.
--   **Collaboration & Publication:** Draft research papers, manage a reproducibility checklist, and export data in standard scientific formats.
--   **Robust Governance:** Features built-in access controls, user consent dialogs, and a comprehensive ethical framework.
+-   **Multi-Modal Data Import:** Upload local scan files (`.LAS`, `.XYZ`) or simulate imports from scientific archives like NASA Earthdata, OpenTopography, and Google Drive.
+-   **Core Measurement & Calibration:** Process and validate raw sensor data into a usable point cloud with detailed metadata and simulated sensor feeds.
+-   **Topographical Analysis:** Visualize and interact with terrain maps, identify anomalies, and toggle geological overlays.
+-   **Validation & Testing:** A comprehensive suite for regression testing, performance benchmarking, and model accuracy validation.
+-   **Data Export & Governance:** Export data in standard formats (LAS, CSV, GeoTIFF, OBJ) with built-in ethical controls and user consent workflows.
+-   **Strategic Roadmap:** A clear, documented strategy focusing on a lean MVP for rapid, demand-driven development.
+
 
 ## Getting Started: A Quick Tour
 
 1.  **Ethics Acknowledgment:** On first launch, review and acknowledge the project's commitment to responsible innovation.
-2.  **Onboarding:** A brief tutorial will introduce you to the core concepts: Scan, Analyze, and Collaborate.
-3.  **Measurement Module:** This is your starting point. Use the "Load Mock Scan" button for a quick demonstration. Once processed, you'll see a detailed overview of the simulated scan, including metadata and sensor feeds.
-4.  **Explore Modules:** Use the sidebar to navigate to different analysis modules (e.g., Environmental, Topography). Each module will automatically use the processed scan data to display its unique analysis.
-5.  **AI Discovery:** Go to the "AI Discovery" module and ask a question about the scan (e.g., "What could cause the thermal anomaly?") to see the AI assistant in action.
-6.  **Roadmap:** Visit the "Roadmap" module to see the project's status, architectural principles, and future plans.
+2.  **Onboarding:** A brief tutorial will introduce you to the core concepts of the application.
+3.  **Measurement Module:** This is your starting point. Use the "Load Mock Scan" button for a quick demonstration. This will process the data and prepare it for analysis.
+4.  **Topography Module:** Navigate to the Topography module to see the processed scan visualized on an interactive terrain map.
+5.  **Export & Share:** Go to the "Export & Share" module to see options for data export, reproducibility checklists, and data governance controls.
+6.  **Validation:** Visit the "Validation" module to see the project's internal testing and benchmarking suite.
+7.  **Roadmap:** Visit the "Roadmap" module to see the project's strategic vision, competitive advantages, and feature priorities.
 
 ## Architecture
 
@@ -42,7 +44,7 @@ The application is built using a **Clean Architecture** pattern to ensure a clea
 
 -   **UI Layer (`/components`):** All React components and UI state.
 -   **Application Layer (`/application`):** Business logic and use cases.
--   **Infrastructure Layer (`/infrastructure`):** External concerns like data access and AI service integrations.
+-   **Infrastructure Layer (`/infrastructure`):** External concerns like data access and service integrations.
 
 For more detailed information on contributing, see the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 

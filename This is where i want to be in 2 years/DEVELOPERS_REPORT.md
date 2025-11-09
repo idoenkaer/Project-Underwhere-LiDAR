@@ -15,6 +15,12 @@ If your only advantage is "easier to use," you've already lost.
 
 ---
 
+## CURRENT STATUS
+**Phase:** MVP Development & Core Team Hiring.
+**Priority Action:** Actively sourcing candidates for the three core technical roles.
+
+---
+
 ## REFRAMING: FROM GENERALIST TO SPECIALIST
 
 Instead of competing with QGIS across all use cases, **OWN A SPECIFIC USE CASE ENTIRELY.**
@@ -48,6 +54,25 @@ Your app solves a problem existing tools fundamentally cannot:
 
 ---
 
+## Target User Personas & Competitive Fit
+
+The six pillars of differentiation are not just abstract features; they are designed to solve the specific, unmet needs of key user personas who are poorly served by existing tools.
+
+| User Persona | QGIS | ArcGIS | CloudCompare | **Your App** | **Why Your App Wins** |
+|---|---|---|---|---|---|
+| **Field archaeologist** | ✗ (too complex) | ✗ (too expensive) | ✗ (desktop only) | ✓ | Mobile + instant analysis |
+| **Conservation biologist** | ✓ (works) | ✓ (works) | ✗ (too specialist) | ✓ | Ecological reports + mobile |
+| **Citizen scientist** | ✗ (steep learning) | ✗ (expensive) | ✗ (overwhelming) | ✓ | 60-second onboarding |
+| **Research team** | ✓ (works) | ✓ (works) | ✓ (works) | ✓ | Real-time collaboration |
+| **Government agency** | ✓ (works) | ✓ (standard) | ✓ (works) | ✓ | Privacy/compliance built-in |
+| **Commercial surveyor** | ✓ (works) | ✓ (standard) | ✓ (works) | ✗ (no proprietary formats) | |
+| **PhD researcher (specialist)** | ✓ (works) | ✓ (works) | ✓ (best) | ✓ (adequate) | |
+| **Field technician (non-expert)** | ✗ (complex) | ✗ (expensive) | ✗ (confusing) | ✓ | Designed for this |
+
+This analysis reveals our core market: professionals and non-experts conducting work *in the field* who need immediate, actionable intelligence without the overhead of traditional desktop GIS. We are not trying to replace CloudCompare for the specialist PhD researcher, but to empower a much broader audience that has been left behind by legacy software.
+
+---
+
 ## THE SIX PILLARS OF DIFFERENTIATION
 
 ### **PILLAR 1: REAL-TIME, IN-SITU ANALYSIS**
@@ -72,7 +97,7 @@ Field Researcher:
 **Why This Matters:**
 - Field scientists make 10-50 measurements per day
 - Currently: Each one takes 2-3 hours post-processing
-- With your app: Each one is instant feedback loop
+- With your app: Each one is an instant feedback loop
 - **Value:** 50-100x faster field research cycles
 
 **Market Application:**
@@ -346,3 +371,76 @@ lidar.analyze(data, 'custom-analysis', { threshold: 0.8 });
 - ArcGIS: Ecosystem exists but requires commercial license
 - CloudCompare: Limited ecosystem, not user-friendly
 - **Your advantage:** Designed from day one
+
+---
+
+## FEATURE PRIORITIZATION (BASED ON DIFFERENTIATION)
+
+### **MUST HAVE (Core differentiation):**
+1. Mobile-first capture + instant field analysis
+2. AI-generated semantic reports
+3. Real-time team collaboration
+4. Automatic privacy detection + redaction
+5. Zero-setup auto-detection + presets
+
+### **SHOULD HAVE (Defensible advantages):**
+6. Open plugin API for community
+7. Offline-first sync architecture
+8. Cross-platform (iOS + Android + web)
+9. Compliance workflow automation
+
+### **NICE TO HAVE (Nice but non-differentiating):**
+- Physics simulation (PDAL can do this)
+- Advanced visualization (exists elsewhere)
+- Measurement tools (basic version acceptable)
+- Export formats (table stakes)
+
+**Strategic Note:** Don't waste effort on nice-to-have items. They don't differentiate. Focus 80% effort on the six pillars.
+
+---
+
+## COMPETITIVE ANALYSIS (REFRAMED)
+
+### **Why You Beat Competitors on YOUR Turf**
+
+| Dimension | QGIS | ArcGIS | CloudCompare | **You (On Your Turf)** |
+|---|---|---|---|---|
+| **Time to first result** | 2-3 hours (setup) | 1 hour (licensing) | 30 min (install) | **10 seconds (instant)** |
+| **Mobile experience** | Terrible | Mediocre | None | **Best-in-class** |
+| **Learning curve** | Steep | Steep | Very steep | **Gentle (60 sec)** |
+| **Real-time collaboration** | Possible (complex) | Possible (complex) | No | **Native, seamless** |
+| **Field analytics** | No | No | No | **Yes (core feature)** |
+| **AI insights** | No | Some (embedded in ArcGIS) | No | **Yes (built-in)** |
+| **Privacy automation** | No | No | No | **Yes (built-in)** |
+| **Extensibility** | Good (complex) | Limited (proprietary) | Limited | **Good (simple)** |
+| **Cost** | Free | $1000+/year | Free | **Freemium** |
+
+**Key:** You don't try to beat them on features. You beat them on **speed, simplicity, and mobile.**
+
+---
+
+## FINAL NARRATIVE (FOR YOUR TEAM)
+
+### **Why Your App Exists:**
+
+"We're not building a better QGIS. We're building something fundamentally different: **a tool designed for scientists in the field, not scientists at desks.**
+
+QGIS is 20-year-old desktop software optimized for specialists. It's powerful but assumes you have 3 hours and a PhD in GIS.
+
+We're building for the 90% of researchers who don't fit that profile:
+- Field archaeologists who need answers in 10 seconds
+- Conservation teams that need real-time collaboration
+- Citizen scientists intimidated by complex tools
+- Teams that need privacy compliance automated
+
+Our differentiation isn't 'nicer UI.' It's:
+1. **Real-time field analysis** (nobody else does this well)
+2. **AI-powered insights** (automatic interpretation, not just data)
+3. **Mobile-first architecture** (designed for pockets, not desks)
+4. **Zero setup** (instant value, not days of configuration)
+5. **Privacy built-in** (not bolted on)
+6. **Open extensibility** (community drives innovation)
+
+These six things, combined, are irreplaceable. You can't get all six from QGIS, ArcGIS, or CloudCompare. You can only get them here.
+
+That's why we exist. That's how we win."

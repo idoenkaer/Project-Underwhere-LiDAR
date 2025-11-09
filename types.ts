@@ -1,4 +1,6 @@
-// FIX: Added missing type definitions for various data modules and updated the root ScientificDatabase interface.
+// types.ts
+
+// FIX: Added missing type definitions for various modules and updated ScientificDatabase.
 export enum Module {
   ROADMAP = 'Roadmap',
   MEASUREMENT = 'Measurement',
@@ -20,6 +22,7 @@ export interface Stat {
   value: string;
   unit?: string;
   tooltip?: string;
+  status?: 'good' | 'warning' | 'critical';
 }
 
 // Data structure for Topography Module
@@ -28,26 +31,22 @@ export interface TopographyAnalysis {
 }
 
 // Data structure for Environmental Module
-interface Material {
-    name: string;
-    value: number;
-    description: string;
-    properties: { [key: string]: string };
-    common_uses: string;
-}
-
-interface FeatureAttribution {
-    feature: string;
-    contribution: number;
-}
-
 export interface EnvironmentalAnalysis {
-    materialComposition: Material[];
+    materialComposition: {
+        name: string;
+        value: number;
+        description: string;
+        properties: Record<string, string>;
+        common_uses: string;
+    }[];
     scanMetrics: Stat[];
     airQuality: Stat[];
     explainability: {
         summary: string;
-        featureAttributions: FeatureAttribution[];
+        featureAttributions: {
+            feature: string;
+            contribution: number;
+        }[];
     };
     assumptions: string;
 }
@@ -68,10 +67,12 @@ export interface BenchmarkResults {
     memory: number;
 }
 
+export type PhysicsWindDirection = 'N' | 'E' | 'S' | 'W';
+
 export interface PhysicsScenario {
     id: string;
     windSpeed: number;
-    windDirection: 'N' | 'E' | 'S' | 'W';
+    windDirection: PhysicsWindDirection;
     results: {
         stress: number;
         deformation: number;
@@ -85,7 +86,7 @@ export interface PhysicsAnalysis {
     scenarios: PhysicsScenario[];
 }
 
-// Data structure for SpaceTime Module
+// Data structure for Spacetime Module
 export type SpaceTimeEventType = 'baseline' | 'growth' | 'erosion' | 'deformation';
 
 export interface SpaceTimeEvent {
