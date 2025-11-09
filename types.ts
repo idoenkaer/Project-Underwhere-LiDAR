@@ -13,6 +13,13 @@ export enum Module {
   ROADMAP = 'Roadmap',
 }
 
+// Universal Recommendation structure
+export type RecommendationPriority = 'High' | 'Medium' | 'Low';
+export interface Recommendation {
+    text: string;
+    priority: RecommendationPriority;
+}
+
 // Data structure for Environmental Analysis Module
 export interface Material {
   name: string;
@@ -53,6 +60,29 @@ export interface EnvironmentalAnalysis {
 export interface BiologicalAnalysis {
   canopyStats: Stat[];
   faunaStats: Stat[];
+  recommendations: Recommendation[];
+}
+
+// Data structure for Topography Module
+export interface TopographyAnalysis {
+    recommendations: Recommendation[];
+}
+
+// Data structure for Physics Module
+export interface PhysicsScenario {
+    id: string;
+    windSpeed: number;
+    windDirection: 'N' | 'E' | 'S' | 'W';
+    results: {
+        stress: number;
+        deformation: number;
+        integrity: number;
+    };
+    recommendations: Recommendation[];
+}
+
+export interface PhysicsAnalysis {
+    scenarios: PhysicsScenario[];
 }
 
 // Data structure for Space-Time Module
@@ -78,5 +108,7 @@ export interface ScientificDatabase {
     scanMeta: ScanMetadata;
     environmental: EnvironmentalAnalysis;
     biological: BiologicalAnalysis;
+    topography: TopographyAnalysis;
+    physics: PhysicsAnalysis;
     spacetime: SpaceTimeAnalysis;
 }

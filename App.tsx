@@ -53,13 +53,13 @@ const App: React.FC = () => {
       case Module.ENVIRONMENTAL:
         return <EnvironmentalModule data={db.environmental} />;
       case Module.TOPOGRAPHY:
-        return <TopographyModule isLiveData={isLiveData} />;
+        return <TopographyModule isLiveData={isLiveData} analysis={db.topography} />;
       case Module.AI_DISCOVERY:
         return <AIDiscoveryModule />;
       case Module.BIOLOGICAL:
         return <BiologicalModule isLiveData={isLiveData} data={db.biological} />;
       case Module.PHYSICS:
-        return <PhysicsModule />;
+        return <PhysicsModule analysis={db.physics} />;
       case Module.SPACETIME:
         return <SpaceTimeModule events={db.spacetime.events} />;
        case Module.RESEARCH:

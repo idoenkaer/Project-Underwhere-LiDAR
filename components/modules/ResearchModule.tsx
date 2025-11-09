@@ -10,6 +10,7 @@ import { ShareIcon } from '../icons/ShareIcon';
 import { GoogleDriveIcon } from '../icons/GoogleDriveIcon';
 import { GitHubIcon } from '../icons/GitHubIcon';
 import { LinkIcon } from '../icons/LinkIcon';
+import { CheckBadgeIcon } from '../icons/CheckBadgeIcon';
 
 type ExportStatus = 'idle' | 'exporting' | 'success';
 type ShareStatus = 'idle' | 'sharing' | 'success';
@@ -73,6 +74,13 @@ const ShareButton: React.FC<{
     </button>
   );
 };
+
+const ChecklistItem: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+    <li className="flex items-center space-x-3">
+        <input type="checkbox" className="h-4 w-4 rounded bg-gray-600 border-gray-500 text-cyan-500 focus:ring-cyan-600" />
+        <span className="text-gray-300">{children}</span>
+    </li>
+);
 
 
 const ResearchModule: React.FC = () => {
@@ -179,25 +187,28 @@ const ResearchModule: React.FC = () => {
 
             {/* Center Panel: Publication Draft & Commentary */}
             <div className="lg:col-span-2 bg-gray-800/50 p-6 rounded-lg border border-gray-700 flex flex-col">
-                 <h3 className="text-lg font-semibold text-gray-200 mb-4">Publication Draft</h3>
-                 <div className="relative flex-1 bg-gray-900/70 rounded-lg p-4 overflow-y-auto">
-                    <div className="absolute inset-0 bg-[image:var(--img-report-bg)] bg-cover bg-center opacity-10 blur-sm"></div>
-                    <div className="relative prose prose-invert max-w-none text-gray-300">
-                        <h1 className="text-cyan-300">Multi-Sensor Lidar Analysis of [Location]</h1>
-                        <p className="text-xs italic text-gray-400">[Workflow complete. All modules contributed to this summary.]</p>
-                        <h2>Abstract</h2>
-                        <p>This study presents a novel approach to environmental analysis using a multi-modal Lidar scanning suite. By integrating infrared, RGB, and spectral sensor data, we identified a previously unmapped geological fault line... [AI-ASSISTED SUMMARY]</p>
-                        <h2>1. Introduction</h2>
-                        <p>The field of geospatial analysis has been revolutionized by... [LITERATURE CONTEXT]</p>
-                        <h2>2. Methods</h2>
-                        <p>A high-resolution Lidar scan was conducted... [DATA FROM MEASUREMENT MODULE]</p>
-                        <p>Structural simulations were performed under... [DATA FROM PHYSICS MODULE]</p>
-                        <h2>3. Results</h2>
-                        <p>Topographical analysis revealed... [DATA FROM TOPOGRAPHY MODULE]</p>
-                        <p>Ecological assessment identified... [DATA FROM BIOLOGY MODULE]</p>
+                 <div className="flex-1 flex flex-col mb-6">
+                    <h3 className="text-lg font-semibold text-gray-200 mb-4">Publication Draft</h3>
+                    <div className="relative flex-1 bg-gray-900/70 rounded-lg p-4 overflow-y-auto">
+                        <div className="absolute inset-0 bg-[image:var(--img-report-bg)] bg-cover bg-center opacity-10 blur-sm"></div>
+                        <div className="relative prose prose-invert max-w-none text-gray-300">
+                            <h1 className="text-cyan-300">Multi-Sensor Lidar Analysis of [Location]</h1>
+                            <p className="text-xs italic text-gray-400">[Workflow complete. All modules contributed to this summary.]</p>
+                            <h2>Abstract</h2>
+                            <p>This study presents a novel approach to environmental analysis using a multi-modal Lidar scanning suite. By integrating infrared, RGB, and spectral sensor data, we identified a previously unmapped geological fault line... [AI-ASSISTED SUMMARY]</p>
+                        </div>
                     </div>
                  </div>
-                 <div className="mt-4 flex-1 flex flex-col">
+                 <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700 mb-6">
+                    <h4 className="text-md font-semibold text-gray-200 mb-3 flex items-center"><CheckBadgeIcon className="h-5 w-5 mr-2 text-cyan-400" />Reproducibility Checklist</h4>
+                    <ul className="space-y-2 text-sm">
+                        <ChecklistItem>Resource Requirements Documented</ChecklistItem>
+                        <ChecklistItem>Methodology Clearly Stated</ChecklistItem>
+                        <ChecklistItem>Randomness Controlled (Seeds, etc.)</ChecklistItem>
+                        <ChecklistItem>Statistical Validation Performed</ChecklistItem>
+                    </ul>
+                 </div>
+                 <div className="flex-1 flex flex-col">
                     <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center"><UsersIcon className="h-5 w-5 mr-2 text-cyan-400"/>Collaborator Commentary</h3>
                     <div className="flex-1 bg-gray-900/70 rounded-lg p-4 space-y-4 overflow-y-auto">
                         {comments.map((comment, index) => (

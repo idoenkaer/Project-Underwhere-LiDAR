@@ -1,4 +1,11 @@
 import React, { useState } from 'react';
+import { TopographyAnalysis } from '../../types';
+import { RecommendationsCard } from '../common/RecommendationsCard';
+
+interface TopographyModuleProps {
+    isLiveData: boolean;
+    analysis: TopographyAnalysis;
+}
 
 const AnomalyMarker: React.FC<{ top: string; left: string; delay?: string; label: string }> = ({ top, left, delay = '0s', label }) => (
     <div className="absolute animate-fadeIn" style={{ top, left, animationDelay: delay }}>
@@ -23,8 +30,7 @@ const ControlToggle: React.FC<{ label: string; checked: boolean; onChange: () =>
 
 type BaseLayer = 'terrain' | 'satellite' | 'dark';
 
-// FIX: Destructure isLiveData from props to make it available within the component.
-const TopographyModule: React.FC<{ isLiveData: boolean }> = ({ isLiveData }) => {
+const TopographyModule: React.FC<TopographyModuleProps> = ({ isLiveData, analysis }) => {
     const [overlays, setOverlays] = useState({ faultLines: true, erosion: true, waterFlow: true });
     const [baseLayer, setBaseLayer] = useState<BaseLayer>('terrain');
 
@@ -50,8 +56,8 @@ const TopographyModule: React.FC<{ isLiveData: boolean }> = ({ isLiveData }) => 
                     {overlays.waterFlow && <AnomalyMarker top="50%" left="25%" label="Water Flow Path" />}
                 </div>
             </div>
-            <div className="space-y-6 bg-gray-800/50 p-6 rounded-lg border border-gray-700">
-                <div>
+            <div className="space-y-6">
+                <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                     <h3 className="text-lg font-semibold text-gray-200 mb-4">Map Controls</h3>
                     <div className="space-y-4">
                         <div>
@@ -74,15 +80,18 @@ const TopographyModule: React.FC<{ isLiveData: boolean }> = ({ isLiveData }) => 
                         </div>
                     </div>
                 </div>
-                 <div className="border-t border-gray-700 pt-6">
-                    <h3 className="text-lg font-semibold text-gray-200 mb-2">Analysis Details</h3>
-                    <p className="font-mono text-cyan-300 text-sm mb-2">{isLiveData ? 'LIVE SCANNING...' : 'SIMULATION LOADED'}</p>
-                    <div className="text-xs text-gray-400 space-y-1">
-                        <p><span className="text-green-400">✔</span> GIS Data Cross-Validation Complete</p>
-                        <p><span className="text-green-400">✔</span> Source: Sentinel-2, USGS Geological Survey</p>
-                         <p><span className="text-blue-400">❖</span> Cross-validated using CloudCompare & GRASS GIS</p>
-                         <p><span className="text-purple-400">✦</span> Extendable with QGIS plugin hooks</p>
+                 <div className="space-y-4">
+                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                        <h3 className="text-md font-semibold text-gray-200 mb-2">Analysis Details</h3>
+                        <p className="font-mono text-cyan-300 text-sm mb-2">{isLiveData ? 'LIVE SCANNING...' : 'SIMULATION LOADED'}</p>
+                        <div className="text-xs text-gray-400 space-y-1">
+                            <p><span className="text-green-400">✔</span> GIS Data Cross-Validation Complete</p>
+                            <p><span className="text-green-400">✔</span> Source: Sentinel-2, USGS Geological Survey</p>
+                             <p><span className="text-blue-400">❖</span> Cross-validated using CloudCompare & GRASS GIS</p>
+                             <p><span className="text-purple-400">✦</span> Extendable with QGIS plugin hooks</p>
+                        </div>
                     </div>
+                    <RecommendationsCard recommendations={analysis.recommendations} />
                  </div>
             </div>
         </div>

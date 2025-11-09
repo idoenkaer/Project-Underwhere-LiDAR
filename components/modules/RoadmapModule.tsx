@@ -24,6 +24,7 @@ import { ScaleIcon } from '../icons/ScaleIcon';
 import { EyeIcon } from '../icons/EyeIcon';
 import { MagnifyingGlassIcon } from '../icons/MagnifyingGlassIcon';
 import { FunnelIcon } from '../icons/FunnelIcon';
+import { AcademicCapIcon } from '../icons/AcademicCapIcon';
 
 
 enum Status {
@@ -128,6 +129,15 @@ const RoadmapModule: React.FC = () => {
                         <p className="text-sm text-gray-400">Develop proof-of-concept for gravitational lensing simulation based on high-mass object scans.</p>
                     </ChecklistItem>
                 </ul>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <AcademicCapIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Reproducibility Standards Framework
+                </h3>
+                <p className="text-sm text-gray-400">
+                    To ensure all scientific contributions can be verified and built upon, we are committed to a five-level reproducibility standard. This framework covers resource requirements, methodological information, randomness control (e.g., seed values), statistical validation, and ultimately, full verification of results.
+                </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">

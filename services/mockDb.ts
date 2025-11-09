@@ -1,4 +1,4 @@
-import { ScientificDatabase, Stat } from '../types';
+import { ScientificDatabase } from '../types';
 
 export const db: ScientificDatabase = {
   scanMeta: {
@@ -45,6 +45,50 @@ export const db: ScientificDatabase = {
         { label: "Avg. Body Mass (Est.)", value: "350 kg" },
         { label: "Density (Sector Beta)", value: "5.6/km²" },
         { label: "Primary Species", value: "Elk" },
+    ],
+    recommendations: [
+        { text: 'Monitor Sector Beta for changes in fauna population density over the next quarter.', priority: 'Medium' },
+        { text: 'Investigate the moderate understory density to ensure it provides sufficient cover for juvenile fauna.', priority: 'Low' },
+    ]
+  },
+  topography: {
+    recommendations: [
+        { text: 'Conduct field verification of the detected fault line (FL-01) to assess its geological significance.', priority: 'High' },
+        { text: 'Implement erosion control measures in Anomaly Zone Alpha to mitigate further land degradation.', priority: 'Medium' },
+        { text: 'Use the generated hydrological model for further geotechnical and environmental impact studies.', priority: 'Low' },
+    ]
+  },
+  physics: {
+    scenarios: [
+        {
+            id: 'wind-90-w',
+            windSpeed: 90,
+            windDirection: 'W',
+            results: { stress: 65, deformation: 5.4, integrity: 95.7 },
+            recommendations: [
+                { text: 'Structure is stable under current conditions. No immediate action required.', priority: 'Low' }
+            ]
+        },
+        {
+            id: 'wind-180-w',
+            windSpeed: 180,
+            windDirection: 'W',
+            results: { stress: 260, deformation: 10.8, integrity: 88.2 },
+            recommendations: [
+                { text: 'Physical inspection of primary arch connection is recommended due to high stress concentration.', priority: 'Medium' },
+                { text: 'Monitor for material fatigue if high-wind events are frequent.', priority: 'Medium' },
+            ]
+        },
+        {
+            id: 'wind-250-e',
+            windSpeed: 250,
+            windDirection: 'E',
+            results: { stress: 451, deformation: 30.2, integrity: 64.1 },
+            recommendations: [
+                { text: 'Immediate structural reinforcement is required at identified critical stress points.', priority: 'High' },
+                { text: 'Risk of cascading failure under sustained load. Limit structural access until remediation is complete.', priority: 'High' },
+            ]
+        }
     ]
   },
   spacetime: {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Stat, BiologicalAnalysis } from '../../types';
 import { MetricCard } from '../common/MetricCard';
+import { RecommendationsCard } from '../common/RecommendationsCard';
 
 interface DataSheetProps {
     title: string;
@@ -107,6 +108,7 @@ const BiologicalModule: React.FC<BiologicalModuleProps> = ({ isLiveData, data })
             <div className="space-y-8">
                 <DataSheetCard title="Canopy Analysis" stats={data.canopyStats} />
                 <DataSheetCard title="Fauna Biometrics" stats={data.faunaStats} />
+                <RecommendationsCard recommendations={data.recommendations} />
             </div>
         </div>
     );

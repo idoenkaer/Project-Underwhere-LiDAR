@@ -1,55 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { MetricCard } from '../common/MetricCard';
+import { PhysicsAnalysis, PhysicsScenario } from '../../types';
+import { RecommendationsCard } from '../common/RecommendationsCard';
 
-type SimulationType = 'none' | 'wind' | 'seismic';
-type WindDirection = 'N' | 'E' | 'S' | 'W';
-
-interface Results {
-    stress: number;
-    deformation: number;
-    integrity: number;
+interface PhysicsModuleProps {
+    analysis: PhysicsAnalysis;
 }
 
-const PhysicsModule: React.FC = () => {
-    const [simulation, setSimulation] = useState<SimulationType>('wind');
+const PhysicsModule: React.FC<PhysicsModuleProps> = ({ analysis }) => {
+    const [selectedScenarioId, setSelectedScenarioId] = useState<string>(analysis.scenarios[0].id);
     const [isRunning, setIsRunning] = useState(false);
-    const [results, setResults] = useState<Results | null>(null);
-    
-    // Interactive Controls State
-    const [windSpeed, setWindSpeed] = useState(90);
-    const [windDirection, setWindDirection] = useState<WindDirection>('W');
+    const [results, setResults] = useState<PhysicsScenario | null>(null);
 
     useEffect(() => {
-        let timerId: number | undefined;
-        if (isRunning) {
-            setResults(null);
-            timerId = window.setTimeout(() => {
-                // Calculate results based on inputs
-                const stress = Math.round(20 * Math.pow(windSpeed / 50, 2));
-                const deformation = parseFloat((3 * (windSpeed / 50)).toFixed(1));
-                const integrity = Math.max(0, parseFloat((100 - stress / 5).toFixed(1)));
-
-                setResults({ stress, deformation, integrity });
-                setIsRunning(false);
-            }, 3000); // Simulate a 3-second analysis
-        }
-        return () => {
-            if (timerId) {
-                clearTimeout(timerId);
-            }
-        };
-    }, [isRunning, windSpeed, windDirection]);
+        // Reset results if scenario changes
+        setResults(null);
+    }, [selectedScenarioId]);
 
     const runSimulation = () => {
-        if (simulation !== 'none') {
+        if (selectedScenarioId) {
             setIsRunning(true);
+            setResults(null);
+            // Simulate loading the pre-calculated results
+            setTimeout(() => {
+                const scenario = analysis.scenarios.find(s => s.id === selectedScenarioId);
+                if (scenario) {
+                    setResults(scenario);
+                }
+                setIsRunning(false);
+            }, 3000);
         }
     };
+    
+    const selectedScenario = analysis.scenarios.find(s => s.id === selectedScenarioId) || analysis.scenarios[0];
 
     const getStressOverlay = () => {
         if (!results) return null;
         
-        const intensity = Math.min(100, results.stress / 3);
+        const intensity = Math.min(100, results.results.stress / 5);
         const gradientStops = {
             N: `from-green-500/10 via-yellow-500/${intensity}0 to-red-500/${intensity+20}0`,
             E: `from-red-500/${intensity+20}0 via-yellow-500/${intensity}0 to-green-500/10`,
@@ -64,7 +52,7 @@ const PhysicsModule: React.FC = () => {
              W: 'bg-gradient-to-r',
         }
        
-        return <div className={`absolute inset-0 ${gradientDirection[windDirection]} ${gradientStops[windDirection]} mix-blend-plus-lighter animate-fadeIn`}></div>;
+        return <div className={`absolute inset-0 ${gradientDirection[results.windDirection]} ${gradientStops[results.windDirection]} mix-blend-plus-lighter animate-fadeIn`}></div>;
     }
 
     const getStatus = (value: number, thresholds: { warn: number, crit: number }): 'good' | 'warning' | 'critical' => {
@@ -78,7 +66,6 @@ const PhysicsModule: React.FC = () => {
         if (value < 90) return 'warning';
         return 'good';
     }
-
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
@@ -110,32 +97,20 @@ const PhysicsModule: React.FC = () => {
                     <h3 className="text-lg font-semibold text-gray-300 mb-4">Simulation Parameters</h3>
                     <div className="space-y-4 bg-gray-800/50 p-4 rounded-lg">
                         <div>
-                            <label htmlFor="windSpeed" className="block text-sm font-medium text-gray-400 mb-2">Wind Speed: <span className="font-mono text-cyan-300">{windSpeed} km/h</span></label>
-                            <input
-                                id="windSpeed"
-                                type="range"
-                                min="10"
-                                max="250"
-                                value={windSpeed}
-                                onChange={(e) => setWindSpeed(parseInt(e.target.value, 10))}
-                                className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                            <label htmlFor="scenario" className="block text-sm font-medium text-gray-400 mb-2">Select Scenario</label>
+                            <select
+                                id="scenario"
+                                value={selectedScenarioId}
+                                onChange={(e) => setSelectedScenarioId(e.target.value)}
+                                className="w-full bg-gray-700 border-gray-600 rounded-md px-3 py-2 focus:ring-cyan-500 focus:border-cyan-500"
                                 disabled={isRunning}
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-400 mb-2">Wind Direction</label>
-                            <div className="grid grid-cols-4 gap-2">
-                                {(['N', 'W', 'E', 'S'] as WindDirection[]).map(dir => (
-                                    <button 
-                                        key={dir} 
-                                        onClick={() => setWindDirection(dir)}
-                                        disabled={isRunning}
-                                        className={`p-2 rounded-md text-sm font-bold transition ${windDirection === dir ? 'bg-cyan-500 text-white' : 'bg-gray-700 hover:bg-gray-600'}`}
-                                    >
-                                        {dir}
-                                    </button>
+                            >
+                                {analysis.scenarios.map(s => (
+                                    <option key={s.id} value={s.id}>
+                                        {s.windSpeed} km/h Wind from {s.windDirection}
+                                    </option>
                                 ))}
-                            </div>
+                            </select>
                         </div>
                     </div>
                      <button onClick={runSimulation} disabled={isRunning} className="mt-4 w-full p-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg disabled:opacity-50 disabled:bg-gray-600 disabled:cursor-wait transition">
@@ -146,13 +121,14 @@ const PhysicsModule: React.FC = () => {
                     <div className="space-y-4 animate-fadeIn">
                         <h3 className="text-lg font-semibold text-gray-300">Analysis Results</h3>
                         <div className="grid grid-cols-1 gap-4">
-                            <MetricCard label="Max Stress" value={String(results.stress)} unit="MPa" status={getStatus(results.stress, { warn: 200, crit: 400})} />
-                            <MetricCard label="Deformation" value={String(results.deformation)} unit="cm" status={getStatus(results.deformation, { warn: 15, crit: 30})} />
-                            <MetricCard label="Integrity" value={String(results.integrity)} unit="%" status={getIntegrityStatus(results.integrity)} />
+                            <MetricCard label="Max Stress" value={String(results.results.stress)} unit="MPa" status={getStatus(results.results.stress, { warn: 200, crit: 400})} />
+                            <MetricCard label="Deformation" value={String(results.results.deformation)} unit="cm" status={getStatus(results.results.deformation, { warn: 15, crit: 30})} />
+                            <MetricCard label="Integrity" value={String(results.results.integrity)} unit="%" status={getIntegrityStatus(results.results.integrity)} />
                         </div>
                          <div className="text-xs text-gray-400 bg-gray-800/50 p-3 rounded-lg">
-                            <p><strong className="text-gray-200">AI Summary:</strong> Based on the simulation with a {windSpeed} km/h wind from the {windDirection}, the structural integrity is {results.integrity}%. {results.stress > 200 ? "Critical stress points are emerging." : "The structure remains stable."}</p>
+                            <p><strong className="text-gray-200">AI Summary:</strong> Based on the simulation with a {results.windSpeed} km/h wind from the {results.windDirection}, the structural integrity is {results.results.integrity}%. {results.results.stress > 200 ? "Critical stress points are emerging." : "The structure remains stable."}</p>
                         </div>
+                        <RecommendationsCard recommendations={results.recommendations} />
                     </div>
                 )}
             </div>
