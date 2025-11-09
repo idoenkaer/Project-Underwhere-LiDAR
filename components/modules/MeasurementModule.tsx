@@ -13,6 +13,7 @@ import { CogIcon } from '../icons/CogIcon';
 import { CodeFileIcon } from '../icons/CodeFileIcon';
 import { MapPinCheckIcon } from '../icons/MapPinCheckIcon';
 import ConsentDialog from '../common/ConsentDialog';
+import { ExclamationCircleIcon } from '../icons/ExclamationCircleIcon';
 
 const SensorFeedCard: React.FC<{ title: string; imageUrl: string; details: string; imageFilter?: string }> = ({ title, imageUrl, details, imageFilter = '' }) => {
     return (

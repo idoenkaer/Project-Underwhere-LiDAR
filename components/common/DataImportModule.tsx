@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { DocumentArrowUpIcon } from '../icons/DocumentArrowUpIcon';
 import { SatelliteIcon } from '../icons/SatelliteIcon';
 import { MountainIcon } from '../icons/MountainIcon';
+import { ExclamationCircleIcon } from '../icons/ExclamationCircleIcon';
 
 type Tab = 'upload' | 'nasa' | 'topo';
 
@@ -167,6 +168,17 @@ export const DataImportModule: React.FC<DataImportModuleProps> = ({ onUpload, on
 
     return (
         <div className="max-w-2xl mx-auto">
+            <div className="bg-gray-900/80 p-4 rounded-lg border border-yellow-500/30 mb-6 flex items-start space-x-3">
+                <ExclamationCircleIcon className="h-6 w-6 text-yellow-400 flex-shrink-0 animate-pulse" />
+                <div className="flex-1">
+                    <h3 className="font-bold text-yellow-300">Responsible Scanning Notice</h3>
+                    <p className="text-xs text-yellow-400/80">
+                        Ensure you have the right to scan the selected area. Respect privacy and environmental sensitivities.
+                        Consult the <code className="bg-black/30 px-1 rounded">ETHICS.md</code> guide for more information.
+                    </p>
+                </div>
+            </div>
+
             <div className="bg-gray-800 rounded-t-lg border border-gray-700 border-b-0 flex">
                 <TabButton active={activeTab === 'upload'} onClick={() => setActiveTab('upload')} icon={DocumentArrowUpIcon} label="File Upload" />
                 <TabButton active={activeTab === 'nasa'} onClick={() => setActiveTab('nasa')} icon={SatelliteIcon} label="NASA Earthdata" />
