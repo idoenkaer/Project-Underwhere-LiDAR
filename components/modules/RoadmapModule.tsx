@@ -26,6 +26,7 @@ import { MagnifyingGlassIcon } from '../icons/MagnifyingGlassIcon';
 import { FunnelIcon } from '../icons/FunnelIcon';
 import { AcademicCapIcon } from '../icons/AcademicCapIcon';
 import { TagIcon } from '../icons/TagIcon';
+import { StopwatchIcon } from '../icons/StopwatchIcon';
 
 
 enum Status {
@@ -130,6 +131,15 @@ const RoadmapModule: React.FC = () => {
                         <p className="text-sm text-gray-400">Develop proof-of-concept for gravitational lensing simulation based on high-mass object scans.</p>
                     </ChecklistItem>
                 </ul>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <StopwatchIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Comprehensive Performance Benchmarking
+                </h3>
+                <p className="text-sm text-gray-400">
+                    Establish rigorous performance baselines for all AI models and data processing pipelines using standardized metrics. This includes classification accuracy, boundary precision, processing latency, and memory consumption, evaluated across different hardware configurations to ensure real-world viability and scientific reliability.
+                </p>
             </div>
              <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">

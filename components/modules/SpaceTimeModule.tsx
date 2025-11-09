@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PlayIcon, PauseIcon } from '../icons/PlayerIcons';
 import { SpaceTimeEvent } from '../../types';
-
-interface SpaceTimeModuleProps {
-    events: SpaceTimeEvent[];
-}
+import { useAppContext } from '../contexts/AppContext';
 
 const EventAnnotation: React.FC<{ event: SpaceTimeEvent, isActive: boolean }> = ({ event, isActive }) => {
     const position = {
@@ -33,7 +30,9 @@ const EventAnnotation: React.FC<{ event: SpaceTimeEvent, isActive: boolean }> = 
 };
 
 
-const SpaceTimeModule: React.FC<SpaceTimeModuleProps> = ({ events }) => {
+const SpaceTimeModule: React.FC = () => {
+    const { database } = useAppContext();
+    const events = database.spacetime.events;
     const [currentMonth, setCurrentMonth] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const logContainerRef = useRef<HTMLDivElement>(null);

@@ -1,17 +1,12 @@
 import React from 'react';
-import { ScanMetadata } from '../types';
+import { useAppContext } from './contexts/AppContext';
 
-interface HeaderProps {
-  title: string;
-  isLiveData: boolean;
-  setIsLiveData: (value: boolean) => void;
-  scanMeta: ScanMetadata;
-}
+const Header: React.FC = () => {
+  const { activeModule, isLiveData, setIsLiveData, scanMeta } = useAppContext();
 
-const Header: React.FC<HeaderProps> = ({ title, isLiveData, setIsLiveData, scanMeta }) => {
   return (
     <header className="flex h-16 w-full flex-shrink-0 items-center border-b border-gray-700 bg-gray-800/50 px-6 backdrop-blur-sm">
-      <h1 className="text-xl font-semibold text-cyan-300">{title}</h1>
+      <h1 className="text-xl font-semibold text-cyan-300">{activeModule}</h1>
       <div className="ml-4 border-l border-gray-600 pl-4">
         <p className="text-sm text-gray-400">
           Scan ID: <span className="font-mono text-cyan-400">{scanMeta.id}</span>

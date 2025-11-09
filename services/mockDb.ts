@@ -67,7 +67,14 @@ export const db: ScientificDatabase = {
             results: { stress: 65, deformation: 5.4, integrity: 95.7 },
             recommendations: [
                 { text: 'Structure is stable under current conditions. No immediate action required.', priority: 'Low' }
-            ]
+            ],
+            benchmark: {
+                config: 'Mobile CPU @ 2.1 GHz',
+                accuracy: 99.8,
+                precision: 99.5,
+                latency: 450,
+                memory: 128
+            }
         },
         {
             id: 'wind-180-w',
@@ -77,7 +84,14 @@ export const db: ScientificDatabase = {
             recommendations: [
                 { text: 'Physical inspection of primary arch connection is recommended due to high stress concentration.', priority: 'Medium' },
                 { text: 'Monitor for material fatigue if high-wind events are frequent.', priority: 'Medium' },
-            ]
+            ],
+            benchmark: {
+                config: 'Mobile CPU @ 2.1 GHz',
+                accuracy: 99.6,
+                precision: 99.1,
+                latency: 1250,
+                memory: 145
+            }
         },
         {
             id: 'wind-250-e',
@@ -87,7 +101,14 @@ export const db: ScientificDatabase = {
             recommendations: [
                 { text: 'Immediate structural reinforcement is required at identified critical stress points.', priority: 'High' },
                 { text: 'Risk of cascading failure under sustained load. Limit structural access until remediation is complete.', priority: 'High' },
-            ]
+            ],
+            benchmark: {
+                config: 'Desktop GPU (RTX 4090)',
+                accuracy: 99.9,
+                precision: 99.8,
+                latency: 85,
+                memory: 512
+            }
         }
     ]
   },

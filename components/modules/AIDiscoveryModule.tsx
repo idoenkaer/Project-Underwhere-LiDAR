@@ -24,7 +24,13 @@ const SimpleMarkdown: React.FC<{ text: string }> = ({ text }) => {
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/`([^`]+)`/g, '<code class="bg-gray-700 text-cyan-300 rounded px-1 py-0.5 font-mono text-sm">$1</code>')
-        .replace(/^- (.*$)/gm, '<li class="ml-4 list-disc">$1</li>')
+        // Find blocks of list items and wrap them in a <ul> tag
+        .replace(/(?:(?:^-|\*)\s.*(?:\n|$))+/gm, (match) => {
+            const items = match.trim().split('\n').map(item => 
+                `<li class="list-disc ml-5">${item.replace(/^(-|\*)\s/, '').trim()}</li>`
+            ).join('');
+            return `<ul class="mb-4">${items}</ul>`;
+        })
         .replace(/\n/g, '<br />');
 
     return <div className="prose prose-invert max-w-none prose-p:text-gray-300" dangerouslySetInnerHTML={{ __html: html }} />;

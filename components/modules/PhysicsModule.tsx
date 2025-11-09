@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { MetricCard } from '../common/MetricCard';
-import { PhysicsAnalysis, PhysicsScenario } from '../../types';
+import { PhysicsScenario } from '../../types';
 import { RecommendationsCard } from '../common/RecommendationsCard';
+import { useAppContext } from '../contexts/AppContext';
+import { BenchmarkResultsCard } from '../common/BenchmarkResultsCard';
 
-interface PhysicsModuleProps {
-    analysis: PhysicsAnalysis;
-}
+const PhysicsModule: React.FC = () => {
+    const { database } = useAppContext();
+    const analysis = database.physics;
 
-const PhysicsModule: React.FC<PhysicsModuleProps> = ({ analysis }) => {
     const [selectedScenarioId, setSelectedScenarioId] = useState<string>(analysis.scenarios[0].id);
     const [isRunning, setIsRunning] = useState(false);
     const [results, setResults] = useState<PhysicsScenario | null>(null);
@@ -32,8 +33,6 @@ const PhysicsModule: React.FC<PhysicsModuleProps> = ({ analysis }) => {
         }
     };
     
-    const selectedScenario = analysis.scenarios.find(s => s.id === selectedScenarioId) || analysis.scenarios[0];
-
     const getStressOverlay = () => {
         if (!results) return null;
         
@@ -129,6 +128,7 @@ const PhysicsModule: React.FC<PhysicsModuleProps> = ({ analysis }) => {
                             <p><strong className="text-gray-200">AI Summary:</strong> Based on the simulation with a {results.windSpeed} km/h wind from the {results.windDirection}, the structural integrity is {results.results.integrity}%. {results.results.stress > 200 ? "Critical stress points are emerging." : "The structure remains stable."}</p>
                         </div>
                         <RecommendationsCard recommendations={results.recommendations} />
+                        {results.benchmark && <BenchmarkResultsCard benchmark={results.benchmark} />}
                     </div>
                 )}
             </div>

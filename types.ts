@@ -68,6 +68,15 @@ export interface TopographyAnalysis {
     recommendations: Recommendation[];
 }
 
+// Benchmark results structure
+export interface BenchmarkResults {
+    config: string;
+    accuracy: number;
+    precision: number;
+    latency: number; // in ms
+    memory: number; // in MB
+}
+
 // Data structure for Physics Module
 export interface PhysicsScenario {
     id: string;
@@ -79,6 +88,7 @@ export interface PhysicsScenario {
         integrity: number;
     };
     recommendations: Recommendation[];
+    benchmark: BenchmarkResults;
 }
 
 export interface PhysicsAnalysis {

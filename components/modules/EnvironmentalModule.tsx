@@ -1,16 +1,9 @@
-
-
-
 import React, { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend, Sector } from 'recharts';
-import { EnvironmentalAnalysis } from '../../types';
 import { MetricCard } from '../common/MetricCard';
 import Tooltip from '../common/Tooltip';
 import { SparklesIcon } from '../icons/SparklesIcon';
-
-interface EnvironmentalModuleProps {
-    data: EnvironmentalAnalysis;
-}
+import { useAppContext } from '../contexts/AppContext';
 
 const renderActiveShape = (props: any) => {
   const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props;
@@ -38,7 +31,9 @@ const renderActiveShape = (props: any) => {
 
 const COLORS = ['#06b6d4', '#22c55e', '#3b82f6', '#f59e0b']; // cyan, green, blue, amber
 
-const EnvironmentalModule: React.FC<EnvironmentalModuleProps> = ({ data }) => {
+const EnvironmentalModule: React.FC = () => {
+    const { database } = useAppContext();
+    const data = database.environmental;
     const [activeIndex, setActiveIndex] = useState<number | null>(0);
     const materialData = data.materialComposition;
 
@@ -89,10 +84,11 @@ const EnvironmentalModule: React.FC<EnvironmentalModuleProps> = ({ data }) => {
                     <p className="text-sm text-gray-400 mb-4">{activeMaterial.description}</p>
                     <div className="space-y-3 text-sm border-t border-gray-600 pt-4">
                         <h4 className="text-md font-semibold text-gray-300">Key Properties</h4>
-                        {Object.entries(activeMaterial.properties).map(([key, value]) => (
+                        {// FIX: Use Object.keys for safer type inference. The value from Object.entries was inferred as 'unknown', which is not a valid ReactNode.
+                        Object.keys(activeMaterial.properties).map((key) => (
                             <p key={key} className="flex justify-between">
                                 <span className="capitalize text-gray-400">{key}</span>
-                                <span className="font-mono text-cyan-300">{value}</span>
+                                <span className="font-mono text-cyan-300">{activeMaterial.properties[key]}</span>
                             </p>
                         ))}
                     </div>

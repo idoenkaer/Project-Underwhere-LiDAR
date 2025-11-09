@@ -1,91 +1,20 @@
 import React, { useState } from 'react';
-import { DownloadIcon } from '../icons/DownloadIcon';
 import { UsersIcon } from '../icons/UsersIcon';
 import { ShieldCheckIcon } from '../icons/ShieldCheckIcon';
-import { DocumentTextIcon } from '../icons/DocumentTextIcon';
-import { CubeIcon } from '../icons/CubeIcon';
-import { GlobeIcon } from '../icons/GlobeIcon';
-import { CheckIcon } from '../icons/CheckIcon';
-import { ShareIcon } from '../icons/ShareIcon';
-import { GoogleDriveIcon } from '../icons/GoogleDriveIcon';
-import { GitHubIcon } from '../icons/GitHubIcon';
 import { LinkIcon } from '../icons/LinkIcon';
 import { CheckBadgeIcon } from '../icons/CheckBadgeIcon';
+import { Card } from '../common/Card';
+import { ExportButton } from '../common/ExportButton';
+import { ShareButton } from '../common/ShareButton';
 
-type ExportStatus = 'idle' | 'exporting' | 'success';
-type ShareStatus = 'idle' | 'sharing' | 'success';
-
-const EXPORT_FORMATS = [
-    { format: 'CSV', description: 'Annotated Measurements', icon: DocumentTextIcon },
-    { format: 'LAS', description: 'Point Cloud Data', icon: CubeIcon },
-    { format: 'GeoTIFF', description: 'Geospatial Raster', icon: GlobeIcon },
-    { format: 'OBJ', description: '3D Model', icon: CubeIcon },
-];
-
-const ExportButton: React.FC<{ format: string, description: string, icon: React.FC<React.SVGProps<SVGSVGElement>>, status: ExportStatus, onClick: () => void }> = ({ format, description, icon: Icon, status, onClick }) => {
-    
-    const content = {
-        idle: <><div className="flex-1 text-left">
-                    <p className="font-bold text-gray-200">{format}</p>
-                    <p className="text-xs text-gray-400">{description}</p>
-                </div>
-                <DownloadIcon className="h-6 w-6 text-cyan-400" /></>,
-        exporting: <><div className="flex-1 text-left text-yellow-400">Exporting...</div>
-                    <svg className="animate-spin h-6 w-6 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg></>,
-        success: <><div className="flex-1 text-left text-green-400">Success!</div><CheckIcon className="h-6 w-6 text-green-400" /></>
-    };
-
-    return (
-    <button onClick={onClick} disabled={status !== 'idle'} className="flex items-center justify-between w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition disabled:cursor-not-allowed">
-        <Icon className="h-6 w-6 mr-4 text-gray-300" />
-        {content[status]}
-    </button>
-)};
-
-const ShareButton: React.FC<{
-  label: string;
-  icon: React.FC<React.SVGProps<SVGSVGElement>>;
-  status: ShareStatus;
-  onClick: () => void;
-}> = ({ label, icon: Icon, status, onClick }) => {
-  const content = {
-    idle: `Share to ${label}`,
-    sharing: 'Sharing...',
-    success: 'Shared Successfully!',
-  };
-  const colors = {
-    idle: 'bg-gray-700/50 hover:bg-gray-700',
-    sharing: 'bg-yellow-600/50 cursor-wait',
-    success: 'bg-green-600/50',
-  };
-
-  return (
-    <button
-      onClick={onClick}
-      disabled={status !== 'idle'}
-      className={`w-full p-3 rounded-lg transition font-semibold flex items-center justify-center space-x-2 ${colors[status]}`}
-    >
-      <Icon className="h-5 w-5" />
-      <span>{content[status]}</span>
-      {status === 'success' && <CheckIcon className="h-5 w-5" />}
-    </button>
-  );
-};
-
-const ChecklistItem: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <li className="flex items-center space-x-3">
-        <input type="checkbox" className="h-4 w-4 rounded bg-gray-600 border-gray-500 text-cyan-500 focus:ring-cyan-600" />
-        <span className="text-gray-300">{children}</span>
+const ChecklistItem: React.FC<{ isChecked: boolean, onToggle: () => void, children: React.ReactNode }> = ({ isChecked, onToggle, children }) => (
+    <li className="flex items-center space-x-3 cursor-pointer" onClick={onToggle}>
+        <input type="checkbox" readOnly checked={isChecked} className="h-4 w-4 rounded bg-gray-600 border-gray-500 text-cyan-500 focus:ring-cyan-600 pointer-events-none" />
+        <span className={`text-gray-300 transition ${isChecked ? 'line-through text-gray-500' : ''}`}>{children}</span>
     </li>
 );
 
-
 const ResearchModule: React.FC = () => {
-    const [exportStatus, setExportStatus] = useState<Record<string, ExportStatus>>({ CSV: 'idle', LAS: 'idle', GeoTIFF: 'idle', OBJ: 'idle' });
-    const [shareStatus, setShareStatus] = useState<Record<string, ShareStatus>>({ drive: 'idle', github: 'idle' });
     const [comments, setComments] = useState([
         { user: 'Dr. Aris', text: 'The fault line anomaly in the topography scan is significant. We need to cross-reference this with seismic data.', time: '2h ago' },
         { user: 'Dr. Chen', text: 'Agreed. The AI-suggested hypothesis about subsurface water flow seems plausible. I\'ll start drafting the methods section.', time: '1h ago' }
@@ -94,29 +23,21 @@ const ResearchModule: React.FC = () => {
     const [demoLink, setDemoLink] = useState('');
     const [isGeneratingLink, setIsGeneratingLink] = useState(false);
     const [linkCopied, setLinkCopied] = useState(false);
+    
+    const [checklist, setChecklist] = useState({
+        resources: false,
+        methodology: false,
+        randomness: false,
+        validation: false,
+    });
 
-
-    const handleExport = (format: string) => {
-        setExportStatus(prev => ({ ...prev, [format]: 'exporting' }));
-        setTimeout(() => {
-            setExportStatus(prev => ({ ...prev, [format]: 'success' }));
-            // Revert back to idle after a few seconds
-            setTimeout(() => {
-                setExportStatus(prev => ({ ...prev, [format]: 'idle' }));
-            }, 2500);
-        }, 2000 + Math.random() * 1000);
+    const handleToggleChecklist = (key: keyof typeof checklist) => {
+        setChecklist(prev => ({ ...prev, [key]: !prev[key] }));
     };
 
-    const handleShare = (platform: 'drive' | 'github') => {
-        setShareStatus(prev => ({...prev, [platform]: 'sharing'}));
-        setTimeout(() => {
-            setShareStatus(prev => ({...prev, [platform]: 'success'}));
-            // Revert back to idle after a few seconds
-             setTimeout(() => {
-                setShareStatus(prev => ({ ...prev, [platform]: 'idle' }));
-            }, 2500);
-        }, 1500);
-    };
+    const completedChecks = Object.values(checklist).filter(Boolean).length;
+    const totalChecks = Object.keys(checklist).length;
+    const progress = (completedChecks / totalChecks) * 100;
 
     const handleGenerateDemoLink = () => {
         setIsGeneratingLink(true);
@@ -129,11 +50,11 @@ const ResearchModule: React.FC = () => {
     };
 
     const handleCopyLink = () => {
+        if (!demoLink) return;
         navigator.clipboard.writeText(demoLink);
         setLinkCopied(true);
         setTimeout(() => setLinkCopied(false), 2000);
     };
-
 
     const handleAddComment = () => {
         if (!newComment.trim()) return;
@@ -145,36 +66,9 @@ const ResearchModule: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn h-full">
             {/* Left Panel: Export, Share, and Ethics */}
             <div className="lg:col-span-1 space-y-8">
-                <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
-                    <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center"><DownloadIcon className="h-5 w-5 mr-2 text-cyan-400"/>Data Export</h3>
-                    <div className="space-y-3">
-                        {EXPORT_FORMATS.map(({format, description, icon}) => (
-                           <ExportButton key={format} format={format} description={description} icon={icon} status={exportStatus[format]} onClick={() => handleExport(format)} />
-                        ))}
-                    </div>
-                </div>
-                 <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
-                    <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center"><ShareIcon className="h-5 w-5 mr-2 text-cyan-400"/>Sharing & Integration</h3>
-                    <div className="space-y-3">
-                       <ShareButton label="Google Drive" icon={GoogleDriveIcon} status={shareStatus.drive} onClick={() => handleShare('drive')} />
-                       <ShareButton label="GitHub Repo" icon={GitHubIcon} status={shareStatus.github} onClick={() => handleShare('github')} />
-                       <div className="border-t border-gray-700 my-4"></div>
-                       <button onClick={handleGenerateDemoLink} disabled={isGeneratingLink} className="w-full p-3 rounded-lg transition font-semibold flex items-center justify-center space-x-2 bg-indigo-600/80 hover:bg-indigo-600 disabled:opacity-50">
-                            <LinkIcon className="h-5 w-5" />
-                            <span>{isGeneratingLink ? 'Generating Link...' : 'Share Demo'}</span>
-                       </button>
-                       {demoLink && (
-                           <div className="flex items-center space-x-2 bg-gray-900/50 p-2 rounded-lg">
-                               <input type="text" readOnly value={demoLink} className="flex-1 bg-transparent text-xs text-cyan-300 font-mono focus:outline-none"/>
-                               <button onClick={handleCopyLink} className="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 rounded text-xs font-bold">
-                                   {linkCopied ? 'Copied!' : 'Copy'}
-                               </button>
-                           </div>
-                       )}
-                    </div>
-                </div>
-                 <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
-                    <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center"><ShieldCheckIcon className="h-5 w-5 mr-2 text-cyan-400"/>Ethics & Open Science</h3>
+                <ExportButton />
+                <ShareButton onGenerateDemoLink={handleGenerateDemoLink} isGeneratingLink={isGeneratingLink} demoLink={demoLink} onCopyLink={handleCopyLink} linkCopied={linkCopied} />
+                <Card icon={ShieldCheckIcon} title="Ethics & Open Science">
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
                             <label htmlFor="anonymize" className="text-gray-300">Anonymize Scan Data</label>
@@ -182,7 +76,7 @@ const ResearchModule: React.FC = () => {
                         </div>
                         <button className="w-full p-3 bg-cyan-600/80 hover:bg-cyan-600 rounded-lg transition font-semibold">Generate Compliance Report</button>
                     </div>
-                </div>
+                </Card>
             </div>
 
             {/* Center Panel: Publication Draft & Commentary */}
@@ -199,16 +93,24 @@ const ResearchModule: React.FC = () => {
                         </div>
                     </div>
                  </div>
-                 <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700 mb-6">
-                    <h4 className="text-md font-semibold text-gray-200 mb-3 flex items-center"><CheckBadgeIcon className="h-5 w-5 mr-2 text-cyan-400" />Reproducibility Checklist</h4>
+                 <Card icon={CheckBadgeIcon} title="Reproducibility Checklist">
+                    <div className="mb-4">
+                        <div className="flex justify-between text-sm font-medium text-gray-400 mb-1">
+                            <span>Progress</span>
+                            <span>{completedChecks} / {totalChecks} Completed</span>
+                        </div>
+                        <div className="w-full bg-gray-700 rounded-full h-2.5">
+                            <div className="bg-cyan-500 h-2.5 rounded-full transition-all duration-500" style={{width: `${progress}%`}}></div>
+                        </div>
+                    </div>
                     <ul className="space-y-2 text-sm">
-                        <ChecklistItem>Resource Requirements Documented</ChecklistItem>
-                        <ChecklistItem>Methodology Clearly Stated</ChecklistItem>
-                        <ChecklistItem>Randomness Controlled (Seeds, etc.)</ChecklistItem>
-                        <ChecklistItem>Statistical Validation Performed</ChecklistItem>
+                        <ChecklistItem isChecked={checklist.resources} onToggle={() => handleToggleChecklist('resources')}>Resource Requirements Documented</ChecklistItem>
+                        <ChecklistItem isChecked={checklist.methodology} onToggle={() => handleToggleChecklist('methodology')}>Methodology Clearly Stated</ChecklistItem>
+                        <ChecklistItem isChecked={checklist.randomness} onToggle={() => handleToggleChecklist('randomness')}>Randomness Controlled (Seeds, etc.)</ChecklistItem>
+                        <ChecklistItem isChecked={checklist.validation} onToggle={() => handleToggleChecklist('validation')}>Statistical Validation Performed</ChecklistItem>
                     </ul>
-                 </div>
-                 <div className="flex-1 flex flex-col">
+                 </Card>
+                 <div className="flex-1 flex flex-col mt-6">
                     <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center"><UsersIcon className="h-5 w-5 mr-2 text-cyan-400"/>Collaborator Commentary</h3>
                     <div className="flex-1 bg-gray-900/70 rounded-lg p-4 space-y-4 overflow-y-auto">
                         {comments.map((comment, index) => (
@@ -226,6 +128,7 @@ const ResearchModule: React.FC = () => {
                             type="text"
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
                             placeholder="Add a comment..."
                              className="flex-1 bg-gray-700 border border-gray-600 rounded-md px-4 py-2 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition"
                         />

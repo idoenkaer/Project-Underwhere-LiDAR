@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { TopographyAnalysis } from '../../types';
 import { RecommendationsCard } from '../common/RecommendationsCard';
-
-interface TopographyModuleProps {
-    isLiveData: boolean;
-    analysis: TopographyAnalysis;
-}
+import { useAppContext } from '../contexts/AppContext';
+import { ControlToggle } from '../common/ControlToggle';
+import { Card } from '../common/Card';
 
 const AnomalyMarker: React.FC<{ top: string; left: string; delay?: string; label: string }> = ({ top, left, delay = '0s', label }) => (
     <div className="absolute animate-fadeIn" style={{ top, left, animationDelay: delay }}>
@@ -19,18 +16,11 @@ const AnomalyMarker: React.FC<{ top: string; left: string; delay?: string; label
     </div>
 );
 
-const ControlToggle: React.FC<{ label: string; checked: boolean; onChange: () => void }> = ({ label, checked, onChange }) => (
-    <div className="flex items-center justify-between">
-        <label className="text-sm text-gray-300">{label}</label>
-        <button onClick={onChange} className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${checked ? 'bg-cyan-600' : 'bg-gray-600'}`}>
-            <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${checked ? 'translate-x-5' : 'translate-x-0'}`} />
-        </button>
-    </div>
-);
-
 type BaseLayer = 'terrain' | 'satellite' | 'dark';
 
-const TopographyModule: React.FC<TopographyModuleProps> = ({ isLiveData, analysis }) => {
+const TopographyModule: React.FC = () => {
+    const { database, isLiveData } = useAppContext();
+    const analysis = database.topography;
     const [overlays, setOverlays] = useState({ faultLines: true, erosion: true, waterFlow: true });
     const [baseLayer, setBaseLayer] = useState<BaseLayer>('terrain');
 
@@ -57,7 +47,7 @@ const TopographyModule: React.FC<TopographyModuleProps> = ({ isLiveData, analysi
                 </div>
             </div>
             <div className="space-y-6">
-                <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <Card>
                     <h3 className="text-lg font-semibold text-gray-200 mb-4">Map Controls</h3>
                     <div className="space-y-4">
                         <div>
@@ -79,9 +69,9 @@ const TopographyModule: React.FC<TopographyModuleProps> = ({ isLiveData, analysi
                              </div>
                         </div>
                     </div>
-                </div>
+                </Card>
                  <div className="space-y-4">
-                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                    <Card>
                         <h3 className="text-md font-semibold text-gray-200 mb-2">Analysis Details</h3>
                         <p className="font-mono text-cyan-300 text-sm mb-2">{isLiveData ? 'LIVE SCANNING...' : 'SIMULATION LOADED'}</p>
                         <div className="text-xs text-gray-400 space-y-1">
@@ -90,7 +80,7 @@ const TopographyModule: React.FC<TopographyModuleProps> = ({ isLiveData, analysi
                              <p><span className="text-blue-400">❖</span> Cross-validated using CloudCompare & GRASS GIS</p>
                              <p><span className="text-purple-400">✦</span> Extendable with QGIS plugin hooks</p>
                         </div>
-                    </div>
+                    </Card>
                     <RecommendationsCard recommendations={analysis.recommendations} />
                  </div>
             </div>
