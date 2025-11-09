@@ -13,6 +13,14 @@ import { ChatBubbleIcon } from '../icons/ChatBubbleIcon';
 import { BuildingLibraryIcon } from '../icons/BuildingLibraryIcon';
 import { AcademicCapIcon } from '../icons/AcademicCapIcon';
 import { ServerStackIcon } from '../icons/ServerStackIcon';
+import { ArrowPathRoundedSquareIcon } from '../icons/ArrowPathRoundedSquareIcon';
+import { MagnifyingGlassIcon } from '../icons/MagnifyingGlassIcon';
+import { BeakerIcon } from '../icons/BeakerIcon';
+import { ArchiveBoxIcon } from '../icons/ArchiveBoxIcon';
+import { ServerIcon } from '../icons/ServerIcon';
+import { CheckBadgeIcon } from '../icons/CheckBadgeIcon';
+import { ChartTrendingUpIcon } from '../icons/ChartTrendingUpIcon';
+import { BellIcon } from '../icons/BellIcon';
 
 const FeatureListItem: React.FC<{ children: React.ReactNode; inScope: boolean }> = ({ children, inScope }) => (
     <li className="flex items-center space-x-3">
@@ -47,6 +55,19 @@ const StrategyCard: React.FC<{ icon: React.FC<any>; title: string; description: 
             </ul>
         </div>
     </div>
+);
+
+const StageItem: React.FC<{ icon: React.FC<any>, title: string, description: string, tools: string }> = ({ icon: Icon, title, description, tools }) => (
+    <li className="flex items-start space-x-4 pl-12 relative">
+        <div className="absolute left-0 top-0 flex-shrink-0 w-12 h-12 rounded-full bg-bg-primary border-2 border-green-dark flex items-center justify-center">
+            <Icon className="w-6 h-6 text-green-bright" />
+        </div>
+        <div>
+            <h4 className="font-bold font-mono text-text-accent">{title}</h4>
+            <p className="text-sm text-text-primary mt-1">{description}</p>
+            <p className="text-xs text-green-muted font-mono mt-2">Tools: {tools}</p>
+        </div>
+    </li>
 );
 
 
@@ -162,6 +183,41 @@ const RoadmapModule: React.FC = () => {
                         description="Applying for grants and seeking corporate sponsorship to support infrastructure costs, bounties, and community events."
                         targets={['Sloan Foundation', 'CZI Science', 'Planet Labs']}
                     />
+                </div>
+            </div>
+
+            <div>
+                <h2 className="text-3xl font-bold text-center font-mono text-green-bright mb-4 text-glow">CI/CD & Production Monitoring</h2>
+                <p className="text-center text-text-primary mb-8 max-w-3xl mx-auto">To ensure code quality and rapid release cycles, we will implement a robust Continuous Integration & Deployment (CI/CD) pipeline with integrated production monitoring.</p>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="lg:col-span-2 bg-bg-secondary p-6 rounded-sm border border-green-dark">
+                        <h3 className="text-xl font-semibold font-mono text-text-accent mb-6 flex items-center">
+                            <ArrowPathRoundedSquareIcon className="h-6 w-6 mr-3 text-green-bright" />
+                            Automated Workflow Stages
+                        </h3>
+                        <ul className="space-y-6">
+                            <div className="absolute left-[3.2rem] top-0 bottom-0 w-px bg-green-dark border-l-2 border-dashed"></div>
+                            <StageItem icon={CodeBracketIcon} title="1. Commit & Push" description="Developers push code to the main repository on GitHub." tools="Git, GitHub" />
+                            <StageItem icon={MagnifyingGlassIcon} title="2. Lint & Static Analysis" description="Code is automatically checked for style consistency and common errors." tools="ESLint, Prettier, checkAliases.js" />
+                            <StageItem icon={BeakerIcon} title="3. Automated Testing" description="Unit, integration, and domain-specific scientific validation checks are run to prevent regressions and ensure accuracy." tools="Jest / Vitest, React Testing Library" />
+                            <StageItem icon={ArchiveBoxIcon} title="4. Build & Package" description="The application is bundled into a static build, ready for deployment." tools="TypeScript Compiler" />
+                            <StageItem icon={ServerIcon} title="5. Deploy" description="The new version is automatically deployed to staging and production environments upon a successful main branch merge." tools="GitHub Actions, Vercel/Netlify" />
+                        </ul>
+                    </div>
+
+                    <div className="space-y-6">
+                        <h3 className="text-xl font-semibold font-mono text-text-accent mb-2">Expected Benefits</h3>
+                        <BenefitCard icon={ChartTrendingUpIcon} title="Increased Release Velocity">
+                            Automating the release process allows us to ship features and bug fixes faster, providing more value to users, more often.
+                        </BenefitCard>
+                        <BenefitCard icon={CheckBadgeIcon} title="Improved Code Quality">
+                            Automated linting and testing catch issues early, ensuring a higher standard of code and reducing the likelihood of bugs.
+                        </BenefitCard>
+                        <BenefitCard icon={BellIcon} title="Production Monitoring & Alerting">
+                             Integration with services like Sentry will provide real-time error reporting. Critical production errors will trigger automated alerts to developers via Slack/email for rapid response.
+                        </BenefitCard>
+                    </div>
                 </div>
             </div>
             

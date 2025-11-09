@@ -21,9 +21,22 @@ The project is built with React and TypeScript, using a simple `index.html` and 
 2.  Open `index.html` in your browser to run the application.
 3.  Modify `*.tsx` files as needed. Changes will be reflected upon browser refresh.
 
-## Architectural Style
+## Architectural Constraints & Best Practices
 
-We adhere to the **Clean Architecture** pattern to ensure a clear separation of concerns. Please familiarize yourself with the structure outlined in the `Roadmap` module within the application:
+To ensure project stability, maintainability, and compatibility with our "zero-setup" environment, all contributors must adhere to the following constraints:
+
+### **1. Relative Import Paths Only**
+
+**This is a critical rule.** The project's simple environment does not use a build tool with path alias resolution (e.g., Webpack, Vite). Therefore:
+
+-   **DO:** Use relative import paths (`./`, `../`).
+-   **DO NOT:** Use absolute or aliased paths (e.g., `src/components/...` or `@/components/...`).
+
+Pull requests containing aliased paths will not be merged. This practice guarantees that the project runs correctly out-of-the-box in any browser without configuration.
+
+### **2. Clean Architecture**
+
+We adhere to the **Clean Architecture** pattern to ensure a clear separation of concerns. Please familiarize yourself with the structure:
 
 -   **UI Layer (`/components`):** Contains all React components. Should be unaware of business logic.
 -   **Application Layer (`/application/use-cases`):** Contains all application-specific business rules.
@@ -31,7 +44,18 @@ We adhere to the **Clean Architecture** pattern to ensure a clear separation of 
 
 Dependencies must always point inwards (UI -> Application -> Infrastructure abstractions).
 
-**A Note on Imports:** To ensure consistent module resolution and prevent build issues, this project uses **relative import paths only** (`./`, `../`). Please do not use absolute or alias imports (e.g., `@/components/...`) as they are not configured in the project's environment.
+## Testing & Validation Philosophy
+
+We believe that robust testing is the foundation of scientific credibility and software quality. Our approach is a hybrid model that combines automated checks with manual, domain-specific validation.
+
+-   **Automated Scripts:** We use automated checks for code quality and consistency.
+    -   **Linting:** `eslint` ensures a consistent code style.
+    -   **Path Alias Checks:** The `scripts/checkAliases.js` script runs pre-commit to prevent disallowed import paths.
+-   **Unit & Integration Tests:** A comprehensive suite of automated tests (using Jest/Vitest) validates individual components and their interactions.
+-   **Scientific Validation:** Our `Validation` module provides a dashboard for benchmarking algorithms against expert-reviewed, ground-truth datasets. This includes checks for data plausibility and scientific outliers.
+-   **Manual Field Testing:** The `Field Test` module provides a guided, instrumented protocol for testing the application's core workflows in real-world conditions.
+
+All contributors are expected to write tests for their code and participate in the manual validation process to ensure the application is not only functional but scientifically accurate and reliable.
 
 ## Code of Conduct
 

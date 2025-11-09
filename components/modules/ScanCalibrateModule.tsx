@@ -14,16 +14,48 @@ import { CodeFileIcon } from '../icons/CodeFileIcon';
 import { MapPinCheckIcon } from '../icons/MapPinCheckIcon';
 import ConsentDialog from '../common/ConsentDialog';
 import { useUIStateContext } from '../contexts/UIStateContext';
+import CameraCaptureModal from '../common/CameraCaptureModal';
+import { CameraIcon } from '../icons/CameraIcon';
+import { ArrowPathIcon } from '../icons/ArrowPathIcon';
+import WalkthroughTip from '../common/WalkthroughTip';
 
-const SensorFeedCard: React.FC<{ title: string; imageUrl: string; details: string; imageFilter?: string }> = ({ title, imageUrl, details, imageFilter = '' }) => {
+const SensorFeedCard: React.FC<{
+    title: string;
+    imageUrl: string;
+    details: string;
+    imageFilter?: string;
+    onCaptureClick?: () => void;
+    onResetClick?: () => void;
+    isLiveCapture?: boolean;
+}> = ({ title, imageUrl, details, imageFilter = '', onCaptureClick, onResetClick, isLiveCapture }) => {
     return (
         <div>
-            <h3 className="text-md font-semibold text-green-muted mb-3 font-mono">{title}</h3>
+            <div className="flex justify-between items-center mb-3">
+                <h3 className="text-md font-semibold text-green-muted font-mono">{title}</h3>
+                {onCaptureClick && (
+                    <button onClick={onCaptureClick} className="flex items-center space-x-1 text-xs text-data-blue font-semibold hover:text-green-bright transition">
+                        <CameraIcon className="h-4 w-4" />
+                        <span>Live Capture</span>
+                    </button>
+                )}
+                 {onResetClick && (
+                    <button onClick={onResetClick} className="flex items-center space-x-1 text-xs text-warning font-semibold hover:text-green-bright transition">
+                        <ArrowPathIcon className="h-4 w-4" />
+                        <span>Reset</span>
+                    </button>
+                )}
+            </div>
             <div className="relative aspect-video w-full rounded-sm bg-black border border-green-dark overflow-hidden">
-                <img src={imageUrl} alt={title} className={`object-cover w-full h-full opacity-70 ${imageFilter}`} />
+                <img src={imageUrl} alt={title} className={`object-cover w-full h-full ${isLiveCapture ? '' : 'opacity-70'} ${imageFilter}`} />
                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 <div className="absolute top-2 left-2 bg-black/50 p-1 px-2 rounded-sm text-xs">
-                    <p><span className='bg-data-blue inline-block w-2 h-2 rounded-full mr-1'></span> <span className='text-data-blue font-mono'>SIMULATED</span></p>
+                    <p>
+                        {isLiveCapture ? (
+                            <><span className='bg-green-primary inline-block w-2 h-2 rounded-full mr-1'></span> <span className='text-green-primary font-mono'>LIVE CAPTURE</span></>
+                        ) : (
+                            <><span className='bg-data-blue inline-block w-2 h-2 rounded-full mr-1'></span> <span className='text-data-blue font-mono'>SIMULATED</span></>
+                        )}
+                    </p>
                 </div>
                 <div className="absolute bottom-2 right-2 bg-black/50 p-1 px-2 rounded-sm text-xs font-mono text-green-primary">
                     <p>{details}</p>
@@ -34,8 +66,39 @@ const SensorFeedCard: React.FC<{ title: string; imageUrl: string; details: strin
 };
 
 const ProcessedView: React.FC = () => {
+    const { addLog } = useUIStateContext();
+    const [isCameraOpen, setIsCameraOpen] = useState(false);
+    const [capturedRgbImage, setCapturedRgbImage] = useState<string | null>(null);
+
+    const handleOpenCamera = () => {
+        addLog("Live camera capture initiated for RGB sensor.");
+        setIsCameraOpen(true);
+    };
+
+    const handleCaptureImage = (imageSrc: string) => {
+        addLog("RGB sensor image captured from live camera.");
+        setCapturedRgbImage(imageSrc);
+        setIsCameraOpen(false);
+    };
+    
+    const handleCloseCamera = () => {
+        addLog("Live camera capture closed.");
+        setIsCameraOpen(false);
+    };
+
+    const handleResetImage = () => {
+        addLog("RGB sensor image reset to simulation.");
+        setCapturedRgbImage(null);
+    };
+
     return (
         <div className="space-y-8 animate-fadeInUp">
+             {isCameraOpen && (
+                <CameraCaptureModal
+                    onCapture={handleCaptureImage}
+                    onClose={handleCloseCamera}
+                />
+            )}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
                     <h2 className="text-lg font-mono font-semibold text-text-primary mb-4">Simulated Lidar Point Cloud</h2>
@@ -60,7 +123,14 @@ const ProcessedView: React.FC = () => {
                  <h2 className="text-lg font-mono font-semibold text-text-primary mb-4">Simulated Sensor Feeds</h2>
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <SensorFeedCard title="Infrared Feed" imageUrl="https://picsum.photos/seed/infrared/800/450" details="LWIR 7.5-13.5μm" imageFilter="grayscale contrast-200" />
-                    <SensorFeedCard title="RGB Camera" imageUrl="https://picsum.photos/seed/rgb/800/450" details="4K UHD @ 30FPS" />
+                    <SensorFeedCard 
+                        title="RGB Camera" 
+                        imageUrl={capturedRgbImage || "https://picsum.photos/seed/rgb/800/450"} 
+                        details="4K UHD @ 30FPS" 
+                        isLiveCapture={!!capturedRgbImage}
+                        onCaptureClick={!capturedRgbImage ? handleOpenCamera : undefined}
+                        onResetClick={capturedRgbImage ? handleResetImage : undefined}
+                    />
                     <SensorFeedCard title="Time-of-Flight Feed" imageUrl="https://picsum.photos/seed/tof/800/450" details="DEPTH MAPPING" imageFilter="grayscale" />
                  </div>
             </div>
@@ -159,12 +229,13 @@ const ProcessingVisualizer: React.FC<{ title?: string }> = ({ title = "Preproces
 
 
 const ScanCalibrateModule: React.FC = () => {
-    const { addLog } = useUIStateContext();
+    const { addLog, walkthroughStep, completeWalkthroughStep, addAlert } = useUIStateContext();
     const [state, setState] = useState<'idle' | 'validating' | 'processing' | 'processed' | 'error'>('idle');
     const [error, setError] = useState<{title: string, message: string} | null>(null);
     const [processingTitle, setProcessingTitle] = useState("Preprocessing Scan...");
     const [showConsent, setShowConsent] = useState(false);
     const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
+    const dataImportRef = useRef<HTMLDivElement>(null);
 
 
     const handleUploadRequest = async (file: File) => {
@@ -193,21 +264,25 @@ const ScanCalibrateModule: React.FC = () => {
                 setError(errorPayload);
                 setState('error');
                 addLog(`Processing Error: ${errorPayload.title} - ${errorPayload.message}`);
+                addAlert(`${errorPayload.title}: ${errorPayload.message}`, 'error');
             }
         };
         setPendingAction(() => action);
         setShowConsent(true);
     };
     
-    const handleLoadMockRequest = async () => {
+    const handleLoadMockRequest = async (scenario: string) => {
         const action = async () => {
-            addLog('Load mock scan requested.');
-            setProcessingTitle("Loading Mock Scan...");
+            addLog(`Load mock scan requested for scenario: ${scenario}`);
+            setProcessingTitle(`Loading ${scenario} Template...`);
             setState('processing');
             setError(null);
             const result = await loadMockScan();
             setState(result);
-            addLog('Mock scan loaded successfully.');
+            if (walkthroughStep === 'scan-calibrate-load') {
+                completeWalkthroughStep();
+            }
+            addLog(`Mock scan for ${scenario} loaded successfully.`);
         };
         setPendingAction(() => action);
         setShowConsent(true);
@@ -278,12 +353,23 @@ const ScanCalibrateModule: React.FC = () => {
             case 'idle':
             default:
                 return (
-                    <DataImportModule
-                        onUpload={handleUploadRequest}
-                        onLoadMock={handleLoadMockRequest}
-                        onImport={handleImportRequest}
-                        disabled={state !== 'idle'}
-                    />
+                    <div ref={dataImportRef} className="relative">
+                       {walkthroughStep === 'scan-calibrate-load' && (
+                           <WalkthroughTip
+                               targetRef={dataImportRef}
+                               onDismiss={completeWalkthroughStep}
+                               title="Step 1: Load Your Data"
+                           >
+                               Welcome! Your journey begins here. For this guided tour, please select one of the "Use-Case Templates" to load a pre-configured scenario. This will simulate scanning an area and prepare it for analysis.
+                           </WalkthroughTip>
+                       )}
+                        <DataImportModule
+                            onUpload={handleUploadRequest}
+                            onLoadMock={handleLoadMockRequest}
+                            onImport={handleImportRequest}
+                            disabled={state !== 'idle'}
+                        />
+                    </div>
                 );
         }
     };

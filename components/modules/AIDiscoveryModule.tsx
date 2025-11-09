@@ -1,55 +1,15 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { isConfigured, configurationError } from '../../services/geminiService';
+import React, { useState, useRef, useEffect } from 'react';
+import { isConfigured, configurationError } from '../../infrastructure/ai/GeminiService';
 import { streamAIDiscovery } from '../../application/use-cases/streamAIDiscovery';
 import { SparklesIcon } from '../icons/SparklesIcon';
-import { BookOpenIcon } from '../icons/BookOpenIcon';
-import { BeakerIcon } from '../icons/BeakerIcon';
 import { useUIStateContext } from '../contexts/UIStateContext';
+import { SimpleMarkdown } from '../common/SimpleMarkdown';
+import { HandThumbUpIcon } from '../icons/HandThumbUpIcon';
+import { HandThumbDownIcon } from '../icons/HandThumbDownIcon';
+import { QuestionMarkCircleIcon } from '../icons/QuestionMarkCircleIcon';
+import { explainAIAnalysis } from '../../application/use-cases/explainAIAnalysis';
+import ExplanationModal from '../common/ExplanationModal';
 
-// Simple HTML escaper
-const escapeHtml = (unsafe: string): string => {
-    return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-};
-
-// A simple and safer markdown renderer
-const SimpleMarkdown: React.FC<{ text: string }> = ({ text }) => {
-    const safeText = escapeHtml(text);
-
-    const html = safeText
-        .replace(/^#### (.*$)/gim, '<h4 class="text-md font-semibold text-text-accent mb-2 mt-4">$1</h4>')
-        .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold text-green-bright mb-2 mt-4">$1</h3>')
-        .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold text-green-bright mb-3 mt-4">$1</h2>')
-        .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-extrabold text-green-bright mb-4 mt-4">$1</h1>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-text-accent">$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        .replace(/`([^`]+)`/g, '<code class="bg-bg-primary text-green-primary rounded px-1 py-0.5 font-mono text-sm">$1</code>')
-        .replace(/(?:(?:^-|\*)\s.*(?:\n|$))+/gm, (match) => {
-            const items = match.trim().split('\n').map(item => 
-                `<li class="list-disc ml-5">${item.replace(/^(-|\*)\s/, '').trim()}</li>`
-            ).join('');
-            return `<ul class="mb-4 space-y-1">${items}</ul>`;
-        })
-        .replace(/\n/g, '<br />');
-
-    return <div className="prose prose-invert max-w-none prose-p:text-text-primary" dangerouslySetInnerHTML={{ __html: html }} />;
-};
-
-const ResponseSection: React.FC<{ title: string; icon: React.ReactNode; content: string }> = ({ title, icon, content }) => (
-    <div className="mb-6">
-        <h3 className="flex items-center text-lg font-semibold text-green-bright mb-3 font-mono">
-            {icon}
-            <span className="ml-2">{title}</span>
-        </h3>
-        <div className="pl-8 border-l-2 border-green-dark">
-             <SimpleMarkdown text={content} />
-        </div>
-    </div>
-);
 
 const suggestedQueries = [
     "Correlate the fault line with moisture content.",
@@ -58,13 +18,18 @@ const suggestedQueries = [
 ];
 
 const AIDiscoveryModule: React.FC = () => {
-  const { addLog } = useUIStateContext();
+  const { addLog, addAlert } = useUIStateContext();
   const [userInput, setUserInput] = useState<string>('');
   const [aiResponse, setAiResponse] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const responseContainerRef = useRef<HTMLDivElement>(null);
   const isMounted = useRef(true);
+
+  // New state
+  const [feedback, setFeedback] = useState<'none' | 'good' | 'bad'>('none');
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [currentQuery, setCurrentQuery] = useState('');
 
   useEffect(() => {
     isMounted.current = true;
@@ -77,27 +42,17 @@ const AIDiscoveryModule: React.FC = () => {
     }
   }, [aiResponse]);
 
-  const parsedResponse = useMemo(() => {
-    const sections: { [key: string]: string } = {};
-    
-    const sectionRegex = /(?:#+\s*|\*\*)(.*?)(?::|\*\*)\s*([\s\S]*?)(?=(?:#+\s*|\*\*)[\w\s]+(?:[:\s]|\*\*)s*$|$)/gim;
-    let match;
-    while ((match = sectionRegex.exec(aiResponse)) !== null) {
-        const key = match[1].trim().toLowerCase().replace(/\s+/g, '_');
-        sections[key] = match[2].trim();
-    }
-
-    return sections;
-  }, [aiResponse]);
-
   const handleQuerySubmit = async (query: string) => {
     if (!query.trim() || isLoading || !isConfigured) return;
 
     addLog(`AI Discovery query submitted: "${query}"`);
+    setCurrentQuery(query);
     setIsLoading(true);
     setError(null);
     setAiResponse('');
     setUserInput('');
+    setFeedback('none');
+    setShowExplanation(false);
 
     try {
       const responseStream = await streamAIDiscovery(query);
@@ -110,7 +65,9 @@ const AIDiscoveryModule: React.FC = () => {
       console.error(err);
       const errorMessage = (err as Error).message || 'An unknown error occurred.';
       if(isMounted.current) {
-          setError(`Failed to get response from AI. ${errorMessage}`);
+          const fullError = `Failed to get response from AI. ${errorMessage}`;
+          setError(fullError);
+          addAlert(fullError, 'error');
           addLog(`AI Discovery Error: ${errorMessage}`);
       }
     } finally {
@@ -126,15 +83,32 @@ const AIDiscoveryModule: React.FC = () => {
     handleQuerySubmit(userInput);
   };
   
+  const handleFeedback = (newFeedback: 'good' | 'bad') => {
+    setFeedback(current => {
+        const finalFeedback = current === newFeedback ? 'none' : newFeedback;
+        addLog(`AI response feedback given: ${finalFeedback}`);
+        return finalFeedback;
+    });
+  };
+
+  const handleExplain = () => {
+      addLog("'Explain this Analysis' requested.");
+      setShowExplanation(true);
+  };
+  
   return (
-    <div className="flex flex-col h-[calc(100vh-10rem)] max-w-4xl mx-auto animate-fadeIn">
-        <div className="flex-1 bg-bg-secondary/50 rounded-t-sm border border-b-0 border-green-dark p-6 overflow-y-auto" ref={responseContainerRef}>
+    <>
+      {showExplanation && (
+          <ExplanationModal
+              onClose={() => setShowExplanation(false)}
+              streamPromise={explainAIAnalysis(currentQuery, aiResponse)}
+          />
+      )}
+      <div className="flex flex-col h-[calc(100vh-10rem)] max-w-4xl mx-auto animate-fadeIn">
+        <div className="flex-1 bg-bg-secondary/50 rounded-t-sm border border-b-0 border-green-dark p-6 flex flex-col" ref={responseContainerRef}>
+          <div className="flex-grow overflow-y-auto">
             {aiResponse ? (
-                <div>
-                   {Object.entries(parsedResponse).map(([key, value]) => (
-                     <ResponseSection key={key} title={key.replace(/_/g, ' ').toUpperCase()} icon={<BeakerIcon className="h-5 w-5" />} content={value} />
-                   ))}
-                </div>
+                <SimpleMarkdown text={aiResponse} />
             ) : (
                 <div className="flex flex-col items-center justify-center h-full text-center text-green-muted">
                     <SparklesIcon className="h-16 w-16 mb-4 text-green-bright"/>
@@ -167,6 +141,35 @@ const AIDiscoveryModule: React.FC = () => {
                 </div>
             )}
             {isLoading && !aiResponse && <p className="text-green-bright animate-pulse font-mono">Generating semantic report...</p>}
+          </div>
+
+          {aiResponse && !isLoading && (
+              <div className="mt-6 border-t border-green-dark pt-4 flex items-center justify-between flex-shrink-0 animate-fadeInUp">
+                <div className="flex items-center space-x-2">
+                  <button 
+                    onClick={() => handleFeedback('good')}
+                    className={`p-2 rounded-full transition-colors ${feedback === 'good' ? 'bg-green-primary/20 text-green-primary' : 'text-green-muted hover:text-green-bright'}`}
+                    title="Good response (Contribute to peer review)"
+                  >
+                    <HandThumbUpIcon className="h-5 w-5" />
+                  </button>
+                  <button 
+                    onClick={() => handleFeedback('bad')}
+                    className={`p-2 rounded-full transition-colors ${feedback === 'bad' ? 'bg-error/20 text-error' : 'text-green-muted hover:text-error'}`}
+                    title="Report issue (Contribute to peer review)"
+                  >
+                    <HandThumbDownIcon className="h-5 w-5" />
+                  </button>
+                </div>
+                <button
+                  onClick={handleExplain}
+                  className="flex items-center space-x-2 text-sm text-data-blue hover:text-green-bright transition font-semibold"
+                >
+                  <QuestionMarkCircleIcon className="h-5 w-5" />
+                  <span>Explain this Analysis</span>
+                </button>
+              </div>
+            )}
         </div>
         <div className="border-t border-green-dark p-4 bg-bg-secondary/80 rounded-b-sm">
              {error && <p className="text-error text-sm mb-2 font-mono bg-error/10 p-2 rounded-sm border border-error/50">{error}</p>}
@@ -194,7 +197,8 @@ const AIDiscoveryModule: React.FC = () => {
                 </button>
              </form>
         </div>
-    </div>
+      </div>
+    </>
   );
 };
 

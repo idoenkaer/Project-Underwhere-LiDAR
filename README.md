@@ -32,7 +32,7 @@ This project serves as a high-fidelity prototype for a next-generation scientifi
 
 1.  **Ethics Acknowledgment:** On first launch, review and acknowledge the project's commitment to responsible innovation.
 2.  **Onboarding:** A brief tutorial will introduce you to the core concepts of the application.
-3.  **Measurement Module:** This is your starting point. Use the "Load Mock Scan" button for a quick demonstration. This will process the data and prepare it for analysis.
+3.  **Scan & Calibrate Module:** This is your starting point. Use the "Load Mock Scan" button for a quick demonstration. This will process the data and prepare it for analysis.
 4.  **Topography Module:** Navigate to the Topography module to see the processed scan visualized on an interactive terrain map.
 5.  **Export & Share:** Go to the "Export & Share" module to see options for data export, reproducibility checklists, and data governance controls.
 6.  **Validation:** Visit the "Validation" module to see the project's internal testing and benchmarking suite.
@@ -45,6 +45,8 @@ The application is built using a **Clean Architecture** pattern to ensure a clea
 -   **UI Layer (`/components`):** All React components and UI state.
 -   **Application Layer (`/application`):** Business logic and use cases.
 -   **Infrastructure Layer (`/infrastructure`):** External concerns like data access and service integrations.
+
+**Developer Note:** This project uses a "zero-setup" environment and relies on browser-native ES modules. Therefore, all module imports **must use relative paths** (`./`, `../`). Aliased paths like `@/` are not supported and will break the application.
 
 For more detailed information on contributing, see the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 

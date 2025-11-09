@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg-primary: #0A0E27;
+  --color-bg-secondary: #1A1F3A;
+  --color-green-bright: #0FFF50;
+  --color-green-primary: #00FF00;
+  --color-green-muted: #00AA00;
+  --color-green-dark: #003300;
+  --color-text-primary: #E0E0E0;
+  --color-text-accent: #F5F5F5;
+  --color-error: #FF4444;
+  --color-warning: #FFAA00;
+  --color-data-blue: #00CCFF;
+}
+/* High Contrast Theme */
+.theme-high-contrast {
+  --color-bg-primary: #111827; /* gray-900 */
+  --color-bg-secondary: #1F2937; /* gray-800 */
+  --color-green-bright: #F9FAFB; /* gray-50 */
+  --color-green-primary: #D1D5DB; /* gray-300 */
+  --color-green-muted: #9CA3AF; /* gray-400 */
+  --color-green-dark: #4B5563; /* gray-600 */
+  --color-text-primary: #D1D5DB; /* gray-300 */
+  --color-text-accent: #F9FAFB; /* gray-50 */
+  --color-data-blue: #38BDF8; /* sky-400 */
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: 'Inter', sans-serif;
+}
+
+/* Custom scrollbars for the new theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-green-dark);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-green-muted);
+}
+
+/* Base micro-interaction animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+      opacity: 0;
+      transform: translateY(10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+.animate-fadeInUp {
+  animation: fadeInUp 0.3s ease-out forwards;
+}
+
+/* Blinking cursor for boot sequence */
+@keyframes blinking-cursor {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: var(--color-green-bright); }
+}
+.blinking-cursor::after {
+    content: '_';
+    animation: blinking-cursor 1.2s step-end infinite;
+}
+
+/* Motion reduction */
+.motion-reduced .animate-fadeIn,
+.motion-reduced .animate-fadeInUp,
+.motion-reduced .animate-spin,
+.motion-reduced .animate-ping,
+.motion-reduced .animate-pulse,
+.motion-reduced .blinking-cursor::after {
+    animation: none;
+}
+.motion-reduced * {
+    transition-property: none !important;
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+}
+
+/* Subtle text glow effect */
+.text-glow {
+  text-shadow: 0 0 10px rgba(15, 255, 80, 0.5);
+}
+.theme-high-contrast .text-glow,
+.motion-reduced .text-glow {
+  text-shadow: none;
+}
+
+/* Onboarding Modal Styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(10, 14, 39, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+}
+
+/* Tooltip Styles */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: max-content;
+  max-width: 240px;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  text-align: center;
+  border-radius: 2px;
+  padding: 8px;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+  border: 1px solid var(--color-green-dark);
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  pointer-events: none;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* High-visibility focus ring for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-green-bright);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.theme-high-contrast *:focus-visible {
+   outline-color: var(--color-data-blue);
+}

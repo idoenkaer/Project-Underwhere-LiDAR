@@ -1,5 +1,7 @@
 {
   "name": "Project Underwhere",
   "description": "An advanced UI concept for a mobile scientific research lab, Project Underwhere visualizes Lidar data and leverages AI for analysis, simulation, and discovery across various scientific domains.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "camera"
+  ]
 }

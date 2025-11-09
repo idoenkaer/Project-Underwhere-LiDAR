@@ -7,159 +7,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      :root {
-        --color-bg-primary: #0A0E27;
-        --color-bg-secondary: #1A1F3A;
-        --color-green-bright: #0FFF50;
-        --color-green-primary: #00FF00;
-        --color-green-muted: #00AA00;
-        --color-green-dark: #003300;
-        --color-text-primary: #E0E0E0;
-        --color-text-accent: #F5F5F5;
-        --color-error: #FF4444;
-        --color-warning: #FFAA00;
-        --color-data-blue: #00CCFF;
-      }
-      body {
-        background-color: var(--color-bg-primary);
-        color: var(--color-text-primary);
-        font-family: 'Inter', sans-serif;
-      }
-      /* Custom scrollbars for the new theme */
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: var(--color-bg-secondary);
-      }
-      ::-webkit-scrollbar-thumb {
-        background: var(--color-green-dark);
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: var(--color-green-muted);
-      }
-      
-      /* Base micro-interaction animations */
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      .animate-fadeIn {
-        animation: fadeIn 0.3s ease-out forwards;
-      }
-      
-      @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-      }
-      .animate-fadeInUp {
-        animation: fadeInUp 0.3s ease-out forwards;
-      }
-      
-      /* Subtle text glow effect */
-      .text-glow {
-        text-shadow: 0 0 10px rgba(15, 255, 80, 0.5);
-      }
-
-      /* Onboarding Modal Styles */
-      .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background-color: rgba(10, 14, 39, 0.8);
-        backdrop-filter: blur(4px);
-        z-index: 50;
-      }
-      
-      /* Tooltip Styles */
-      .tooltip-container {
-        position: relative;
-        display: inline-block;
-        border-bottom: 1px dotted var(--color-green-muted);
-        cursor: help;
-      }
-      .tooltip-text {
-        visibility: hidden;
-        width: 240px;
-        background-color: var(--color-bg-secondary);
-        color: var(--color-text-primary);
-        text-align: left;
-        border-radius: 2px;
-        padding: 8px;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        margin-left: -120px;
-        opacity: 0;
-        transition: opacity 0.3s;
-        border: 1px solid var(--color-green-dark);
-        font-size: 0.875rem;
-        line-height: 1.25rem;
-      }
-      .tooltip-container:hover .tooltip-text {
-        visibility: visible;
-        opacity: 1;
-      }
-    </style>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'bg-primary': 'var(--color-bg-primary)',
-            'bg-secondary': 'var(--color-bg-secondary)',
-            'green-bright': 'var(--color-green-bright)',
-            'green-primary': 'var(--color-green-primary)',
-            'green-muted': 'var(--color-green-muted)',
-            'green-dark': 'var(--color-green-dark)',
-            'text-primary': 'var(--color-text-primary)',
-            'text-accent': 'var(--color-text-accent)',
-            'error': 'var(--color-error)',
-            'warning': 'var(--color-warning)',
-            'data-blue': 'var(--color-data-blue)',
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['Roboto Mono', 'monospace'],
-          },
-          boxShadow: {
-            'glow-green-md': '0 0 20px rgba(15, 255, 80, 0.3)',
-            'glow-green-sm': '0 0 10px rgba(15, 255, 80, 0.2)',
-          },
-          borderRadius: {
-            'sm': '2px',
-            'DEFAULT': '4px',
-            'md': '6px',
-            'lg': '8px',
-          }
-        }
-      }
-    }
-  </script>
   <script type="importmap">
 {
   "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0",
     "recharts": "https://aistudiocdn.com/recharts@^3.3.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0"
+    "vite": "https://aistudiocdn.com/vite@^7.2.2",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.0",
+    "vitest/": "https://aistudiocdn.com/vitest@^4.0.8/",
+    "@testing-library/react": "https://aistudiocdn.com/@testing-library/react@^16.3.0",
+    "vitest": "https://aistudiocdn.com/vitest@^4.0.8"
   }
 }
 </script>
 </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>

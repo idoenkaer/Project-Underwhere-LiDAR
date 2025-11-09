@@ -1,14 +1,22 @@
 // types.ts
 
-// FIX: Added missing type definitions for various modules and updated ScientificDatabase.
 export enum Module {
   ROADMAP = 'Roadmap',
   SCAN_CALIBRATE = 'Scan & Calibrate',
   TOPOGRAPHY = 'Topography',
+  ENVIRONMENTAL = 'Environmental',
+  BIOLOGICAL = 'Biological',
+  PHYSICS = 'Physics',
+  SPACETIME = '4D Spacetime',
+  QUANTUM = 'Quantum Simulation',
   AI_DISCOVERY = 'AI Discovery',
   EXPORT_SHARE = 'Export & Share',
   VALIDATION = 'Validation',
+  ACTIVITY = 'Activity',
+  PLUGINS = 'Plugins',
+  FIELD_TEST = 'Field Test',
   DEBUG = 'Debug',
+  SETTINGS = 'Settings',
 }
 
 // Universal Recommendation structure
@@ -26,6 +34,14 @@ export interface Stat {
   tooltip?: string;
   status?: 'good' | 'warning' | 'critical';
 }
+
+// Alert structure for toast notifications
+export interface Alert {
+    id: number;
+    message: string;
+    type: 'error' | 'warning' | 'info';
+}
+
 
 // Data structure for Topography Module
 export interface TopographyAnalysis {

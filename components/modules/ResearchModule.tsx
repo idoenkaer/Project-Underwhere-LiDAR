@@ -17,8 +17,10 @@ import { CubeIcon } from '../icons/CubeIcon';
 import { DownloadIcon } from '../icons/DownloadIcon';
 import { DocumentTextIcon } from '../icons/DocumentTextIcon';
 import { CodeBracketIcon } from '../icons/CodeBracketIcon';
-// FIX: Imported the missing `CheckIcon` component.
 import { CheckIcon } from '../icons/CheckIcon';
+import { useUIStateContext } from '../contexts/UIStateContext';
+import { useDataContext } from '../contexts/DataContext';
+import { PinIcon } from '../icons/PinIcon';
 
 type ExportStatus = 'idle' | 'exporting' | 'success';
 
@@ -44,6 +46,8 @@ const IntegrationButton: React.FC<{ label: string; description: string; icon: Re
 
 
 const ResearchModule: React.FC = () => {
+    const { logs, addLog, snapshots, pinSnapshot } = useUIStateContext();
+    const { scanMeta } = useDataContext();
     const [checklist, setChecklist] = useState({
         resources: false,
         methodology: false,
@@ -63,6 +67,9 @@ const ResearchModule: React.FC = () => {
     });
     const [showExportConsent, setShowExportConsent] = useState(false);
     const [pendingExportFormat, setPendingExportFormat] = useState<string | null>(null);
+
+    const [packageExportStatus, setPackageExportStatus] = useState<ExportStatus>('idle');
+    const [snapshotNote, setSnapshotNote] = useState('');
 
     const handleToggleChecklist = (key: keyof typeof checklist) => {
         setChecklist(prev => ({ ...prev, [key]: !prev[key] }));
@@ -101,9 +108,72 @@ const ResearchModule: React.FC = () => {
         // Simulate deletion process
         setTimeout(() => {
             setDeleteStatus('deleted');
-            // In a real app, this would trigger a global state reset.
-            // For this demo, we just show the status change.
-            // The user would see the effect upon navigating back to Measurement.
+        }, 2000);
+    };
+
+    const handlePinSnapshot = () => {
+        if (!snapshotNote.trim()) return;
+        pinSnapshot(snapshotNote);
+        setSnapshotNote('');
+    };
+
+    const handleExportPackage = () => {
+        setPackageExportStatus('exporting');
+        addLog('Reproducibility package export initiated.');
+
+        setTimeout(() => {
+            const snapshotString = snapshots.length > 0
+                ? snapshots.map(s => `- [${s.timestamp}] ${s.note}`).join('\n')
+                : '- No snapshots pinned in this session.';
+            
+            const fullLog = logs.map(log => `[${log.timestamp}] ${log.message}`).join('\n');
+
+            const reportContent = `
+ANALYSIS REPRODUCIBILITY PACKAGE
+=================================
+
+Export Timestamp: ${new Date().toISOString()}
+Project ID: Project Underwhere
+Scan ID: ${scanMeta.id}
+
+---------------------------------
+1. METADATA
+---------------------------------
+- Original Scan Timestamp: ${scanMeta.timestamp}
+- Location: ${scanMeta.location}
+- Coordinate System: WGS 84 / UTM 10N (EPSG:32610)
+
+---------------------------------
+2. PINNED SNAPSHOTS (DATA PROVENANCE)
+---------------------------------
+${snapshotString}
+
+---------------------------------
+3. DATA MANIFEST (INCLUDED IN PACKAGE)
+---------------------------------
+- /raw/${scanMeta.id}.las (Original point cloud)
+- /processed/topography_results.json (Topography analysis output)
+- /processed/ai_report.md (Semantic report from AI)
+- /audits/audit_log.txt (Full event log below)
+
+---------------------------------
+4. FULL AUDIT LOG (SESSION EVENTS)
+---------------------------------
+${fullLog}
+`;
+            const blob = new Blob([reportContent.trim()], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `analysis_package_${scanMeta.id}_${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            setPackageExportStatus('success');
+            addLog('Reproducibility package exported successfully.');
+            setTimeout(() => setPackageExportStatus('idle'), 3000);
         }, 2000);
     };
 
@@ -211,6 +281,51 @@ const ResearchModule: React.FC = () => {
                         <ChecklistItem isChecked={checklist.validation} onToggle={() => handleToggleChecklist('validation')}>Statistical Validation Performed</ChecklistItem>
                     </ul>
                  </Card>
+
+                <Card icon={PinIcon} title="Data Provenance & Snapshots">
+                    <p className="text-sm text-text-primary mb-4">
+                        Create immutable, timestamped records of your workflow for compliance and audit trails.
+                    </p>
+                    <div className="flex space-x-2">
+                        <input
+                            type="text"
+                            value={snapshotNote}
+                            onChange={(e) => setSnapshotNote(e.target.value)}
+                            placeholder="Note for this snapshot..."
+                            className="flex-1 bg-bg-primary border border-green-dark rounded-sm px-4 py-2 focus:ring-2 focus:ring-green-bright focus:outline-none transition font-mono text-green-bright placeholder:text-green-muted text-sm"
+                        />
+                        <button
+                            onClick={handlePinSnapshot}
+                            disabled={!snapshotNote.trim()}
+                            className="px-4 py-2 bg-green-muted text-bg-primary rounded-sm hover:bg-green-bright disabled:bg-green-dark disabled:cursor-not-allowed transition font-semibold"
+                            title="Pin Snapshot"
+                        >
+                            <PinIcon className="h-5 w-5" />
+                        </button>
+                    </div>
+                    {snapshots.length > 0 && (
+                        <div className="mt-4 border-t border-green-dark pt-3">
+                            <h4 className="text-xs font-bold text-green-muted uppercase mb-2 font-mono">Session Snapshots</h4>
+                            <ul className="text-sm text-text-primary space-y-1 font-mono text-xs max-h-24 overflow-y-auto">
+                                {[...snapshots].reverse().map((s, i) => (
+                                    <li key={i}><span className="text-green-muted/80">[{s.timestamp}]</span> {s.note}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </Card>
+
+                 <Card icon={ArchiveBoxIcon} title="Reproducibility Package">
+                    <p className="text-sm text-text-primary mb-4">
+                        Export a complete analysis package including metadata, parameters, and a full audit log for peer review and replication.
+                    </p>
+                    <button onClick={handleExportPackage} disabled={packageExportStatus !== 'idle'} className="w-full p-3 bg-green-muted text-bg-primary rounded-sm hover:bg-green-bright transition font-bold flex items-center justify-center space-x-2 disabled:bg-green-dark disabled:text-green-muted disabled:cursor-not-allowed">
+                        {packageExportStatus === 'idle' && <><DownloadIcon className="h-5 w-5" /><span>Export Analysis Package</span></>}
+                        {packageExportStatus === 'exporting' && 'Exporting...'}
+                        {packageExportStatus === 'success' && 'Exported!'}
+                    </button>
+                 </Card>
+
                  <Card icon={SatelliteIcon} title="Data Federation & Archival">
                     <div className="space-y-3">
                         <IntegrationButton label="NASA Earthdata" description="Search public satellite imagery" icon={SatelliteIcon} href="https://search.earthdata.nasa.gov/" />

@@ -22,11 +22,16 @@ export const streamFromGemini = async (prompt: string) => {
   if (!ai || !isConfigured) {
     throw new Error("Gemini AI service is not configured.");
   }
+  
+  try {
+    const responseStream = await ai.models.generateContentStream({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+    });
+    return responseStream;
+  } catch (error) {
+     console.error("Error during Gemini API call:", error);
+     throw new Error(`The AI service failed to process the request. Please check the console for details.`);
+  }
 
-  const responseStream = await ai.models.generateContentStream({
-    model: 'gemini-2.5-flash',
-    contents: prompt,
-  });
-
-  return responseStream;
 };

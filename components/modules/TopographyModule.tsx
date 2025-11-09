@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { RecommendationsCard } from '../common/RecommendationsCard';
 import { useDataContext } from '../contexts/DataContext';
 import { useUIStateContext } from '../contexts/UIStateContext';
@@ -9,6 +9,9 @@ import { ChartTrendingUpIcon } from '../icons/ChartTrendingUpIcon';
 import { CompassIcon } from '../icons/CompassIcon';
 import { LeafIcon } from '../icons/LeafIcon';
 import { ExclamationTriangleIcon } from '../icons/ExclamationTriangleIcon';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
+import WalkthroughTip from '../common/WalkthroughTip';
+
 
 const AnomalyMarker: React.FC<{ top: string; left: string; delay?: string; label: string }> = ({ top, left, delay = '0s', label }) => (
     <div className="absolute animate-fadeIn" style={{ top, left, animationDelay: delay }}>
@@ -35,21 +38,90 @@ const QuickAnalysisResults: React.FC = () => (
 
 const TopographyModule: React.FC = () => {
     const { database } = useDataContext();
-    const { isLiveData } = useUIStateContext();
+    const { isLiveData, stopTestTimer, walkthroughStep, completeWalkthroughStep } = useUIStateContext();
     const analysis = database.topography;
     const [overlays, setOverlays] = useState({ faultLines: true, erosion: true, waterFlow: true });
     const [baseLayer, setBaseLayer] = useState<BaseLayer>('terrain');
-    const [analysisState, setAnalysisState] = useState<'idle' | 'running' | 'complete'>('idle');
+    const [quickAnalysisState, setQuickAnalysisState] = useState<'idle' | 'running' | 'complete'>('idle');
+    const quickAnalysisCardRef = useRef<HTMLDivElement>(null);
+
+    const [isDrawing, setIsDrawing] = useState(false);
+    const [transectStart, setTransectStart] = useState<{ x: number, y: number } | null>(null);
+    const [transectEnd, setTransectEnd] = useState<{ x: number, y: number } | null>(null);
+    const [elevationData, setElevationData] = useState<any[] | null>(null);
+    const [profileAnalysisState, setProfileAnalysisState] = useState<'idle' | 'running' | 'complete'>('idle');
+    const mapContainerRef = useRef<HTMLDivElement>(null);
 
     const toggleOverlay = (key: keyof typeof overlays) => {
         setOverlays(prev => ({ ...prev, [key]: !prev[key] }));
     };
 
     const runQuickAnalysis = () => {
-        setAnalysisState('running');
+        setQuickAnalysisState('running');
+        if (walkthroughStep === 'topography-analysis') {
+            completeWalkthroughStep();
+        }
         setTimeout(() => {
-            setAnalysisState('complete');
+            setQuickAnalysisState('complete');
+            stopTestTimer(); // Stop the field test timer upon completion
         }, 1500);
+    };
+
+    const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!mapContainerRef.current) return;
+        const rect = mapContainerRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        setIsDrawing(true);
+        setTransectStart({ x, y });
+        setTransectEnd({ x, y });
+        setElevationData(null);
+        setProfileAnalysisState('idle');
+    };
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!isDrawing || !mapContainerRef.current) return;
+        const rect = mapContainerRef.current.getBoundingClientRect();
+        const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+        const y = Math.max(0, Math.min(e.clientY - rect.top, rect.height));
+        setTransectEnd({ x, y });
+    };
+    
+    const generateMockElevationData = (start: {x:number, y:number}, end: {x:number, y:number}) => {
+        const distance = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
+        const data = [];
+        const segments = Math.max(100, Math.floor(distance));
+        for (let i = 0; i <= segments; i++) {
+            const elevation = 150 + Math.sin(i / 30) * 25 + (Math.random() - 0.5) * 8 * Math.cos(i / (segments/10));
+            data.push({ distance: Math.round(i * (distance / segments)), elevation: Math.round(elevation * 10) / 10 });
+        }
+        return data;
+    };
+
+    const handleMouseUp = () => {
+        if (!isDrawing || !transectStart || !transectEnd) return;
+        // Ensure there's a meaningful transect
+        if (transectStart.x === transectEnd.x && transectStart.y === transectEnd.y) {
+            setIsDrawing(false);
+            setTransectStart(null);
+            setTransectEnd(null);
+            return;
+        }
+        setIsDrawing(false);
+        setProfileAnalysisState('running');
+        setTimeout(() => {
+            const data = generateMockElevationData(transectStart, transectEnd);
+            setElevationData(data);
+            setProfileAnalysisState('complete');
+        }, 1000);
+    };
+
+    const handleMouseLeave = () => {
+        if (isDrawing) {
+            setIsDrawing(false);
+            setTransectStart(null);
+            setTransectEnd(null);
+        }
     };
     
     const baseLayerImages: Record<BaseLayer, string> = {
@@ -62,30 +134,94 @@ const TopographyModule: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
             <div className="lg:col-span-2 space-y-6">
                 <h2 className="text-lg font-mono font-semibold text-text-primary">Interactive Terrain Map</h2>
-                <div className="relative aspect-video w-full rounded-sm bg-black border border-green-dark overflow-hidden">
-                    <img src={baseLayerImages[baseLayer]} alt="Topographical Map" className="object-cover w-full h-full transition-opacity duration-500 opacity-50" />
+                <div 
+                    ref={mapContainerRef}
+                    className="relative aspect-video w-full rounded-sm bg-black border border-green-dark overflow-hidden cursor-crosshair"
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseLeave}
+                >
+                    <img src={baseLayerImages[baseLayer]} alt="Topographical Map" className="object-cover w-full h-full transition-opacity duration-500 opacity-50 select-none pointer-events-none" />
                     
                     {overlays.faultLines && <AnomalyMarker top="30%" left="40%" label="Fault Line" />}
                     {overlays.erosion && <AnomalyMarker top="65%" left="60%" label="Erosion Zone" />}
                     {overlays.waterFlow && <AnomalyMarker top="50%" left="25%" label="Water Flow Path" />}
-                </div>
-                 <Card>
-                    <h3 className="text-lg font-mono font-semibold text-text-accent mb-4">In-Situ Quick Analysis</h3>
-                    {analysisState === 'idle' && (
-                        <>
-                            <p className="text-sm text-text-primary mb-4">Run an instant, on-device analysis to get immediate feedback on key terrain characteristics.</p>
-                            <button onClick={runQuickAnalysis} className="w-full p-3 bg-green-muted text-bg-primary rounded-sm hover:bg-green-bright transition font-bold">
-                                Run Instant Analysis
-                            </button>
-                        </>
+
+                    {transectStart && transectEnd && (
+                        <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                            <line x1={transectStart.x} y1={transectStart.y} x2={transectEnd.x} y2={transectEnd.y} stroke="var(--color-data-blue)" strokeWidth="2" strokeDasharray="4" />
+                            <circle cx={transectStart.x} cy={transectStart.y} r="4" fill="var(--color-bg-primary)" stroke="var(--color-data-blue)" strokeWidth="2" />
+                             <text x={transectStart.x + 8} y={transectStart.y - 8} fill="var(--color-data-blue)" className="font-mono font-bold text-sm">A</text>
+                            <circle cx={transectEnd.x} cy={transectEnd.y} r="4" fill="var(--color-bg-primary)" stroke="var(--color-data-blue)" strokeWidth="2" />
+                            <text x={transectEnd.x + 8} y={transectEnd.y - 8} fill="var(--color-data-blue)" className="font-mono font-bold text-sm">B</text>
+                        </svg>
                     )}
-                    {analysisState === 'running' && (
-                        <div className="flex items-center justify-center h-24">
+                </div>
+                <Card>
+                    <h3 className="text-lg font-mono font-semibold text-text-accent mb-4">Elevation Profile</h3>
+                    {profileAnalysisState === 'idle' && (
+                        <div className="h-48 flex items-center justify-center text-center text-green-muted">
+                            <p>Click and drag on the map above to select a transect for analysis.</p>
+                        </div>
+                    )}
+                    {profileAnalysisState === 'running' && (
+                        <div className="h-48 flex items-center justify-center">
                             <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-green-bright"></div>
                         </div>
                     )}
-                    {analysisState === 'complete' && <QuickAnalysisResults />}
+                    {profileAnalysisState === 'complete' && elevationData && (
+                        <div className="w-full h-48 animate-fadeInUp">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={elevationData} margin={{ top: 5, right: 30, left: 20, bottom: 20 }}>
+                                    <CartesianGrid stroke="var(--color-green-dark)" strokeDasharray="3 3" />
+                                    <XAxis dataKey="distance" stroke="var(--color-green-muted)" tick={{ fontSize: 10 }} unit="m" name="Distance" label={{ value: 'Distance', position: 'insideBottom', offset: -10, fill: 'var(--color-green-muted)', fontSize: 12 }} />
+                                    <YAxis stroke="var(--color-green-muted)" tick={{ fontSize: 10 }} unit="m" name="Elevation" label={{ value: 'Elevation', angle: -90, position: 'insideLeft', fill: 'var(--color-green-muted)', fontSize: 12, dx: -10 }} />
+                                    <RechartsTooltip
+                                        contentStyle={{ 
+                                            backgroundColor: 'var(--color-bg-primary)', 
+                                            border: '1px solid var(--color-green-dark)',
+                                            color: 'var(--color-text-primary)'
+                                        }}
+                                        itemStyle={{ color: 'var(--color-green-bright)' }}
+                                        labelStyle={{ color: 'var(--color-green-muted)', fontWeight: 'bold' }}
+                                        formatter={(value: number, name: string) => [`${value}m`, name.charAt(0).toUpperCase() + name.slice(1)]}
+                                        labelFormatter={(label) => `Distance: ${label}m`}
+                                    />
+                                    <Line type="monotone" dataKey="elevation" stroke="var(--color-green-bright)" strokeWidth={2} dot={false} />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </div>
+                    )}
                  </Card>
+                 <div ref={quickAnalysisCardRef} className="relative">
+                    {walkthroughStep === 'topography-analysis' && (
+                         <WalkthroughTip
+                            targetRef={quickAnalysisCardRef}
+                            onDismiss={completeWalkthroughStep}
+                            title="Step 2: Instant Analysis"
+                        >
+                            Now that your scan is visualized, run an "In-Situ Quick Analysis". This simulates a rapid, on-device calculation to give you immediate feedback, a core feature for field work.
+                        </WalkthroughTip>
+                    )}
+                    <Card>
+                        <h3 className="text-lg font-mono font-semibold text-text-accent mb-4">In-Situ Quick Analysis</h3>
+                        {quickAnalysisState === 'idle' && (
+                            <>
+                                <p className="text-sm text-text-primary mb-4">Run an instant, on-device analysis to get immediate feedback on key terrain characteristics.</p>
+                                <button onClick={runQuickAnalysis} className="w-full p-3 bg-green-muted text-bg-primary rounded-sm hover:bg-green-bright transition font-bold">
+                                    Run Instant Analysis
+                                </button>
+                            </>
+                        )}
+                        {quickAnalysisState === 'running' && (
+                            <div className="flex items-center justify-center h-24">
+                                <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-green-bright"></div>
+                            </div>
+                        )}
+                        {quickAnalysisState === 'complete' && <QuickAnalysisResults />}
+                    </Card>
+                 </div>
             </div>
             <div className="space-y-6">
                 <Card>

@@ -6,12 +6,13 @@ import { InfoIcon } from '../icons/InfoIcon';
 import { GoogleDriveIcon } from '../icons/GoogleDriveIcon';
 import { CloudArrowUpIcon } from '../icons/CloudArrowUpIcon';
 import { CubeIcon } from '../icons/CubeIcon';
+import { BeakerIcon } from '../icons/BeakerIcon';
 
 type Tab = 'upload' | 'nasa' | 'topo' | 'cloud';
 
 interface DataImportModuleProps {
     onUpload: (file: File) => void;
-    onLoadMock: () => void;
+    onLoadMock: (scenario: string) => void;
     onImport: (source: string) => void;
     disabled: boolean;
 }
@@ -38,15 +39,50 @@ const UploadCard: React.FC<{ onUpload: (file: File) => void; disabled: boolean }
         }
     };
     
+    const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!disabled) setDragging(true);
+    };
+    
+    const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDragging(false);
+    };
+    
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+    
+    const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDragging(false);
+        if (disabled) return;
+
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            onUpload(e.dataTransfer.files[0]);
+            e.dataTransfer.clearData();
+        }
+    };
+
     return (
-        <div className={`p-6 bg-bg-secondary/50 rounded-sm border-2 border-dashed transition-colors ${dragging ? 'border-green-bright bg-green-dark/30' : 'border-green-dark'}`}>
-            <div className="text-center">
+        <div 
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            className={`p-6 bg-bg-secondary/50 rounded-sm border-2 border-dashed transition-colors ${dragging ? 'border-green-bright bg-green-dark/30' : 'border-green-dark'}`}
+        >
+            <div className="text-center pointer-events-none">
                 <DocumentArrowUpIcon className="mx-auto h-12 w-12 text-green-muted" />
-                <h3 className="mt-2 text-lg font-semibold text-text-primary">Upload Scan Data</h3>
+                <h3 className="mt-2 text-lg font-semibold text-text-primary">Drag & Drop or Upload Scan Data</h3>
                 <p className="mt-1 text-sm text-green-muted font-mono">Select a .LAS, .XYZ or .CSV file to begin analysis.</p>
                 <div className="mt-6">
                     <input type="file" ref={fileInputRef} onChange={handleFileChange} className="sr-only" accept=".las,.csv,.xyz" />
-                    <button onClick={() => fileInputRef.current?.click()} disabled={disabled} className="px-6 py-3 bg-transparent border-2 border-green-bright text-green-bright font-mono rounded-sm uppercase tracking-wider hover:bg-green-bright hover:text-bg-primary transition-all duration-200 hover:shadow-glow-green-md disabled:border-green-muted/50 disabled:text-green-muted/50 disabled:bg-transparent disabled:cursor-not-allowed">
+                    <button onClick={() => fileInputRef.current?.click()} disabled={disabled} className="px-6 py-3 bg-transparent border-2 border-green-bright text-green-bright font-mono rounded-sm uppercase tracking-wider hover:bg-green-bright hover:text-bg-primary transition-all duration-200 hover:shadow-glow-green-md disabled:border-green-muted/50 disabled:text-green-muted/50 disabled:bg-transparent disabled:cursor-not-allowed pointer-events-auto">
                         Select File
                     </button>
                 </div>
@@ -235,12 +271,38 @@ export const DataImportModule: React.FC<DataImportModuleProps> = ({ onUpload, on
             <div className="bg-bg-secondary rounded-b-sm border border-green-dark p-6">
                  {renderTabContent()}
             </div>
-             <div className="text-center text-green-muted text-sm mt-4 font-mono">
-                or, for a quick demonstration:
+             <div className="text-center text-green-muted text-sm my-4 font-mono relative">
+                <span className="bg-bg-primary px-2">or, for a guided demonstration</span>
+                <div className="absolute left-0 top-1/2 w-full h-px bg-green-dark -z-10"></div>
             </div>
-            <button onClick={onLoadMock} disabled={disabled} className="w-full mt-2 py-3 bg-bg-secondary text-green-muted rounded-sm hover:bg-bg-secondary/50 hover:text-green-bright transition font-semibold disabled:opacity-50">
-                Load Mock Scan
-            </button>
+
+            <div className="bg-bg-secondary p-6 rounded-sm border border-green-dark">
+                <h3 className="text-lg font-mono font-semibold text-text-accent mb-4 flex items-center">
+                    <BeakerIcon className="h-5 w-5 mr-3 text-green-bright" />
+                    Load Use-Case Template
+                </h3>
+                <p className="text-sm text-text-primary mb-4">
+                    Select a pre-configured scientific scenario to begin a guided analysis workflow.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <button onClick={() => onLoadMock('archaeology')} disabled={disabled} className="p-4 bg-bg-primary text-green-muted rounded-sm hover:bg-bg-primary/50 hover:text-green-bright transition font-semibold disabled:opacity-50 text-left">
+                        <p className="font-bold">Archaeological Survey</p>
+                        <p className="text-xs mt-1">Identify subtle terrain variations for excavation planning.</p>
+                    </button>
+                    <button onClick={() => onLoadMock('forestry')} disabled={disabled} className="p-4 bg-bg-primary text-green-muted rounded-sm hover:bg-bg-primary/50 hover:text-green-bright transition font-semibold disabled:opacity-50 text-left">
+                        <p className="font-bold">Forest Canopy Analysis</p>
+                        <p className="text-xs mt-1">Measure canopy height and density for ecological studies.</p>
+                    </button>
+                    <button onClick={() => onLoadMock('geotechnical')} disabled={disabled} className="p-4 bg-bg-primary text-green-muted rounded-sm hover:bg-bg-primary/50 hover:text-green-bright transition font-semibold disabled:opacity-50 text-left">
+                        <p className="font-bold">Geotechnical Slope Stability</p>
+                        <p className="text-xs mt-1">Analyze slope angles and identify potential erosion zones.</p>
+                    </button>
+                    <button onClick={() => onLoadMock('default')} disabled={disabled} className="p-4 bg-bg-primary text-green-muted rounded-sm hover:bg-bg-primary/50 hover:text-green-bright transition font-semibold disabled:opacity-50 text-left">
+                        <p className="font-bold">Default Lidar Scan</p>
+                        <p className="text-xs mt-1">A general-purpose scan for exploratory analysis.</p>
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

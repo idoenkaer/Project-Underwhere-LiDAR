@@ -2,6 +2,7 @@ import React from 'react';
 import { useUIStateContext } from '../contexts/UIStateContext';
 import { useDataContext } from '../contexts/DataContext';
 import { Card } from '../common/Card';
+import { ExclamationTriangleIcon } from '../icons/ExclamationTriangleIcon';
 
 const StateItem: React.FC<{ label: string; value: any }> = ({ label, value }) => (
     <div className="flex justify-between items-center py-1 border-b border-green-dark/50">
@@ -11,8 +12,13 @@ const StateItem: React.FC<{ label: string; value: any }> = ({ label, value }) =>
 );
 
 const DebugModule: React.FC = () => {
-    const { logs, activeModule, isLiveData, showOnboarding, showEthicsSplash } = useUIStateContext();
+    const { logs, activeModule, isLiveData, showOnboarding, showEthicsSplash, addLog } = useUIStateContext();
     const { scanMeta } = useDataContext();
+
+    const triggerError = () => {
+        addLog("Manually triggering a test error for Sentry verification.");
+        throw new Error("Sentry Test Error: This is a test exception to verify error reporting.");
+    };
 
     return (
         <div className="animate-fadeIn space-y-8">
@@ -33,6 +39,15 @@ const DebugModule: React.FC = () => {
                             <StateItem label="scanID" value={scanMeta.id} />
                             <StateItem label="location" value={scanMeta.location} />
                         </div>
+                    </Card>
+                     <Card title="Error Reporting Test">
+                        <p className="text-sm text-text-primary mb-4">
+                            Click the button below to throw a test error. This will be caught by our error boundary and reported to our monitoring service (Sentry).
+                        </p>
+                        <button onClick={triggerError} className="w-full p-3 bg-error/80 hover:bg-error text-white font-bold rounded-sm transition flex items-center justify-center space-x-2">
+                            <ExclamationTriangleIcon className="h-5 w-5" />
+                            <span>Trigger Test Error</span>
+                        </button>
                     </Card>
                 </div>
                 
