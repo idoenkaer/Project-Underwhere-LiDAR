@@ -16,3 +16,9 @@ export const loadMockScan = async (): Promise<'processed'> => {
     await new Promise(resolve => setTimeout(resolve, 3000));
     return 'processed';
 }
+
+export const importExternalDataset = async (): Promise<'processed'> => {
+    // Simulate API fetch and data processing
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    return 'processed';
+}

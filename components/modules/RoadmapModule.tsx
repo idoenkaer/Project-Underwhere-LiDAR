@@ -29,6 +29,7 @@ import { TagIcon } from '../icons/TagIcon';
 import { StopwatchIcon } from '../icons/StopwatchIcon';
 import { Square2StackIcon } from '../icons/Square2StackIcon';
 import { CloudArrowUpIcon } from '../icons/CloudArrowUpIcon';
+import { ChartTrendingUpIcon } from '../icons/ChartTrendingUpIcon';
 
 
 enum Status {
@@ -143,6 +144,33 @@ const RoadmapModule: React.FC = () => {
                     Restructured the application to follow the Clean Architecture pattern. This establishes clear boundaries between layers—Entities (data structures), Use Cases (business logic), Interface Adapters (UI components), and Infrastructure (frameworks, external APIs). This separation enhances testability, maintainability, and makes the system independent of UI and data source specifics.
                 </p>
             </div>
+             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <ChartTrendingUpIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    AI-Powered Predictive Modeling
+                </h3>
+                <p className="text-sm text-gray-400">
+                    Move beyond static analysis by implementing AI-driven change detection between sequential Lidar scans. The goal is to develop predictive models for environmental impacts, such as forecasting erosion patterns or vegetation succession.
+                </p>
+            </div>
+             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <PuzzlePieceIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Extensible & Modular Architecture
+                </h3>
+                <p className="text-sm text-gray-400">
+                    Commitment to a flexible, plugin-based system. This initiative will focus on creating a clear API that allows for the seamless integration of future modules, new sensor types (like Ground-Penetrating Radar or Hyperspectral imagers), and custom, mission-specific workflows.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <RocketIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    NASA Collaboration & Interoperability
+                </h3>
+                <p className="text-sm text-gray-400">
+                    Align the project with NASA standards by benchmarking against published datasets (ICESat, Landsat), enhancing spatial referencing (WGS84/UTM) with full scientific provenance, developing custom modules for specialized workflows like planetary mapping and atmospheric Lidar, and coordinating with NASA's Earth Science teams for validation and pilot studies.
+                </p>
+            </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
                     <CloudArrowUpIcon className="h-6 w-6 mr-3 text-cyan-400" />
@@ -150,6 +178,24 @@ const RoadmapModule: React.FC = () => {
                 </h3>
                 <p className="text-sm text-gray-400">
                     Enhance the project's scientific impact by integrating with key external platforms. This includes building connectors to NASA Earthdata for satellite imagery comparison, OpenTopography for accessing public high-resolution terrain data, and open science archives like Zenodo to ensure research outputs are citable, discoverable, and preserved for the long term.
+                </p>
+            </div>
+             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <MagnifyingGlassIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Geospatial Validation & Ground-Truthing
+                </h3>
+                <p className="text-sm text-gray-400">
+                    To ensure survey-grade accuracy and scientific rigor, we are establishing documented ground-truthing protocols. This involves field validation using high-precision GPS/RTK equipment to create benchmarks. These benchmarks will be used to validate the coordinate precision and elevation accuracy of our Lidar outputs, ensuring they meet the highest standards before cross-validation against published datasets or external sources like GRASS GIS.
+                </p>
+            </div>
+             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <PuzzlePieceIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Geospatial Data Standards & Interoperability
+                </h3>
+                <p className="text-sm text-gray-400">
+                    Implement and document support for global geospatial standards. This includes ensuring all data services adhere to OGC protocols (WMS, WFS) for seamless integration, standardizing on WGS84/UTM spatial references, and producing standard-compliant outputs like GeoTIFF, LAS 1.4, and netCDF. We will facilitate easy data exchange with leading platforms (QGIS, CloudCompare, PDAL) and enrich all datasets with comprehensive metadata.
                 </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
@@ -269,15 +315,7 @@ const RoadmapModule: React.FC = () => {
                     Implement mission-grade data protocols by integrating RTK/PPK for survey-level positional accuracy. This initiative includes adopting standardized metadata schemas (e.g., ISO 19115) for all captured data, ensuring robust spatial referencing, and preparing datasets for long-term, interoperable archival in accordance with industry standards like STANAG 4545.
                 </p>
             </div>
-            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
-                    <MagnifyingGlassIcon className="h-6 w-6 mr-3 text-cyan-400" />
-                    Geospatial Validation & Ground-Truthing
-                </h3>
-                <p className="text-sm text-gray-400">
-                    To ensure survey-grade accuracy and scientific rigor, we are establishing documented ground-truthing protocols. This involves field validation using high-precision GPS/RTK equipment to create benchmarks. These benchmarks will be used to validate the coordinate precision and elevation accuracy of our Lidar outputs, ensuring they meet the highest standards before cross-validation against published datasets or external sources like GRASS GIS.
-                </p>
-            </div>
+
         </div>
     );
 };

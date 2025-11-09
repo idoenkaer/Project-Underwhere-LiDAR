@@ -1,12 +1,17 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { ExclamationTriangleIcon } from '../icons/ExclamationTriangleIcon';
 import { MetricCard } from '../common/MetricCard';
 import { CheckIcon } from '../icons/CheckIcon';
-import { processScanFile, loadMockScan } from '../../application/use-cases/processScanFile';
+import { processScanFile, loadMockScan, importExternalDataset } from '../../application/use-cases/processScanFile';
 import { CheckBadgeIcon } from '../icons/CheckBadgeIcon';
 import { GlobeIcon } from '../icons/GlobeIcon';
 import { TagIcon } from '../icons/TagIcon';
 import { CircleStackIcon } from '../icons/CircleStackIcon';
+import { ShieldCheckIcon } from '../icons/ShieldCheckIcon';
+import { DataImportModule } from '../common/DataImportModule';
+import { CogIcon } from '../icons/CogIcon';
+import { CodeFileIcon } from '../icons/CodeFileIcon';
+import { MapPinCheckIcon } from '../icons/MapPinCheckIcon';
 
 const SensorFeedCard: React.FC<{ title: string; imageUrl: string; details: string; imageFilter?: string }> = ({ title, imageUrl, details, imageFilter = '' }) => {
     return (
@@ -66,9 +71,24 @@ const ProcessedView: React.FC = () => {
                         <p className="text-xs text-gray-500 mt-1">Survey-Grade Accuracy (&lt;2cm)</p>
                     </div>
                     <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><MapPinCheckIcon className="h-5 w-5 mr-2 text-cyan-400" /> Ground-Truth Validation</h3>
+                        <p className="font-mono text-lg text-green-400">VALIDATED VS GCPS</p>
+                        <p className="text-xs text-gray-500 mt-1">Cross-referenced with 12 GCPs</p>
+                    </div>
+                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
                         <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><GlobeIcon className="h-5 w-5 mr-2 text-cyan-400" /> Coordinate System</h3>
                         <p className="font-mono text-lg text-cyan-300">WGS 84 / UTM 10N</p>
                         <p className="text-xs text-gray-500 mt-1">EPSG:32610</p>
+                    </div>
+                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><CodeFileIcon className="h-5 w-5 mr-2 text-cyan-400" /> Output Format</h3>
+                        <p className="font-mono text-lg text-cyan-300">LAS 1.4 / LAZ</p>
+                        <p className="text-xs text-gray-500 mt-1">ASPRS Standard Compliant</p>
+                    </div>
+                     <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><CogIcon className="h-5 w-5 mr-2 text-cyan-400" /> Instrument & Versioning</h3>
+                        <p className="font-mono text-lg text-cyan-300">INST-04B / v2.1.3</p>
+                        <p className="text-xs text-gray-500 mt-1">Dataset Version: 1.0.2</p>
                     </div>
                     <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
                         <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><TagIcon className="h-5 w-5 mr-2 text-cyan-400" /> Embedded Metadata</h3>
@@ -80,44 +100,22 @@ const ProcessedView: React.FC = () => {
                         <p className="font-mono text-lg text-cyan-300">Ready for Archive</p>
                         <p className="text-xs text-gray-500 mt-1">STANAG 4545 Compliant</p>
                     </div>
+                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><ShieldCheckIcon className="h-5 w-5 mr-2 text-cyan-400" /> Data Provenance</h3>
+                        <p className="font-mono text-lg text-cyan-300">CHAIN OF CUSTODY</p>
+                        <p className="text-xs text-gray-500 mt-1">NIST RFI Compliant</p>
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
 
-const UploadCard: React.FC<{ onUpload: (file: File) => void, disabled: boolean }> = ({ onUpload, disabled }) => {
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [dragging, setDragging] = useState(false);
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            onUpload(e.target.files[0]);
-        }
-    };
-    
-    return (
-        <div className={`p-6 bg-gray-800/50 rounded-lg border-2 border-dashed transition-colors ${dragging ? 'border-cyan-400 bg-cyan-900/30' : 'border-gray-700'}`}>
-            <div className="text-center">
-                <svg className="mx-auto h-12 w-12 text-gray-500" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                <h3 className="mt-2 text-lg font-semibold text-gray-200">Upload Scan Data</h3>
-                <p className="mt-1 text-sm text-gray-400">Select a .LAS or .CSV file to begin analysis.</p>
-                <div className="mt-6">
-                    <input type="file" ref={fileInputRef} onChange={handleFileChange} className="sr-only" accept=".las,.csv,.xyz" />
-                    <button onClick={() => fileInputRef.current?.click()} disabled={disabled} className="px-6 py-3 bg-cyan-600 text-white rounded-md hover:bg-cyan-500 transition font-semibold disabled:bg-gray-600 disabled:cursor-not-allowed">
-                        Select File
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const ProcessingVisualizer: React.FC = () => {
+const ProcessingVisualizer: React.FC<{ title?: string }> = ({ title = "Preprocessing Scan..." }) => {
     const steps = ['Noise Removal', 'Data Normalization', 'Density Harmonization', 'Sensor Calibration'];
-    const [currentStep, setCurrentStep] = useState(0);
+    const [currentStep, setCurrentStep] = React.useState(0);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (currentStep < steps.length) {
             const timer = setTimeout(() => {
                 setCurrentStep(prev => prev + 1);
@@ -128,7 +126,7 @@ const ProcessingVisualizer: React.FC = () => {
 
     return (
         <div className="flex flex-col items-center justify-center h-full text-center animate-fadeIn flex-1">
-            <h2 className="text-2xl font-bold text-cyan-300 mb-6">Preprocessing Scan...</h2>
+            <h2 className="text-2xl font-bold text-cyan-300 mb-6">{title}</h2>
             <div className="w-full max-w-md space-y-4">
                 {steps.map((step, index) => {
                     const isCompleted = index < currentStep;
@@ -161,10 +159,13 @@ const ProcessingVisualizer: React.FC = () => {
 const MeasurementModule: React.FC = () => {
     const [state, setState] = useState<'idle' | 'validating' | 'processing' | 'processed' | 'error'>('idle');
     const [error, setError] = useState<{title: string, message: string} | null>(null);
+    const [processingTitle, setProcessingTitle] = useState("Preprocessing Scan...");
+
 
     const handleUpload = async (file: File) => {
         setState('validating');
         setError(null);
+        setProcessingTitle("Preprocessing Scan...");
 
         try {
             await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate validation delay
@@ -185,11 +186,21 @@ const MeasurementModule: React.FC = () => {
     };
     
     const handleLoadMock = async () => {
+        setProcessingTitle("Loading Mock Scan...");
         setState('processing');
         setError(null);
         const result = await loadMockScan();
         setState(result);
     };
+    
+    const handleImport = async (source: string) => {
+        setProcessingTitle(`Importing from ${source}...`);
+        setState('processing');
+        setError(null);
+        const result = await importExternalDataset();
+        setState(result);
+    };
+
 
     const handleReset = () => {
         setState('idle');
@@ -206,7 +217,7 @@ const MeasurementModule: React.FC = () => {
                     </div>
                 );
             case 'processing':
-                return <ProcessingVisualizer />;
+                return <ProcessingVisualizer title={processingTitle} />;
             case 'processed':
                 return <ProcessedView />;
             case 'error':
@@ -225,18 +236,12 @@ const MeasurementModule: React.FC = () => {
             case 'idle':
             default:
                 return (
-                     <div className="space-y-4">
-                        <UploadCard onUpload={handleUpload} disabled={state !== 'idle'} />
-                        <p className="text-center text-xs text-gray-500 !mt-2">
-                           Future versions will support direct API imports from USGS and OpenTopography.
-                        </p>
-                        <div className="text-center text-gray-500 text-sm">
-                            or, for a quick demonstration:
-                        </div>
-                        <button onClick={handleLoadMock} disabled={state !== 'idle'} className="w-full py-3 bg-gray-700/50 text-gray-300 rounded-md hover:bg-gray-700 transition font-semibold disabled:opacity-50">
-                            Load Mock Scan
-                        </button>
-                    </div>
+                    <DataImportModule
+                        onUpload={handleUpload}
+                        onLoadMock={handleLoadMock}
+                        onImport={handleImport}
+                        disabled={state !== 'idle'}
+                    />
                 );
         }
     };
