@@ -25,6 +25,7 @@ import { EyeIcon } from '../icons/EyeIcon';
 import { MagnifyingGlassIcon } from '../icons/MagnifyingGlassIcon';
 import { FunnelIcon } from '../icons/FunnelIcon';
 import { AcademicCapIcon } from '../icons/AcademicCapIcon';
+import { TagIcon } from '../icons/TagIcon';
 
 
 enum Status {
@@ -129,6 +130,15 @@ const RoadmapModule: React.FC = () => {
                         <p className="text-sm text-gray-400">Develop proof-of-concept for gravitational lensing simulation based on high-mass object scans.</p>
                     </ChecklistItem>
                 </ul>
+            </div>
+             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <TagIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    AI/ML Training & Supervision Strategy
+                </h3>
+                <p className="text-sm text-gray-400">
+                    Acknowledging the resource-intensive nature of manual Lidar annotation, our strategy is to mitigate this bottleneck by adopting advanced training methodologies. We will investigate and implement weak supervision, semi-supervised, and self-supervised learning approaches to effectively leverage unlabeled data and reduce dependency on fully annotated datasets.
+                </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
