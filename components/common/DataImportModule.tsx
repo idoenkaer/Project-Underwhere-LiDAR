@@ -3,8 +3,11 @@ import { DocumentArrowUpIcon } from '../icons/DocumentArrowUpIcon';
 import { SatelliteIcon } from '../icons/SatelliteIcon';
 import { MountainIcon } from '../icons/MountainIcon';
 import { ExclamationCircleIcon } from '../icons/ExclamationCircleIcon';
+import { GoogleDriveIcon } from '../icons/GoogleDriveIcon';
+import { CloudArrowUpIcon } from '../icons/CloudArrowUpIcon';
+import { CubeIcon } from '../icons/CubeIcon';
 
-type Tab = 'upload' | 'nasa' | 'topo';
+type Tab = 'upload' | 'nasa' | 'topo' | 'cloud';
 
 interface DataImportModuleProps {
     onUpload: (file: File) => void;
@@ -17,7 +20,7 @@ const TabButton: React.FC<{ active: boolean; onClick: () => void; icon: React.FC
     <button
         onClick={onClick}
         className={`flex-1 p-4 text-sm font-bold flex items-center justify-center space-x-2 transition-colors border-b-2 ${
-            active ? 'border-cyan-400 text-cyan-300' : 'border-transparent text-gray-400 hover:text-white hover:bg-gray-700/50'
+            active ? 'border-green-bright text-green-bright' : 'border-transparent text-green-muted hover:text-text-accent hover:bg-bg-secondary/50'
         }`}
     >
         <Icon className="h-5 w-5" />
@@ -36,14 +39,14 @@ const UploadCard: React.FC<{ onUpload: (file: File) => void; disabled: boolean }
     };
     
     return (
-        <div className={`p-6 bg-gray-800/50 rounded-lg border-2 border-dashed transition-colors ${dragging ? 'border-cyan-400 bg-cyan-900/30' : 'border-gray-700'}`}>
+        <div className={`p-6 bg-bg-secondary/50 rounded-sm border-2 border-dashed transition-colors ${dragging ? 'border-green-bright bg-green-dark/30' : 'border-green-dark'}`}>
             <div className="text-center">
-                <DocumentArrowUpIcon className="mx-auto h-12 w-12 text-gray-500" />
-                <h3 className="mt-2 text-lg font-semibold text-gray-200">Upload Scan Data</h3>
-                <p className="mt-1 text-sm text-gray-400">Select a .LAS, .XYZ or .CSV file to begin analysis.</p>
+                <DocumentArrowUpIcon className="mx-auto h-12 w-12 text-green-muted" />
+                <h3 className="mt-2 text-lg font-semibold text-text-primary">Upload Scan Data</h3>
+                <p className="mt-1 text-sm text-green-muted font-mono">Select a .LAS, .XYZ or .CSV file to begin analysis.</p>
                 <div className="mt-6">
                     <input type="file" ref={fileInputRef} onChange={handleFileChange} className="sr-only" accept=".las,.csv,.xyz" />
-                    <button onClick={() => fileInputRef.current?.click()} disabled={disabled} className="px-6 py-3 bg-cyan-600 text-white rounded-md hover:bg-cyan-500 transition font-semibold disabled:bg-gray-600 disabled:cursor-not-allowed">
+                    <button onClick={() => fileInputRef.current?.click()} disabled={disabled} className="px-6 py-3 bg-transparent border-2 border-green-bright text-green-bright font-mono rounded-sm uppercase tracking-wider hover:bg-green-bright hover:text-bg-primary transition-all duration-200 hover:shadow-glow-green-md disabled:border-green-muted/50 disabled:text-green-muted/50 disabled:bg-transparent disabled:cursor-not-allowed">
                         Select File
                     </button>
                 </div>
@@ -73,26 +76,68 @@ const ExternalSourceCard: React.FC<{
     };
 
     return (
-        <div className="p-6 bg-gray-800/50 rounded-lg">
-            <h3 className="text-lg font-semibold text-gray-200 mb-4">{title}</h3>
+        <div className="p-6 bg-bg-secondary/50 rounded-sm">
+            <h3 className="text-lg font-semibold text-text-primary mb-4">{title}</h3>
             <div className="space-y-4">
                 {formFields}
-                <button onClick={handleSearch} disabled={disabled || isSearching} className="w-full px-6 py-3 bg-cyan-600 text-white rounded-md hover:bg-cyan-500 transition font-semibold disabled:bg-gray-600 disabled:cursor-not-allowed">
+                <button onClick={handleSearch} disabled={disabled || isSearching} className="w-full px-6 py-3 bg-transparent border-2 border-green-bright text-green-bright font-mono rounded-sm uppercase tracking-wider hover:bg-green-bright hover:text-bg-primary transition-all duration-200 hover:shadow-glow-green-md disabled:border-green-muted/50 disabled:text-green-muted/50 disabled:bg-transparent disabled:cursor-not-allowed">
                     {isSearching ? 'Searching...' : buttonText}
                 </button>
             </div>
             {showResults && (
-                <div className="mt-6 border-t border-gray-700 pt-4 animate-fadeInUp">
-                    <h4 className="font-semibold text-gray-300 mb-2">Found 1 Dataset:</h4>
-                    <div className="bg-gray-700/50 p-3 rounded-lg flex items-center justify-between">
+                <div className="mt-6 border-t border-green-dark pt-4 animate-fadeInUp">
+                    <h4 className="font-semibold text-green-muted mb-2 font-mono">Found 1 Dataset:</h4>
+                    <div className="bg-bg-primary/50 p-3 rounded-sm flex items-center justify-between">
+                        {/* FIX: The `results` prop was used here but not destructured from the component's props. */}
                         <div>{results}</div>
-                        <button onClick={onImport} disabled={disabled} className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-500 transition font-semibold disabled:opacity-50">Import</button>
+                        <button onClick={onImport} disabled={disabled} className="px-4 py-2 bg-data-blue/80 text-white text-sm rounded-sm hover:bg-data-blue transition font-semibold disabled:opacity-50">Import</button>
                     </div>
                 </div>
             )}
         </div>
     );
 };
+
+const CloudSourceCard: React.FC<{
+    onImport: () => void;
+    disabled: boolean;
+}> = ({ onImport, disabled }) => {
+    const [authState, setAuthState] = useState<'idle' | 'authenticating' | 'authenticated'>('idle');
+    
+    const handleConnect = () => {
+        setAuthState('authenticating');
+        setTimeout(() => {
+            setAuthState('authenticated');
+        }, 1500);
+    };
+
+    if (authState !== 'authenticated') {
+        return (
+            <div className="p-6 bg-bg-secondary/50 rounded-sm text-center">
+                 <h3 className="text-lg font-semibold text-text-primary mb-4">Connect to Cloud Storage</h3>
+                 <p className="text-sm text-green-muted mb-6">Import datasets directly from your cloud provider.</p>
+                 <button onClick={handleConnect} disabled={disabled || authState === 'authenticating'} className="w-full px-6 py-3 bg-data-blue/90 text-white rounded-sm hover:bg-data-blue transition font-semibold disabled:bg-green-muted disabled:cursor-not-allowed flex items-center justify-center space-x-2">
+                    <GoogleDriveIcon className="h-5 w-5" />
+                    <span>{authState === 'authenticating' ? 'Connecting...' : 'Connect to Google Drive'}</span>
+                </button>
+            </div>
+        );
+    }
+    
+    return (
+        <div className="p-6 bg-bg-secondary/50 rounded-sm animate-fadeInUp">
+            <h3 className="text-lg font-semibold text-text-primary mb-4">Select a file from Google Drive</h3>
+            <div className="bg-bg-primary/50 p-3 rounded-sm flex items-center justify-between">
+                <div>
+                    <p className="text-sm text-text-primary font-mono flex items-center"><CubeIcon className="h-4 w-4 mr-2" /> field_scan_2024.laz</p>
+                </div>
+                <button onClick={onImport} disabled={disabled} className="px-4 py-2 bg-data-blue/80 text-white text-sm rounded-sm hover:bg-data-blue transition font-semibold disabled:opacity-50">Import</button>
+            </div>
+             <p className="text-xs text-green-muted/50 text-center mt-3 font-mono">Showing a mock file for demonstration.</p>
+        </div>
+    );
+};
+
 
 export const DataImportModule: React.FC<DataImportModuleProps> = ({ onUpload, onLoadMock, onImport, disabled }) => {
     const [activeTab, setActiveTab] = useState<Tab>('upload');
@@ -106,24 +151,24 @@ export const DataImportModule: React.FC<DataImportModuleProps> = ({ onUpload, on
                         formFields={
                             <>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Dataset</label>
-                                    <select className="w-full bg-gray-700 border-gray-600 rounded-md px-3 py-2">
+                                    <label className="block text-sm font-medium text-green-muted mb-1">Dataset</label>
+                                    <select className="w-full bg-bg-primary border border-green-dark rounded-sm px-3 py-2 focus:ring-green-bright focus:border-green-bright text-green-bright font-mono">
                                         <option>ICESat-2 Land Ice Height, Version 5</option>
                                         <option>Landsat 9 Collection 2 Level-1</option>
                                         <option>MODIS/Terra Surface Reflectance</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Date Range</label>
+                                    <label className="block text-sm font-medium text-green-muted mb-1">Date Range</label>
                                     <div className="flex space-x-2">
-                                        <input type="text" value="2023-01-01" readOnly className="w-full bg-gray-700 border-gray-600 rounded-md px-3 py-2 font-mono" />
-                                        <input type="text" value="2023-12-31" readOnly className="w-full bg-gray-700 border-gray-600 rounded-md px-3 py-2 font-mono" />
+                                        <input type="text" value="2023-01-01" readOnly className="w-full bg-bg-primary border border-green-dark rounded-sm px-3 py-2 font-mono text-green-bright" />
+                                        <input type="text" value="2023-12-31" readOnly className="w-full bg-bg-primary border border-green-dark rounded-sm px-3 py-2 font-mono text-green-bright" />
                                     </div>
                                 </div>
                             </>
                         }
                         buttonText="Search Datasets"
-                        results={<p className="text-sm text-gray-300 font-mono">ATL06_20230515.h5</p>}
+                        results={<p className="text-sm text-text-primary font-mono">ATL06_20230515.h5</p>}
                         onImport={() => onImport('NASA Earthdata')}
                         disabled={disabled}
                     />
@@ -135,12 +180,12 @@ export const DataImportModule: React.FC<DataImportModuleProps> = ({ onUpload, on
                         formFields={
                              <>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Area of Interest</label>
-                                     <input type="text" defaultValue="Mount St. Helens, WA" className="w-full bg-gray-700 border-gray-600 rounded-md px-3 py-2" />
+                                    <label className="block text-sm font-medium text-green-muted mb-1">Area of Interest</label>
+                                     <input type="text" defaultValue="Mount St. Helens, WA" className="w-full bg-bg-primary border border-green-dark rounded-sm px-3 py-2 focus:ring-green-bright focus:border-green-bright text-green-bright font-mono" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Dataset Type</label>
-                                    <select className="w-full bg-gray-700 border-gray-600 rounded-md px-3 py-2">
+                                    <label className="block text-sm font-medium text-green-muted mb-1">Dataset Type</label>
+                                    <select className="w-full bg-bg-primary border border-green-dark rounded-sm px-3 py-2 focus:ring-green-bright focus:border-green-bright text-green-bright font-mono">
                                         <option>Point Cloud</option>
                                         <option>DEM</option>
                                     </select>
@@ -148,17 +193,19 @@ export const DataImportModule: React.FC<DataImportModuleProps> = ({ onUpload, on
                              </>
                         }
                         buttonText="Find Datasets"
-                        results={<p className="text-sm text-gray-300">USGS Lidar for Mount St. Helens</p>}
+                        results={<p className="text-sm text-text-primary">USGS Lidar for Mount St. Helens</p>}
                         onImport={() => onImport('OpenTopography')}
                         disabled={disabled}
                     />
                 );
+            case 'cloud':
+                return <CloudSourceCard onImport={() => onImport('Google Drive')} disabled={disabled} />;
             case 'upload':
             default:
                 return (
                     <div className="space-y-4">
                         <UploadCard onUpload={onUpload} disabled={disabled} />
-                        <p className="text-center text-xs text-gray-500 !mt-2">
+                        <p className="text-center text-xs text-green-muted/80 !mt-2 font-mono">
                            This is a simulation. You can upload a .LAS, .XYZ, or .CSV file under 10MB.
                         </p>
                     </div>
@@ -168,29 +215,30 @@ export const DataImportModule: React.FC<DataImportModuleProps> = ({ onUpload, on
 
     return (
         <div className="max-w-2xl mx-auto">
-            <div className="bg-gray-900/80 p-4 rounded-lg border border-yellow-500/30 mb-6 flex items-start space-x-3">
-                <ExclamationCircleIcon className="h-6 w-6 text-yellow-400 flex-shrink-0 animate-pulse" />
+            <div className="bg-bg-secondary p-4 rounded-sm border-l-4 border-green-bright mb-6 flex items-start space-x-3">
+                <ExclamationCircleIcon className="h-6 w-6 text-green-bright flex-shrink-0" />
                 <div className="flex-1">
-                    <h3 className="font-bold text-yellow-300">Responsible Scanning Notice</h3>
-                    <p className="text-xs text-yellow-400/80">
+                    <h3 className="font-bold text-green-bright">Responsible Scanning Notice</h3>
+                    <p className="text-xs text-green-muted">
                         Ensure you have the right to scan the selected area. Respect privacy and environmental sensitivities.
-                        Consult the <code className="bg-black/30 px-1 rounded">ETHICS.md</code> guide for more information.
+                        Consult the <code className="bg-black/30 px-1 rounded font-mono">ETHICS.md</code> guide for more information.
                     </p>
                 </div>
             </div>
 
-            <div className="bg-gray-800 rounded-t-lg border border-gray-700 border-b-0 flex">
+            <div className="bg-bg-secondary rounded-t-sm border border-green-dark border-b-0 flex">
                 <TabButton active={activeTab === 'upload'} onClick={() => setActiveTab('upload')} icon={DocumentArrowUpIcon} label="File Upload" />
+                <TabButton active={activeTab === 'cloud'} onClick={() => setActiveTab('cloud')} icon={CloudArrowUpIcon} label="Cloud Storage" />
                 <TabButton active={activeTab === 'nasa'} onClick={() => setActiveTab('nasa')} icon={SatelliteIcon} label="NASA Earthdata" />
                 <TabButton active={activeTab === 'topo'} onClick={() => setActiveTab('topo')} icon={MountainIcon} label="OpenTopography" />
             </div>
-            <div className="bg-gray-800 rounded-b-lg border border-gray-700 p-6">
+            <div className="bg-bg-secondary rounded-b-sm border border-green-dark p-6">
                  {renderTabContent()}
             </div>
-             <div className="text-center text-gray-500 text-sm mt-4">
+             <div className="text-center text-green-muted text-sm mt-4 font-mono">
                 or, for a quick demonstration:
             </div>
-            <button onClick={onLoadMock} disabled={disabled} className="w-full mt-2 py-3 bg-gray-700/50 text-gray-300 rounded-md hover:bg-gray-700 transition font-semibold disabled:opacity-50">
+            <button onClick={onLoadMock} disabled={disabled} className="w-full mt-2 py-3 bg-bg-secondary text-green-muted rounded-sm hover:bg-bg-secondary/50 hover:text-green-bright transition font-semibold disabled:opacity-50">
                 Load Mock Scan
             </button>
         </div>

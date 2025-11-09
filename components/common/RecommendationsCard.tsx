@@ -14,21 +14,21 @@ const priorityConfig: Record<RecommendationPriority, {
 }> = {
     High: {
         label: 'High Priority',
-        bgColor: 'bg-red-900/50',
-        textColor: 'text-red-300',
-        borderColor: 'border-red-500/50'
+        bgColor: 'bg-error/10',
+        textColor: 'text-error',
+        borderColor: 'border-error/50'
     },
     Medium: {
         label: 'Medium Priority',
-        bgColor: 'bg-yellow-800/50',
-        textColor: 'text-yellow-300',
-        borderColor: 'border-yellow-500/50'
+        bgColor: 'bg-warning/10',
+        textColor: 'text-warning',
+        borderColor: 'border-warning/50'
     },
     Low: {
         label: 'Low Priority',
-        bgColor: 'bg-blue-900/50',
-        textColor: 'text-blue-300',
-        borderColor: 'border-blue-500/50'
+        bgColor: 'bg-data-blue/10',
+        textColor: 'text-data-blue',
+        borderColor: 'border-data-blue/50'
     },
 };
 
@@ -38,18 +38,18 @@ export const RecommendationsCard: React.FC<RecommendationsCardProps> = ({ recomm
     }
 
     return (
-        <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 animate-fadeInUp">
-            <h3 className="text-md font-semibold text-gray-200 mb-4 flex items-center">
-                <LightBulbIcon className="h-5 w-5 mr-2 text-yellow-300" />
+        <div className="bg-bg-secondary p-4 rounded-sm border border-green-dark animate-fadeInUp">
+            <h3 className="text-md font-semibold text-text-accent mb-4 flex items-center font-mono">
+                <LightBulbIcon className="h-5 w-5 mr-2 text-warning" />
                 Actionable Recommendations
             </h3>
             <div className="space-y-3">
                 {recommendations.map((rec, index) => {
                     const config = priorityConfig[rec.priority];
                     return (
-                        <div key={index} className={`p-3 rounded-lg border ${config.bgColor} ${config.borderColor}`}>
-                            <div className={`text-xs font-bold mb-1 ${config.textColor}`}>{config.label}</div>
-                            <p className="text-sm text-gray-300">{rec.text}</p>
+                        <div key={index} className={`p-3 rounded-sm border ${config.bgColor} ${config.borderColor}`}>
+                            <div className={`text-xs font-bold mb-1 ${config.textColor} font-mono`}>{config.label}</div>
+                            <p className="text-sm text-text-primary">{rec.text}</p>
                         </div>
                     );
                 })}

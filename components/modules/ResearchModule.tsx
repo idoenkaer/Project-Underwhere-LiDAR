@@ -17,38 +17,33 @@ import { CubeIcon } from '../icons/CubeIcon';
 import { DownloadIcon } from '../icons/DownloadIcon';
 import { DocumentTextIcon } from '../icons/DocumentTextIcon';
 import { CodeBracketIcon } from '../icons/CodeBracketIcon';
+// FIX: Imported the missing `CheckIcon` component.
+import { CheckIcon } from '../icons/CheckIcon';
 
 type ExportStatus = 'idle' | 'exporting' | 'success';
 
 const ChecklistItem: React.FC<{ isChecked: boolean, onToggle: () => void, children: React.ReactNode }> = ({ isChecked, onToggle, children }) => (
-    <li className="flex items-center space-x-3 cursor-pointer" onClick={onToggle}>
-        <input type="checkbox" readOnly checked={isChecked} className="h-4 w-4 rounded bg-gray-600 border-gray-500 text-cyan-500 focus:ring-cyan-600 pointer-events-none" />
-        <span className={`text-gray-300 transition ${isChecked ? 'line-through text-gray-500' : ''}`}>{children}</span>
+    <li className="flex items-center space-x-3 cursor-pointer group" onClick={onToggle}>
+        <div className={`w-4 h-4 rounded-sm flex items-center justify-center border-2 ${isChecked ? 'border-green-primary bg-green-primary' : 'border-green-muted group-hover:border-green-bright'}`}>
+           {isChecked && <CheckIcon className="w-3 h-3 text-bg-primary" />}
+        </div>
+        <span className={`text-text-primary transition ${isChecked ? 'line-through text-green-muted/80' : 'group-hover:text-text-accent'}`}>{children}</span>
     </li>
 );
 
 const IntegrationButton: React.FC<{ label: string; description: string; icon: React.FC<React.SVGProps<SVGSVGElement>>; href: string }> = ({ label, description, icon: Icon, href }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="flex items-center w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition group">
-        <Icon className="h-8 w-8 mr-4 text-gray-300 flex-shrink-0" />
+    <a href={href} target="_blank" rel="noopener noreferrer" className="flex items-center w-full p-3 text-left bg-bg-primary/50 hover:bg-bg-primary rounded-sm transition group">
+        <Icon className="h-8 w-8 mr-4 text-green-muted flex-shrink-0" />
         <div className="flex-1">
-            <p className="font-bold text-gray-200 group-hover:text-cyan-300 transition">{label}</p>
-            <p className="text-xs text-gray-400">{description}</p>
+            <p className="font-bold text-text-primary group-hover:text-green-bright transition">{label}</p>
+            <p className="text-xs text-green-muted">{description}</p>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500 group-hover:text-cyan-400 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-muted group-hover:text-green-bright transition" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
     </a>
 );
 
 
 const ResearchModule: React.FC = () => {
-    const [comments, setComments] = useState([
-        { user: 'Dr. Aris', text: 'The fault line anomaly in the topography scan is significant. We need to cross-reference this with seismic data.', time: '2h ago' },
-        { user: 'Dr. Chen', text: 'Agreed. The AI-suggested hypothesis about subsurface water flow seems plausible. I\'ll start drafting the methods section.', time: '1h ago' }
-    ]);
-    const [newComment, setNewComment] = useState('');
-    const [demoLink, setDemoLink] = useState('');
-    const [isGeneratingLink, setIsGeneratingLink] = useState(false);
-    const [copyStatus, setCopyStatus] = useState<'idle' | 'success' | 'error'>('idle');
-    
     const [checklist, setChecklist] = useState({
         resources: false,
         methodology: false,
@@ -76,36 +71,6 @@ const ResearchModule: React.FC = () => {
     const completedChecks = Object.values(checklist).filter(Boolean).length;
     const totalChecks = Object.keys(checklist).length;
     const progress = (completedChecks / totalChecks) * 100;
-
-    const handleGenerateDemoLink = () => {
-        setIsGeneratingLink(true);
-        setDemoLink('');
-        setCopyStatus('idle');
-        setTimeout(() => {
-            const uniqueId = Math.random().toString(36).substring(2, 10);
-            setDemoLink(`https://sci-research-suite.dev/demo/${uniqueId}`);
-            setIsGeneratingLink(false);
-        }, 1500);
-    };
-
-    const handleCopyLink = async () => {
-        if (!demoLink || copyStatus !== 'idle') return;
-        try {
-            await navigator.clipboard.writeText(demoLink);
-            setCopyStatus('success');
-        } catch (err) {
-            console.error('Failed to copy link:', err);
-            setCopyStatus('error');
-        } finally {
-            setTimeout(() => setCopyStatus('idle'), 2500);
-        }
-    };
-
-    const handleAddComment = () => {
-        if (!newComment.trim()) return;
-        setComments([...comments, { user: 'You', text: newComment, time: 'Just now' }]);
-        setNewComment('');
-    };
     
     const handleExportRequest = (format: string) => {
         setPendingExportFormat(format);
@@ -143,7 +108,7 @@ const ResearchModule: React.FC = () => {
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn h-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fadeIn h-full">
             {showExportConsent && (
                 <ConsentDialog
                     title="Data Export Consent"
@@ -152,7 +117,7 @@ const ResearchModule: React.FC = () => {
                 >
                     <p>You are about to export scientific data. This may include sensitive geospatial information.</p>
                     <p className="font-bold mt-2">Current Settings:</p>
-                    <ul className="list-disc list-inside text-gray-300">
+                    <ul className="list-disc list-inside text-text-primary font-mono">
                         <li>Anonymize Geospatial Data: {anonymizeData ? 'Enabled' : 'Disabled'}</li>
                     </ul>
                     <p className="mt-2">Please ensure you comply with all data sharing and privacy policies before distributing this information.</p>
@@ -165,7 +130,7 @@ const ResearchModule: React.FC = () => {
                     onConfirm={handleDeleteConfirm}
                     onCancel={() => setShowDeleteConfirm(false)}
                 >
-                    <p className="text-red-300 font-bold">This action is irreversible.</p>
+                    <p className="text-error font-bold">This action is irreversible.</p>
                     <p>Are you sure you want to permanently delete all locally processed scan data from this session? This includes the point cloud, analysis results, and metadata.</p>
                 </ConsentDialog>
             )}
@@ -173,9 +138,9 @@ const ResearchModule: React.FC = () => {
             <div className="lg:col-span-1 space-y-8">
                 <Card icon={IdentificationIcon} title="Authorship & Credentials">
                     <div className="text-sm space-y-2">
-                        <p className="font-bold text-gray-200">Dr. Evelyn Reed</p>
-                        <p className="text-xs text-cyan-400">Lead Scientist & UI Architect</p>
-                        <p className="mt-2 text-gray-400 text-xs">
+                        <p className="font-bold text-text-accent">Dr. Evelyn Reed</p>
+                        <p className="text-xs text-green-bright font-mono">Lead Scientist & UI Architect</p>
+                        <p className="mt-2 text-text-primary text-xs">
                             Specializing in advanced Lidar data visualization and applied AI for geospatial analysis.
                         </p>
                     </div>
@@ -185,48 +150,68 @@ const ResearchModule: React.FC = () => {
                 <Card icon={FolderOpenIcon} title="Open Data & Interoperability">
                     <div className="space-y-4">
                         <div>
-                            <h4 className="text-sm font-semibold text-gray-300 mb-2">Downloadable Demo Datasets</h4>
+                            <h4 className="text-sm font-semibold text-green-muted mb-2">Downloadable Demo Datasets</h4>
                             <div className="space-y-2">
-                                <a href="#" className="flex items-center w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition group">
-                                    <CubeIcon className="h-6 w-6 mr-3 text-gray-400"/>
+                                <a href="#" className="flex items-center w-full p-3 text-left bg-bg-primary/50 hover:bg-bg-primary rounded-sm transition group">
+                                    <CubeIcon className="h-6 w-6 mr-3 text-green-muted"/>
                                     <div className="flex-1">
-                                        <p className="font-bold text-sm text-gray-200 group-hover:text-cyan-300">scan_dataset_0A4F.las</p>
-                                        <p className="text-xs text-gray-500">Mock Lidar Scan Data</p>
+                                        <p className="font-bold text-sm text-text-primary group-hover:text-green-bright font-mono">scan_dataset_0A4F.las</p>
+                                        <p className="text-xs text-green-muted/80">Mock Lidar Scan Data</p>
                                     </div>
-                                    <DownloadIcon className="h-5 w-5 text-gray-500"/>
+                                    <DownloadIcon className="h-5 w-5 text-green-muted"/>
                                 </a>
-                                <a href="#" className="flex items-center w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition group">
-                                    <DocumentTextIcon className="h-6 w-6 mr-3 text-gray-400"/>
+                                <a href="#" className="flex items-center w-full p-3 text-left bg-bg-primary/50 hover:bg-bg-primary rounded-sm transition group">
+                                    <DocumentTextIcon className="h-6 w-6 mr-3 text-green-muted"/>
                                     <div className="flex-1">
-                                        <p className="font-bold text-sm text-gray-200 group-hover:text-cyan-300">ground_truth_census.csv</p>
-                                        <p className="text-xs text-gray-500">Validation Ground-Truth Data</p>
+                                        <p className="font-bold text-sm text-text-primary group-hover:text-green-bright font-mono">ground_truth_census.csv</p>
+                                        <p className="text-xs text-green-muted/80">Validation Ground-Truth Data</p>
                                     </div>
-                                    <DownloadIcon className="h-5 w-5 text-gray-500"/>
+                                    <DownloadIcon className="h-5 w-5 text-green-muted"/>
                                 </a>
                             </div>
                         </div>
-                        <div className="border-t border-gray-700 !my-3"></div>
+                        <div className="border-t border-green-dark !my-3"></div>
                         <div>
-                            <h4 className="text-sm font-semibold text-gray-300 mb-2">Integration Connectors (Examples)</h4>
+                            <h4 className="text-sm font-semibold text-green-muted mb-2">Integration Connectors (Examples)</h4>
                             <div className="space-y-2">
-                                 <a href="#" className="flex items-center w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition group">
-                                    <CodeBracketIcon className="h-6 w-6 mr-3 text-gray-400"/>
+                                 <a href="#" className="flex items-center w-full p-3 text-left bg-bg-primary/50 hover:bg-bg-primary rounded-sm transition group">
+                                    <CodeBracketIcon className="h-6 w-6 mr-3 text-green-muted"/>
                                     <div className="flex-1">
-                                        <p className="font-bold text-sm text-gray-200 group-hover:text-cyan-300">QGIS Plugin Connector</p>
+                                        <p className="font-bold text-sm text-text-primary group-hover:text-green-bright">QGIS Plugin Connector</p>
                                     </div>
                                  </a>
-                                 <a href="#" className="flex items-center w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition group">
-                                    <CodeBracketIcon className="h-6 w-6 mr-3 text-gray-400"/>
+                                 <a href="#" className="flex items-center w-full p-3 text-left bg-bg-primary/50 hover:bg-bg-primary rounded-sm transition group">
+                                    <CodeBracketIcon className="h-6 w-6 mr-3 text-green-muted"/>
                                     <div className="flex-1">
-                                        <p className="font-bold text-sm text-gray-200 group-hover:text-cyan-300">PDAL Pipeline Script</p>
+                                        <p className="font-bold text-sm text-text-primary group-hover:text-green-bright">PDAL Pipeline Script</p>
                                     </div>
                                  </a>
                             </div>
                         </div>
                     </div>
                 </Card>
+            </div>
 
-                <Card icon={SatelliteIcon} title="Data Federation & Archival">
+            {/* Right Panel: Publication Prep, Federation, and Ethics */}
+            <div className="lg:col-span-1 space-y-8">
+                 <Card icon={CheckBadgeIcon} title="Reproducibility Checklist">
+                    <div className="mb-4">
+                        <div className="flex justify-between text-sm font-medium text-green-muted mb-1 font-mono">
+                            <span>Progress</span>
+                            <span>{completedChecks} / {totalChecks} Completed</span>
+                        </div>
+                        <div className="w-full bg-green-dark rounded-full h-2.5">
+                            <div className="bg-green-bright h-2.5 rounded-full transition-all duration-500" style={{width: `${progress}%`}}></div>
+                        </div>
+                    </div>
+                    <ul className="space-y-2 text-sm">
+                        <ChecklistItem isChecked={checklist.resources} onToggle={() => handleToggleChecklist('resources')}>Resource Requirements Documented</ChecklistItem>
+                        <ChecklistItem isChecked={checklist.methodology} onToggle={() => handleToggleChecklist('methodology')}>Methodology Clearly Stated</ChecklistItem>
+                        <ChecklistItem isChecked={checklist.randomness} onToggle={() => handleToggleChecklist('randomness')}>Randomness Controlled (Seeds, etc.)</ChecklistItem>
+                        <ChecklistItem isChecked={checklist.validation} onToggle={() => handleToggleChecklist('validation')}>Statistical Validation Performed</ChecklistItem>
+                    </ul>
+                 </Card>
+                 <Card icon={SatelliteIcon} title="Data Federation & Archival">
                     <div className="space-y-3">
                         <IntegrationButton label="NASA Earthdata" description="Search public satellite imagery" icon={SatelliteIcon} href="https://search.earthdata.nasa.gov/" />
                         <IntegrationButton label="OpenTopography" description="Access public Lidar datasets" icon={MountainIcon} href="https://opentopography.org/" />
@@ -236,18 +221,18 @@ const ResearchModule: React.FC = () => {
                 <Card icon={ShieldCheckIcon} title="Ethics & User Control">
                     <div className="space-y-4 text-sm">
                         <div className="flex items-center justify-between">
-                            <label htmlFor="anonymize" className="text-gray-300">Anonymize Geospatial Data</label>
-                            <input type="checkbox" id="anonymize" checked={anonymizeData} onChange={() => setAnonymizeData(!anonymizeData)} className="h-4 w-4 rounded bg-gray-600 border-gray-500 text-cyan-500 focus:ring-cyan-600" />
+                            <label htmlFor="anonymize" className="text-text-primary">Anonymize Geospatial Data</label>
+                            <input type="checkbox" id="anonymize" checked={anonymizeData} onChange={() => setAnonymizeData(!anonymizeData)} className="h-4 w-4 rounded-sm bg-bg-primary border-green-muted text-green-bright focus:ring-green-bright" />
                         </div>
                          <div className="flex items-center justify-between">
-                            <label htmlFor="optout" className="text-gray-300">Opt-out of Data Sharing</label>
-                            <input type="checkbox" id="optout" checked={optOutSharing} onChange={() => setOptOutSharing(!optOutSharing)} className="h-4 w-4 rounded bg-gray-600 border-gray-500 text-cyan-500 focus:ring-cyan-600" />
+                            <label htmlFor="optout" className="text-text-primary">Opt-out of Data Sharing</label>
+                            <input type="checkbox" id="optout" checked={optOutSharing} onChange={() => setOptOutSharing(!optOutSharing)} className="h-4 w-4 rounded-sm bg-bg-primary border-green-muted text-green-bright focus:ring-green-bright" />
                         </div>
-                        <div className="border-t border-gray-700 !my-4"></div>
+                        <div className="border-t border-green-dark !my-4"></div>
                         <button 
                             onClick={handleDeleteRequest}
                             disabled={deleteStatus !== 'idle'}
-                            className="w-full p-3 bg-red-800/80 hover:bg-red-700 rounded-lg transition font-semibold flex items-center justify-center space-x-2 disabled:bg-gray-600 disabled:cursor-not-allowed"
+                            className="w-full p-3 bg-transparent border-2 border-error rounded-sm transition font-semibold flex items-center justify-center space-x-2 text-error hover:bg-error hover:text-bg-primary disabled:border-green-muted/50 disabled:text-green-muted/50 disabled:bg-transparent disabled:cursor-not-allowed"
                         >
                             <TrashIcon className="h-5 w-5" />
                             <span>
@@ -258,64 +243,6 @@ const ResearchModule: React.FC = () => {
                         </button>
                     </div>
                 </Card>
-            </div>
-
-            {/* Center Panel: Publication Draft & Commentary */}
-            <div className="lg:col-span-2 bg-gray-800/50 p-6 rounded-lg border border-gray-700 flex flex-col">
-                 <div className="flex-1 flex flex-col mb-6">
-                    <h3 className="text-lg font-semibold text-gray-200 mb-4">Publication Draft</h3>
-                    <div className="relative flex-1 bg-gray-900/70 rounded-lg p-4 overflow-y-auto">
-                        <div className="absolute inset-0 bg-[image:var(--img-report-bg)] bg-cover bg-center opacity-10 blur-sm"></div>
-                        <div className="relative prose prose-invert max-w-none text-gray-300">
-                            <h1 className="text-cyan-300">Multi-Sensor Lidar Analysis of [Location]</h1>
-                            <p className="text-xs italic text-gray-400">[Workflow complete. All modules contributed to this summary.]</p>
-                            <h2>Abstract</h2>
-                            <p>This study presents a novel approach to environmental analysis using a multi-modal Lidar scanning suite. By integrating infrared, RGB, and spectral sensor data, we identified a previously unmapped geological fault line... [AI-ASSISTED SUMMARY]</p>
-                        </div>
-                    </div>
-                 </div>
-                 <Card icon={CheckBadgeIcon} title="Reproducibility Checklist">
-                    <div className="mb-4">
-                        <div className="flex justify-between text-sm font-medium text-gray-400 mb-1">
-                            <span>Progress</span>
-                            <span>{completedChecks} / {totalChecks} Completed</span>
-                        </div>
-                        <div className="w-full bg-gray-700 rounded-full h-2.5">
-                            <div className="bg-cyan-500 h-2.5 rounded-full transition-all duration-500" style={{width: `${progress}%`}}></div>
-                        </div>
-                    </div>
-                    <ul className="space-y-2 text-sm">
-                        <ChecklistItem isChecked={checklist.resources} onToggle={() => handleToggleChecklist('resources')}>Resource Requirements Documented</ChecklistItem>
-                        <ChecklistItem isChecked={checklist.methodology} onToggle={() => handleToggleChecklist('methodology')}>Methodology Clearly Stated</ChecklistItem>
-                        <ChecklistItem isChecked={checklist.randomness} onToggle={() => handleToggleChecklist('randomness')}>Randomness Controlled (Seeds, etc.)</ChecklistItem>
-                        <ChecklistItem isChecked={checklist.validation} onToggle={() => handleToggleChecklist('validation')}>Statistical Validation Performed</ChecklistItem>
-                    </ul>
-                 </Card>
-                 <div className="flex-1 flex flex-col mt-6">
-                    <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center"><UsersIcon className="h-5 w-5 mr-2 text-cyan-400"/>Collaborator Commentary</h3>
-                    <div className="flex-1 bg-gray-900/70 rounded-lg p-4 space-y-4 overflow-y-auto">
-                        {comments.map((comment, index) => (
-                             <div key={index} className="p-3 bg-gray-700/50 rounded-lg">
-                                <div className="flex justify-between items-center text-xs mb-1">
-                                    <p className="font-bold text-cyan-300">{comment.user}</p>
-                                    <p className="text-gray-400">{comment.time}</p>
-                                </div>
-                                <p className="text-sm text-gray-300">{comment.text}</p>
-                            </div>
-                        ))}
-                    </div>
-                     <div className="mt-4 flex space-x-2">
-                        <input
-                            type="text"
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
-                            placeholder="Add a comment..."
-                             className="flex-1 bg-gray-700 border border-gray-600 rounded-md px-4 py-2 focus:ring-2 focus:ring-cyan-500 focus:outline-none transition"
-                        />
-                        <button onClick={handleAddComment} className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-500 transition">Send</button>
-                    </div>
-                </div>
             </div>
         </div>
     );

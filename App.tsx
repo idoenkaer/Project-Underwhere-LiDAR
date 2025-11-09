@@ -8,14 +8,8 @@ import { DataProvider } from './components/contexts/DataContext';
 // Lazy load all modules
 const RoadmapModule = lazy(() => import('./components/modules/RoadmapModule'));
 const MeasurementModule = lazy(() => import('./components/modules/MeasurementModule'));
-const EnvironmentalModule = lazy(() => import('./components/modules/EnvironmentalModule'));
 const TopographyModule = lazy(() => import('./components/modules/TopographyModule'));
-const AIDiscoveryModule = lazy(() => import('./components/modules/AIDiscoveryModule'));
-const BiologicalModule = lazy(() => import('./components/modules/BiologicalModule'));
-const PhysicsModule = lazy(() => import('./components/modules/PhysicsModule'));
-const SpaceTimeModule = lazy(() => import('./components/modules/SpaceTimeModule'));
 const ResearchModule = lazy(() => import('./components/modules/ResearchModule'));
-const QuantumModule = lazy(() => import('./components/modules/QuantumModule'));
 const ValidationModule = lazy(() => import('./components/modules/ValidationModule'));
 const OnboardingModule = lazy(() => import('./components/common/OnboardingModule'));
 const EthicsSplashScreen = lazy(() => import('./components/common/EthicsSplashScreen'));
@@ -23,7 +17,7 @@ const EthicsSplashScreen = lazy(() => import('./components/common/EthicsSplashSc
 
 const LoadingSpinner: React.FC = () => (
     <div className="flex items-center justify-center h-full">
-        <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-cyan-400"></div>
+        <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-green-bright"></div>
     </div>
 );
 
@@ -36,35 +30,23 @@ const AppContent: React.FC = () => {
         return <RoadmapModule />;
       case Module.MEASUREMENT:
         return <MeasurementModule />;
-      case Module.ENVIRONMENTAL:
-        return <EnvironmentalModule />;
       case Module.TOPOGRAPHY:
         return <TopographyModule />;
-      case Module.AI_DISCOVERY:
-        return <AIDiscoveryModule />;
-      case Module.BIOLOGICAL:
-        return <BiologicalModule />;
-      case Module.PHYSICS:
-        return <PhysicsModule />;
-      case Module.SPACETIME:
-        return <SpaceTimeModule />;
-       case Module.RESEARCH:
+       case Module.EXPORT_SHARE:
         return <ResearchModule />;
        case Module.VALIDATION:
         return <ValidationModule />;
-      case Module.QUANTUM:
-        return <QuantumModule />;
       default:
         return <RoadmapModule />;
     }
   };
 
   return (
-    <div className="flex h-screen w-full bg-gray-900 font-sans">
+    <div className="flex h-screen w-full bg-bg-primary font-sans">
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 blueprint-bg">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
            <Suspense fallback={<LoadingSpinner />}>
             {showEthicsSplash && <EthicsSplashScreen onClose={handleCloseEthicsSplash} />}
             {!showEthicsSplash && showOnboarding && <OnboardingModule onClose={handleCloseOnboarding} />}

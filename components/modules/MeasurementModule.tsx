@@ -18,14 +18,14 @@ import { ExclamationCircleIcon } from '../icons/ExclamationCircleIcon';
 const SensorFeedCard: React.FC<{ title: string; imageUrl: string; details: string; imageFilter?: string }> = ({ title, imageUrl, details, imageFilter = '' }) => {
     return (
         <div>
-            <h3 className="text-md font-semibold text-gray-400 mb-3">{title}</h3>
-            <div className="relative aspect-video w-full rounded-lg bg-black border border-gray-700 overflow-hidden">
+            <h3 className="text-md font-semibold text-green-muted mb-3 font-mono">{title}</h3>
+            <div className="relative aspect-video w-full rounded-sm bg-black border border-green-dark overflow-hidden">
                 <img src={imageUrl} alt={title} className={`object-cover w-full h-full opacity-70 ${imageFilter}`} />
                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                <div className="absolute top-2 left-2 bg-black/50 p-1 px-2 rounded-md text-xs">
-                    <p><span className='bg-blue-500 inline-block w-2 h-2 rounded-full mr-1'></span> <span className='text-blue-400'>SIMULATED</span></p>
+                <div className="absolute top-2 left-2 bg-black/50 p-1 px-2 rounded-sm text-xs">
+                    <p><span className='bg-data-blue inline-block w-2 h-2 rounded-full mr-1'></span> <span className='text-data-blue font-mono'>SIMULATED</span></p>
                 </div>
-                <div className="absolute bottom-2 right-2 bg-black/50 p-1 px-2 rounded-md text-xs font-mono">
+                <div className="absolute bottom-2 right-2 bg-black/50 p-1 px-2 rounded-sm text-xs font-mono text-green-primary">
                     <p>{details}</p>
                 </div>
             </div>
@@ -38,26 +38,26 @@ const ProcessedView: React.FC = () => {
         <div className="space-y-8 animate-fadeInUp">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
-                    <h2 className="text-lg font-semibold text-gray-300 mb-4">Simulated Lidar Point Cloud</h2>
-                    <div className="relative aspect-video w-full rounded-lg bg-black border border-gray-700 overflow-hidden">
+                    <h2 className="text-lg font-mono font-semibold text-text-primary mb-4">Simulated Lidar Point Cloud</h2>
+                    <div className="relative aspect-video w-full rounded-sm bg-black border border-green-dark overflow-hidden">
                         <img src="https://picsum.photos/seed/lidar/1280/720" alt="Lidar Point Cloud" className="object-cover w-full h-full opacity-30" />
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <p className="text-gray-400 text-lg">Dataset: `scan_dataset_0A4F.las` Processed</p>
+                            <p className="text-green-muted text-lg font-mono">Dataset: `scan_dataset_0A4F.las` Processed</p>
                         </div>
                     </div>
                 </div>
                 <div className="space-y-6">
-                    <h2 className="text-lg font-semibold text-gray-300">Calibration & Sensor Status</h2>
+                    <h2 className="text-lg font-mono font-semibold text-text-primary">Calibration & Sensor Status</h2>
                     <MetricCard label="Resolution" value="< 1" unit="cm" />
-                    <div className="space-y-2 text-sm bg-gray-800/50 p-4 rounded-lg">
-                        <p className="flex justify-between items-center"><span>Infrared (IR)</span><span className="text-cyan-300 font-mono">CALIBRATED</span></p>
-                        <p className="flex justify-between items-center"><span>RGB</span><span className="text-cyan-300 font-mono">CALIBRATED</span></p>
-                        <p className="flex justify-between items-center"><span>Time-of-Flight (ToF)</span><span className="text-cyan-300 font-mono">CALIBRATED</span></p>
+                    <div className="space-y-2 text-sm bg-bg-secondary p-4 rounded-sm border border-green-dark">
+                        <p className="flex justify-between items-center text-text-primary"><span>Infrared (IR)</span><span className="text-green-primary font-mono">CALIBRATED</span></p>
+                        <p className="flex justify-between items-center text-text-primary"><span>RGB</span><span className="text-green-primary font-mono">CALIBRATED</span></p>
+                        <p className="flex justify-between items-center text-text-primary"><span>Time-of-Flight (ToF)</span><span className="text-green-primary font-mono">CALIBRATED</span></p>
                     </div>
                 </div>
             </div>
             <div>
-                 <h2 className="text-lg font-semibold text-gray-300 mb-4">Simulated Sensor Feeds</h2>
+                 <h2 className="text-lg font-mono font-semibold text-text-primary mb-4">Simulated Sensor Feeds</h2>
                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <SensorFeedCard title="Infrared Feed" imageUrl="https://picsum.photos/seed/infrared/800/450" details="LWIR 7.5-13.5μm" imageFilter="grayscale contrast-200" />
                     <SensorFeedCard title="RGB Camera" imageUrl="https://picsum.photos/seed/rgb/800/450" details="4K UHD @ 30FPS" />
@@ -65,47 +65,47 @@ const ProcessedView: React.FC = () => {
                  </div>
             </div>
             <div className="animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-                <h2 className="text-lg font-semibold text-gray-300 mb-4">Geospatial Referencing & Metadata</h2>
+                <h2 className="text-lg font-mono font-semibold text-text-primary mb-4">Geospatial Referencing & Metadata</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
-                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><CheckBadgeIcon className="h-5 w-5 mr-2 text-cyan-400" /> Geolocation Precision</h3>
-                        <p className="font-mono text-lg text-green-400">RTK LOCK ACQUIRED</p>
-                        <p className="text-xs text-gray-500 mt-1">Survey-Grade Accuracy (&lt;2cm)</p>
+                    <div className="bg-bg-secondary p-4 rounded-sm border border-green-dark">
+                        <h3 className="text-sm font-medium text-green-muted flex items-center mb-2"><CheckBadgeIcon className="h-5 w-5 mr-2 text-green-bright" /> Geolocation Precision</h3>
+                        <p className="font-mono text-lg text-green-primary">RTK LOCK ACQUIRED</p>
+                        <p className="text-xs text-green-dark mt-1">Survey-Grade Accuracy (&lt;2cm)</p>
                     </div>
-                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
-                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><MapPinCheckIcon className="h-5 w-5 mr-2 text-cyan-400" /> Ground-Truth Validation</h3>
-                        <p className="font-mono text-lg text-green-400">VALIDATED VS GCPS</p>
-                        <p className="text-xs text-gray-500 mt-1">Cross-referenced with 12 GCPs</p>
+                    <div className="bg-bg-secondary p-4 rounded-sm border border-green-dark">
+                        <h3 className="text-sm font-medium text-green-muted flex items-center mb-2"><MapPinCheckIcon className="h-5 w-5 mr-2 text-green-bright" /> Ground-Truth Validation</h3>
+                        <p className="font-mono text-lg text-green-primary">VALIDATED VS GCPS</p>
+                        <p className="text-xs text-green-dark mt-1">Cross-referenced with 12 GCPs</p>
                     </div>
-                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
-                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><GlobeIcon className="h-5 w-5 mr-2 text-cyan-400" /> Coordinate System</h3>
-                        <p className="font-mono text-lg text-cyan-300">WGS 84 / UTM 10N</p>
-                        <p className="text-xs text-gray-500 mt-1">EPSG:32610</p>
+                    <div className="bg-bg-secondary p-4 rounded-sm border border-green-dark">
+                        <h3 className="text-sm font-medium text-green-muted flex items-center mb-2"><GlobeIcon className="h-5 w-5 mr-2 text-green-bright" /> Coordinate System</h3>
+                        <p className="font-mono text-lg text-green-bright">WGS 84 / UTM 10N</p>
+                        <p className="text-xs text-green-dark mt-1">EPSG:32610</p>
                     </div>
-                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
-                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><CodeFileIcon className="h-5 w-5 mr-2 text-cyan-400" /> Output Format</h3>
-                        <p className="font-mono text-lg text-cyan-300">LAS 1.4 / LAZ</p>
-                        <p className="text-xs text-gray-500 mt-1">ASPRS Standard Compliant</p>
+                    <div className="bg-bg-secondary p-4 rounded-sm border border-green-dark">
+                        <h3 className="text-sm font-medium text-green-muted flex items-center mb-2"><CodeFileIcon className="h-5 w-5 mr-2 text-green-bright" /> Output Format</h3>
+                        <p className="font-mono text-lg text-green-bright">LAS 1.4 / LAZ</p>
+                        <p className="text-xs text-green-dark mt-1">ASPRS Standard Compliant</p>
                     </div>
-                     <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
-                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><CogIcon className="h-5 w-5 mr-2 text-cyan-400" /> Instrument & Versioning</h3>
-                        <p className="font-mono text-lg text-cyan-300">INST-04B / v2.1.3</p>
-                        <p className="text-xs text-gray-500 mt-1">Dataset Version: 1.0.2</p>
+                     <div className="bg-bg-secondary p-4 rounded-sm border border-green-dark">
+                        <h3 className="text-sm font-medium text-green-muted flex items-center mb-2"><CogIcon className="h-5 w-5 mr-2 text-green-bright" /> Instrument & Versioning</h3>
+                        <p className="font-mono text-lg text-green-bright">INST-04B / v2.1.3</p>
+                        <p className="text-xs text-green-dark mt-1">Dataset Version: 1.0.2</p>
                     </div>
-                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
-                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><TagIcon className="h-5 w-5 mr-2 text-cyan-400" /> Embedded Metadata</h3>
-                        <p className="font-mono text-lg text-cyan-300">3 Tags Embedded</p>
-                        <p className="text-xs text-gray-500 mt-1">MissionID, Operator, Platform</p>
+                    <div className="bg-bg-secondary p-4 rounded-sm border border-green-dark">
+                        <h3 className="text-sm font-medium text-green-muted flex items-center mb-2"><TagIcon className="h-5 w-5 mr-2 text-green-bright" /> Embedded Metadata</h3>
+                        <p className="font-mono text-lg text-green-bright">3 Tags Embedded</p>
+                        <p className="text-xs text-green-dark mt-1">MissionID, Operator, Platform</p>
                     </div>
-                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
-                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><CircleStackIcon className="h-5 w-5 mr-2 text-cyan-400" /> Archival Status</h3>
-                        <p className="font-mono text-lg text-cyan-300">Ready for Archive</p>
-                        <p className="text-xs text-gray-500 mt-1">STANAG 4545 Compliant</p>
+                    <div className="bg-bg-secondary p-4 rounded-sm border border-green-dark">
+                        <h3 className="text-sm font-medium text-green-muted flex items-center mb-2"><CircleStackIcon className="h-5 w-5 mr-2 text-green-bright" /> Archival Status</h3>
+                        <p className="font-mono text-lg text-green-bright">Ready for Archive</p>
+                        <p className="text-xs text-green-dark mt-1">STANAG 4545 Compliant</p>
                     </div>
-                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
-                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><ShieldCheckIcon className="h-5 w-5 mr-2 text-cyan-400" /> Data Provenance</h3>
-                        <p className="font-mono text-lg text-cyan-300">CHAIN OF CUSTODY</p>
-                        <p className="text-xs text-gray-500 mt-1">NIST RFI Compliant</p>
+                    <div className="bg-bg-secondary p-4 rounded-sm border border-green-dark">
+                        <h3 className="text-sm font-medium text-green-muted flex items-center mb-2"><ShieldCheckIcon className="h-5 w-5 mr-2 text-green-bright" /> Data Provenance</h3>
+                        <p className="font-mono text-lg text-green-bright">CHAIN OF CUSTODY</p>
+                        <p className="text-xs text-green-dark mt-1">NIST RFI Compliant</p>
                     </div>
                 </div>
             </div>
@@ -128,31 +128,31 @@ const ProcessingVisualizer: React.FC<{ title?: string }> = ({ title = "Preproces
 
     return (
         <div className="flex flex-col items-center justify-center h-full text-center animate-fadeIn flex-1">
-            <h2 className="text-2xl font-bold text-cyan-300 mb-6">{title}</h2>
+            <h2 className="text-2xl font-bold text-green-bright mb-6 font-mono">{title}</h2>
             <div className="w-full max-w-md space-y-4">
                 {steps.map((step, index) => {
                     const isCompleted = index < currentStep;
                     const isInProgress = index === currentStep;
                     
                     return (
-                        <div key={step} className="flex items-center space-x-4 bg-gray-800/50 p-4 rounded-lg">
+                        <div key={step} className="flex items-center space-x-4 bg-bg-secondary p-4 rounded-sm">
                             <div className="flex-shrink-0">
                                 {isCompleted ? (
-                                    <CheckIcon className="h-6 w-6 text-green-400 animate-fadeIn" />
+                                    <CheckIcon className="h-6 w-6 text-green-primary animate-fadeIn" />
                                 ) : isInProgress ? (
-                                    <div className="w-6 h-6 border-2 border-dashed rounded-full animate-spin border-cyan-400"></div>
+                                    <div className="w-6 h-6 border-2 border-dashed rounded-full animate-spin border-green-bright"></div>
                                 ) : (
-                                    <div className="w-6 h-6 border-2 border-gray-600 rounded-full"></div>
+                                    <div className="w-6 h-6 border-2 border-green-dark rounded-full"></div>
                                 )}
                             </div>
-                            <div className={`flex-1 text-left ${isCompleted ? 'text-green-400' : isInProgress ? 'text-cyan-300 animate-pulse' : 'text-gray-500'}`}>
+                            <div className={`flex-1 text-left font-mono ${isCompleted ? 'text-green-primary' : isInProgress ? 'text-green-bright animate-pulse' : 'text-green-muted'}`}>
                                 <p className="font-semibold">{step}</p>
                             </div>
                         </div>
                     );
                 })}
             </div>
-             <p className="text-sm text-gray-500 mt-6">Removing noise, normalizing data, and harmonizing point density...</p>
+             <p className="text-sm text-green-muted mt-6 font-mono">Removing noise, normalizing data, and harmonizing point density...</p>
         </div>
     );
 };
@@ -241,8 +241,8 @@ const MeasurementModule: React.FC = () => {
             case 'validating':
                 return (
                     <div className="flex flex-col items-center justify-center h-full text-center animate-fadeIn flex-1">
-                         <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-cyan-400 mx-auto"></div>
-                         <h2 className="text-2xl font-bold text-cyan-300 mt-6">Validating scan data integrity...</h2>
+                         <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-green-bright mx-auto"></div>
+                         <h2 className="text-2xl font-bold font-mono text-green-bright mt-6">Validating scan data integrity...</h2>
                     </div>
                 );
             case 'processing':
@@ -252,11 +252,11 @@ const MeasurementModule: React.FC = () => {
             case 'error':
                  return (
                     <div className="flex flex-col items-center justify-center h-full text-center animate-fadeIn flex-1">
-                        <div className="bg-red-900/50 border border-red-500/50 text-red-300 p-8 rounded-lg max-w-md">
-                            <ExclamationTriangleIcon className="h-16 w-16 mx-auto text-red-400" />
-                            <h2 className="text-2xl font-bold text-red-300 mt-4">{error?.title}</h2>
-                            <p className="mt-2">{error?.message}</p>
-                            <button onClick={handleReset} className="mt-6 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition font-semibold">
+                        <div className="bg-error/10 border border-error text-error p-8 rounded-sm max-w-md">
+                            <ExclamationTriangleIcon className="h-16 w-16 mx-auto text-error" />
+                            <h2 className="text-2xl font-bold text-error mt-4 font-mono">{error?.title}</h2>
+                            <p className="mt-2 text-text-primary">{error?.message}</p>
+                            <button onClick={handleReset} className="mt-6 px-4 py-2 bg-bg-secondary text-text-primary rounded-sm hover:bg-bg-secondary/50 transition font-semibold">
                                 Try Again
                             </button>
                         </div>
@@ -288,9 +288,9 @@ const MeasurementModule: React.FC = () => {
                 </ConsentDialog>
             )}
             {state === 'processed' && (
-                <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 flex items-center justify-between">
-                     <p className="text-sm text-green-400">Scan processed successfully. All sensors calibrated.</p>
-                     <button onClick={handleReset} className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition font-semibold">
+                <div className="bg-bg-secondary p-4 rounded-sm border border-green-dark flex items-center justify-between">
+                     <p className="text-sm text-green-primary font-mono">Scan processed successfully. All sensors calibrated.</p>
+                     <button onClick={handleReset} className="px-4 py-2 bg-green-muted/50 text-text-accent rounded-sm hover:bg-green-muted/80 transition font-semibold">
                         Start New Scan
                     </button>
                 </div>

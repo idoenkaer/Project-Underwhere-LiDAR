@@ -11,18 +11,18 @@ interface MetricCardProps {
 
 export const MetricCard: React.FC<MetricCardProps> = ({ label, value, unit, tooltip, status }) => {
     const statusColor = {
-        good: 'text-green-400',
-        warning: 'text-yellow-400',
-        critical: 'text-red-400',
-    }[status || 'default'] || 'text-cyan-300';
+        good: 'text-green-primary',
+        warning: 'text-warning',
+        critical: 'text-error',
+    }[status || 'default'] || 'text-green-bright';
 
-    const Label = <div className="text-sm font-medium text-gray-400">{label}</div>;
+    const Label = <div className="text-sm font-medium text-green-muted font-mono uppercase text-xs">{label}</div>;
 
     return (
-        <div className="rounded-lg bg-gray-800/50 p-4 backdrop-blur-sm">
+        <div className="rounded-sm bg-bg-primary/50 p-4">
             {tooltip ? <Tooltip text={tooltip}>{Label}</Tooltip> : Label}
-            <div className={`mt-1 text-2xl font-semibold ${statusColor}`}>
-                {value} {unit && <span className="text-lg opacity-80">{unit}</span>}
+            <div className={`mt-1 text-2xl font-semibold font-mono ${statusColor}`}>
+                {value} {unit && <span className="text-lg text-green-muted">{unit}</span>}
             </div>
         </div>
     );
