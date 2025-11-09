@@ -30,6 +30,9 @@ import { StopwatchIcon } from '../icons/StopwatchIcon';
 import { Square2StackIcon } from '../icons/Square2StackIcon';
 import { CloudArrowUpIcon } from '../icons/CloudArrowUpIcon';
 import { ChartTrendingUpIcon } from '../icons/ChartTrendingUpIcon';
+import { BugAntIcon } from '../icons/BugAntIcon';
+import { ServerIcon } from '../icons/ServerIcon';
+import { UserGroupIcon } from '../icons/UserGroupIcon';
 
 
 enum Status {
@@ -138,10 +141,28 @@ const RoadmapModule: React.FC = () => {
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
                     <WorkflowIcon className="h-6 w-6 mr-3 text-cyan-400" />
-                    Clean Architecture Refactor
+                    Architectural Design Pattern
                 </h3>
                 <p className="text-sm text-gray-400">
-                    Restructured the application to follow the Clean Architecture pattern. This establishes clear boundaries between layers—Entities (data structures), Use Cases (business logic), Interface Adapters (UI components), and Infrastructure (frameworks, external APIs). This separation enhances testability, maintainability, and makes the system independent of UI and data source specifics.
+                    The application is structured using the **Clean Architecture** pattern to ensure maintainability and separation of concerns. This creates clear boundaries: the **UI Layer** (`/components`) is decoupled from the **Application Layer** (`/application/use-cases`), which contains all business logic. The Application Layer, in turn, depends on abstract repository interfaces, with concrete implementations (like data access and external API calls) residing in the **Infrastructure Layer** (`/infrastructure`). This design makes the system independently testable and adaptable to future changes in technology or requirements.
+                </p>
+            </div>
+             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <BugAntIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Multi-Layered Testing Strategy
+                </h3>
+                <p className="text-sm text-gray-400">
+                    To ensure reliability and robustness, a comprehensive, multi-layered testing strategy is planned. **Unit Tests** (Jest/Vitest) will validate individual use cases and infrastructure services in isolation. **Integration Tests** will verify the contracts between layers, ensuring UI components correctly invoke application logic. Finally, **End-to-End (E2E) Tests** (Cypress/Playwright) will simulate real user workflows across the entire application to catch issues in the complete user flow.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <ServerIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Scalability & Cloud Architecture
+                </h3>
+                <p className="text-sm text-gray-400">
+                    To ensure mission-grade scalability and cost-effective operation, we are planning a cloud-native architecture. This includes a data compression strategy (e.g., LAZ format for Lidar), a distributed processing plan using serverless functions or container orchestration for large-scale analysis, and a comprehensive disaster recovery strategy with geo-redundant storage and automated backups.
                 </p>
             </div>
              <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
@@ -277,6 +298,15 @@ const RoadmapModule: React.FC = () => {
                 </h3>
                 <p className="text-sm text-gray-400">
                     Implement fail-safe data imports with clear validation and error feedback. Enhance visual hierarchy by accentuating primary actions and improving separation between UI sections. Controls for maps and visualizations will be persistent and intuitive. Add subtle micro-interactions to provide feedback on loading, errors, and task completion.
+                </p>
+            </div>
+             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <UserGroupIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    User-Centric Design & Workflow Analysis
+                </h3>
+                <p className="text-sm text-gray-400">
+                    To ensure the platform meets the real-world needs of scientists, we are launching a dedicated user research initiative. This involves creating detailed user personas (e.g., Field Geologist, Lab Analyst), mapping their end-to-end workflows from data acquisition to publication, and conducting iterative usability testing sessions. The goal is to refine the UI/UX to directly support and accelerate established scientific processes, preventing user frustration and ensuring high adoption.
                 </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
