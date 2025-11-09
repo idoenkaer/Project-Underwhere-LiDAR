@@ -4,6 +4,7 @@ import { MetricCard } from '../common/MetricCard';
 import { RecommendationsCard } from '../common/RecommendationsCard';
 import { useDataContext } from '../contexts/DataContext';
 import { useUIStateContext } from '../contexts/UIStateContext';
+import { runBiologicalAnalysis } from '../../application/use-cases/runBiologicalAnalysis';
 
 interface DataSheetProps {
     title: string;
@@ -27,11 +28,10 @@ const BiologicalModule: React.FC = () => {
     const data = database.biological;
     const [analysisState, setAnalysisState] = useState<'idle' | 'processing' | 'complete'>('idle');
 
-    const handleRunAnalysis = () => {
+    const handleRunAnalysis = async () => {
         setAnalysisState('processing');
-        setTimeout(() => {
-            setAnalysisState('complete');
-        }, 3000); // Simulate 3-second analysis
+        const result = await runBiologicalAnalysis();
+        setAnalysisState(result);
     };
 
     if (analysisState === 'idle') {

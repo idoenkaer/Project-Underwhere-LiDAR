@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { streamAIResponse, isConfigured, configurationError } from '../../services/geminiService';
+import { isConfigured, configurationError } from '../../infrastructure/ai/GeminiService';
+import { streamAIDiscovery } from '../../application/use-cases/streamAIDiscovery';
 import { SparklesIcon } from '../icons/SparklesIcon';
 import { BookOpenIcon } from '../icons/BookOpenIcon';
 import { BeakerIcon } from '../icons/BeakerIcon';
@@ -85,7 +86,7 @@ const AIDiscoveryModule: React.FC = () => {
     setAiResponse('');
 
     try {
-      const responseStream = await streamAIResponse(userInput);
+      const responseStream = await streamAIDiscovery(userInput);
       
       for await (const chunk of responseStream) {
         setAiResponse((prev) => prev + chunk.text);

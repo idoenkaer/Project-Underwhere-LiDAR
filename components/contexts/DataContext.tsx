@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import { ScientificDatabase, ScanMetadata } from '../../types';
-import { db } from '../../services/mockDb';
+import { db } from '../../infrastructure/data/mockData';
 
 interface DataContextType {
   database: ScientificDatabase;

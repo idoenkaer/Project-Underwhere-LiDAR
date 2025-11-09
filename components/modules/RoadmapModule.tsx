@@ -135,6 +135,15 @@ const RoadmapModule: React.FC = () => {
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <WorkflowIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Clean Architecture Refactor
+                </h3>
+                <p className="text-sm text-gray-400">
+                    Restructured the application to follow the Clean Architecture pattern. This establishes clear boundaries between layers—Entities (data structures), Use Cases (business logic), Interface Adapters (UI components), and Infrastructure (frameworks, external APIs). This separation enhances testability, maintainability, and makes the system independent of UI and data source specifics.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
                     <StopwatchIcon className="h-6 w-6 mr-3 text-cyan-400" />
                     Comprehensive Performance Benchmarking
                 </h3>
@@ -244,10 +253,10 @@ const RoadmapModule: React.FC = () => {
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
                     <MagnifyingGlassIcon className="h-6 w-6 mr-3 text-cyan-400" />
-                    Geospatial Validation & Cross-Validation Testing
+                    Geospatial Validation & Ground-Truthing
                 </h3>
                 <p className="text-sm text-gray-400">
-                    To ensure scientific rigor, we will validate coordinate precision and elevation accuracy against published datasets. This includes testing cross-validation overlays to ensure correct spatial registration and temporal alignment with external data sources like GRASS GIS.
+                    To ensure survey-grade accuracy and scientific rigor, we are establishing documented ground-truthing protocols. This involves field validation using high-precision GPS/RTK equipment to create benchmarks. These benchmarks will be used to validate the coordinate precision and elevation accuracy of our Lidar outputs, ensuring they meet the highest standards before cross-validation against published datasets or external sources like GRASS GIS.
                 </p>
             </div>
         </div>

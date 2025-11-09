@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { Module, ScientificDatabase, ScanMetadata } from '../../types';
-import { db } from '../../services/mockDb';
+import { db } from '../../infrastructure/data/mockData';
 
 interface AppContextType {
   activeModule: Module;

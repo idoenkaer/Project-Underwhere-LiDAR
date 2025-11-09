@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MetricCard } from '../common/MetricCard';
 import { PhysicsScenario } from '../../types';
 import { RecommendationsCard } from '../common/RecommendationsCard';
 import { useDataContext } from '../contexts/DataContext';
 import { BenchmarkResultsCard } from '../common/BenchmarkResultsCard';
+import { runPhysicsSimulation } from '../../application/use-cases/runPhysicsSimulation';
+import { MockDataRepository } from '../../infrastructure/data/MockDataRepository';
 
 const PhysicsModule: React.FC = () => {
     const { database } = useDataContext();
@@ -12,24 +14,26 @@ const PhysicsModule: React.FC = () => {
     const [selectedScenarioId, setSelectedScenarioId] = useState<string>(analysis.scenarios[0].id);
     const [isRunning, setIsRunning] = useState(false);
     const [results, setResults] = useState<PhysicsScenario | null>(null);
+    const repoRef = useRef(new MockDataRepository());
 
     useEffect(() => {
         // Reset results if scenario changes
         setResults(null);
     }, [selectedScenarioId]);
 
-    const runSimulation = () => {
+    const runSimulation = async () => {
         if (selectedScenarioId) {
             setIsRunning(true);
             setResults(null);
-            // Simulate loading the pre-calculated results
-            setTimeout(() => {
-                const scenario = analysis.scenarios.find(s => s.id === selectedScenarioId);
-                if (scenario) {
-                    setResults(scenario);
-                }
+            try {
+                const scenario = await runPhysicsSimulation(repoRef.current, selectedScenarioId);
+                setResults(scenario);
+            } catch (error) {
+                console.error("Simulation failed:", error);
+                // Optionally set an error state here to show in the UI
+            } finally {
                 setIsRunning(false);
-            }, 3000);
+            }
         }
     };
     

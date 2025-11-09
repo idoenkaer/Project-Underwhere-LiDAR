@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ExclamationTriangleIcon } from '../icons/ExclamationTriangleIcon';
 import { MetricCard } from '../common/MetricCard';
 import { CheckIcon } from '../icons/CheckIcon';
+import { processScanFile, loadMockScan } from '../../application/use-cases/processScanFile';
 
 const SensorFeedCard: React.FC<{ title: string; imageUrl: string; details: string; imageFilter?: string }> = ({ title, imageUrl, details, imageFilter = '' }) => {
     return (
@@ -132,30 +133,33 @@ const MeasurementModule: React.FC = () => {
     const [state, setState] = useState<'idle' | 'validating' | 'processing' | 'processed' | 'error'>('idle');
     const [error, setError] = useState<{title: string, message: string} | null>(null);
 
-    const handleUpload = (file: File) => {
+    const handleUpload = async (file: File) => {
         setState('validating');
         setError(null);
 
-        // Simulate validation
-        setTimeout(() => {
-            if (!['text/csv', 'application/vnd.las'].includes(file.type) && !file.name.endsWith('.las') && !file.name.endsWith('.xyz')) {
-                setError({ title: 'Invalid File Format', message: 'Please upload a valid .LAS, .XYZ or .CSV point cloud file.'});
-                setState('error');
-            } else if (file.size > 10 * 1024 * 1024) { // Mock validation: size check
-                setError({ title: 'Data Out of Range', message: 'File size exceeds 10MB. Scan may contain points outside the expected geophysical area.'});
-                setState('error');
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate validation delay
+            setState('processing');
+            const result = await processScanFile(file);
+            setState(result);
+        } catch (e) {
+            const message = (e as Error).message;
+            if (message === 'Invalid File Format') {
+                 setError({ title: 'Invalid File Format', message: 'Please upload a valid .LAS, .XYZ or .CSV point cloud file.'});
+            } else if (message === 'Data Out of Range') {
+                 setError({ title: 'Data Out of Range', message: 'File size exceeds 10MB. Scan may contain points outside the expected geophysical area.'});
             } else {
-                setState('processing');
-                // Simulate processing pipeline (4 steps * 750ms = 3000ms)
-                setTimeout(() => setState('processed'), 3000);
+                 setError({ title: 'Processing Error', message: 'An unknown error occurred.'});
             }
-        }, 1500);
+            setState('error');
+        }
     };
     
-    const handleLoadMock = () => {
+    const handleLoadMock = async () => {
         setState('processing');
         setError(null);
-        setTimeout(() => setState('processed'), 3000);
+        const result = await loadMockScan();
+        setState(result);
     };
 
     const handleReset = () => {
