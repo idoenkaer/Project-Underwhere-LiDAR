@@ -16,7 +16,10 @@ const PhysicsModule = lazy(() => import('./components/modules/PhysicsModule'));
 const SpaceTimeModule = lazy(() => import('./components/modules/SpaceTimeModule'));
 const ResearchModule = lazy(() => import('./components/modules/ResearchModule'));
 const QuantumModule = lazy(() => import('./components/modules/QuantumModule'));
+const ValidationModule = lazy(() => import('./components/modules/ValidationModule'));
 const OnboardingModule = lazy(() => import('./components/common/OnboardingModule'));
+const EthicsSplashScreen = lazy(() => import('./components/common/EthicsSplashScreen'));
+
 
 const LoadingSpinner: React.FC = () => (
     <div className="flex items-center justify-center h-full">
@@ -25,7 +28,7 @@ const LoadingSpinner: React.FC = () => (
 );
 
 const AppContent: React.FC = () => {
-  const { activeModule, showOnboarding, handleCloseOnboarding } = useUIStateContext();
+  const { activeModule, showOnboarding, handleCloseOnboarding, showEthicsSplash, handleCloseEthicsSplash } = useUIStateContext();
 
   const renderActiveModule = () => {
     switch (activeModule) {
@@ -47,6 +50,8 @@ const AppContent: React.FC = () => {
         return <SpaceTimeModule />;
        case Module.RESEARCH:
         return <ResearchModule />;
+       case Module.VALIDATION:
+        return <ValidationModule />;
       case Module.QUANTUM:
         return <QuantumModule />;
       default:
@@ -61,8 +66,9 @@ const AppContent: React.FC = () => {
         <Header />
         <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 blueprint-bg">
            <Suspense fallback={<LoadingSpinner />}>
-            {showOnboarding && <OnboardingModule onClose={handleCloseOnboarding} />}
-            {renderActiveModule()}
+            {showEthicsSplash && <EthicsSplashScreen onClose={handleCloseEthicsSplash} />}
+            {!showEthicsSplash && showOnboarding && <OnboardingModule onClose={handleCloseOnboarding} />}
+            {!showEthicsSplash && !showOnboarding && renderActiveModule()}
           </Suspense>
         </main>
       </div>

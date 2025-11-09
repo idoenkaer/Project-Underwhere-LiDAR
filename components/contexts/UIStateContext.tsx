@@ -8,6 +8,8 @@ interface UIStateContextType {
   setIsLiveData: (isLive: boolean) => void;
   showOnboarding: boolean;
   handleCloseOnboarding: () => void;
+  showEthicsSplash: boolean;
+  handleCloseEthicsSplash: () => void;
 }
 
 const UIStateContext = createContext<UIStateContextType | undefined>(undefined);
@@ -16,12 +18,24 @@ export const UIStateProvider: React.FC<{ children: ReactNode }> = ({ children })
   const [activeModule, setActiveModule] = useState<Module>(Module.ROADMAP);
   const [isLiveData, setIsLiveData] = useState<boolean>(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showEthicsSplash, setShowEthicsSplash] = useState(false);
   
   useEffect(() => {
-    if (!sessionStorage.getItem('onboardingComplete')) {
+    if (!sessionStorage.getItem('ethicsAcknowledged')) {
+      setShowEthicsSplash(true);
+    } else if (!sessionStorage.getItem('onboardingComplete')) {
       setShowOnboarding(true);
     }
   }, []);
+
+  const handleCloseEthicsSplash = () => {
+    sessionStorage.setItem('ethicsAcknowledged', 'true');
+    setShowEthicsSplash(false);
+    // After acknowledging ethics, check if onboarding is needed
+    if (!sessionStorage.getItem('onboardingComplete')) {
+      setShowOnboarding(true);
+    }
+  };
 
   const handleCloseOnboarding = () => {
     sessionStorage.setItem('onboardingComplete', 'true');
@@ -36,6 +50,8 @@ export const UIStateProvider: React.FC<{ children: ReactNode }> = ({ children })
     setIsLiveData,
     showOnboarding,
     handleCloseOnboarding,
+    showEthicsSplash,
+    handleCloseEthicsSplash,
   };
 
   return <UIStateContext.Provider value={value}>{children}</UIStateContext.Provider>;

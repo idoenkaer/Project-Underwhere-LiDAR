@@ -9,6 +9,7 @@ export enum Module {
   SPACETIME = 'Space-Time',
   AI_DISCOVERY = 'AI Discovery',
   RESEARCH = 'Collaboration',
+  VALIDATION = 'Validation',
   QUANTUM = 'Quantum',
   ROADMAP = 'Roadmap',
 }

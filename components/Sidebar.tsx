@@ -11,6 +11,7 @@ import { ChartBarIcon } from './icons/ChartBarIcon';
 import { BookOpenIcon } from './icons/BookOpenIcon';
 import { ClipboardListIcon } from './icons/ClipboardListIcon';
 import { useUIStateContext } from './contexts/UIStateContext';
+import { ClipboardDocumentCheckIcon } from './icons/ClipboardDocumentCheckIcon';
 
 const navItems = [
   { module: Module.ROADMAP, icon: ClipboardListIcon, label: 'Roadmap' },
@@ -22,6 +23,7 @@ const navItems = [
   { module: Module.SPACETIME, icon: ChartBarIcon, label: 'Space-Time' },
   { module: Module.AI_DISCOVERY, icon: SparklesIcon, label: 'AI Discovery' },
   { module: Module.RESEARCH, icon: BookOpenIcon, label: 'Collaboration' },
+  { module: Module.VALIDATION, icon: ClipboardDocumentCheckIcon, label: 'Validation' },
   { module: Module.QUANTUM, icon: AtomIcon, label: 'Quantum' },
 ];
 

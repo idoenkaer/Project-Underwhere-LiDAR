@@ -12,6 +12,11 @@ import { ArchiveBoxIcon } from '../icons/ArchiveBoxIcon';
 import { IdentificationIcon } from '../icons/IdentificationIcon';
 import { TrashIcon } from '../icons/TrashIcon';
 import ConsentDialog from '../common/ConsentDialog';
+import { FolderOpenIcon } from '../icons/FolderOpenIcon';
+import { CubeIcon } from '../icons/CubeIcon';
+import { DownloadIcon } from '../icons/DownloadIcon';
+import { DocumentTextIcon } from '../icons/DocumentTextIcon';
+import { CodeBracketIcon } from '../icons/CodeBracketIcon';
 
 type ExportStatus = 'idle' | 'exporting' | 'success';
 
@@ -176,7 +181,51 @@ const ResearchModule: React.FC = () => {
                     </div>
                 </Card>
                 <ExportButton onExportRequest={handleExportRequest} statuses={exportStatuses} />
-                <ShareButton onGenerateDemoLink={handleGenerateDemoLink} isGeneratingLink={isGeneratingLink} demoLink={demoLink} onCopyLink={handleCopyLink} copyStatus={copyStatus} />
+                
+                <Card icon={FolderOpenIcon} title="Open Data & Interoperability">
+                    <div className="space-y-4">
+                        <div>
+                            <h4 className="text-sm font-semibold text-gray-300 mb-2">Downloadable Demo Datasets</h4>
+                            <div className="space-y-2">
+                                <a href="#" className="flex items-center w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition group">
+                                    <CubeIcon className="h-6 w-6 mr-3 text-gray-400"/>
+                                    <div className="flex-1">
+                                        <p className="font-bold text-sm text-gray-200 group-hover:text-cyan-300">scan_dataset_0A4F.las</p>
+                                        <p className="text-xs text-gray-500">Mock Lidar Scan Data</p>
+                                    </div>
+                                    <DownloadIcon className="h-5 w-5 text-gray-500"/>
+                                </a>
+                                <a href="#" className="flex items-center w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition group">
+                                    <DocumentTextIcon className="h-6 w-6 mr-3 text-gray-400"/>
+                                    <div className="flex-1">
+                                        <p className="font-bold text-sm text-gray-200 group-hover:text-cyan-300">ground_truth_census.csv</p>
+                                        <p className="text-xs text-gray-500">Validation Ground-Truth Data</p>
+                                    </div>
+                                    <DownloadIcon className="h-5 w-5 text-gray-500"/>
+                                </a>
+                            </div>
+                        </div>
+                        <div className="border-t border-gray-700 !my-3"></div>
+                        <div>
+                            <h4 className="text-sm font-semibold text-gray-300 mb-2">Integration Connectors (Examples)</h4>
+                            <div className="space-y-2">
+                                 <a href="#" className="flex items-center w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition group">
+                                    <CodeBracketIcon className="h-6 w-6 mr-3 text-gray-400"/>
+                                    <div className="flex-1">
+                                        <p className="font-bold text-sm text-gray-200 group-hover:text-cyan-300">QGIS Plugin Connector</p>
+                                    </div>
+                                 </a>
+                                 <a href="#" className="flex items-center w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition group">
+                                    <CodeBracketIcon className="h-6 w-6 mr-3 text-gray-400"/>
+                                    <div className="flex-1">
+                                        <p className="font-bold text-sm text-gray-200 group-hover:text-cyan-300">PDAL Pipeline Script</p>
+                                    </div>
+                                 </a>
+                            </div>
+                        </div>
+                    </div>
+                </Card>
+
                 <Card icon={SatelliteIcon} title="Data Federation & Archival">
                     <div className="space-y-3">
                         <IntegrationButton label="NASA Earthdata" description="Search public satellite imagery" icon={SatelliteIcon} href="https://search.earthdata.nasa.gov/" />

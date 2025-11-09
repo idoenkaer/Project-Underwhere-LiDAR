@@ -35,6 +35,9 @@ import { ServerIcon } from '../icons/ServerIcon';
 import { UserGroupIcon } from '../icons/UserGroupIcon';
 import { GlobeAmericasIcon } from '../icons/GlobeAmericasIcon';
 import { WrenchScrewdriverIcon } from '../icons/WrenchScrewdriverIcon';
+import { BuildingLibraryIcon } from '../icons/BuildingLibraryIcon';
+import { ArrowPathRoundedSquareIcon } from '../icons/ArrowPathRoundedSquareIcon';
+import { ShieldAlertIcon } from '../icons/ShieldAlertIcon';
 
 
 enum Status {
@@ -155,7 +158,7 @@ const RoadmapModule: React.FC = () => {
                     Multi-Layered Testing Strategy
                 </h3>
                 <p className="text-sm text-gray-400">
-                    To ensure reliability and robustness, a comprehensive, multi-layered testing strategy is planned. **Unit Tests** (Jest/Vitest) will validate individual use cases and infrastructure services in isolation. **Integration Tests** will verify the contracts between layers, ensuring UI components correctly invoke application logic. Finally, **End-to-End (E2E) Tests** (Cypress/Playwright) will simulate real user workflows across the entire application to catch issues in the complete user flow.
+                    To make testing a first-class citizen, we've implemented an **interactive Validation module**. This suite allows for the simulated execution of **automated regression tests** to prevent new features from breaking existing workflows, **performance benchmarks** to monitor processing latency and resource usage, and **accuracy validation** to compare model outputs against ground-truth datasets. This is supplemented by a planned strategy for traditional unit, integration, and E2E tests.
                 </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
@@ -183,6 +186,33 @@ const RoadmapModule: React.FC = () => {
                 </h3>
                 <p className="text-sm text-gray-400">
                     To ensure responsible innovation, we are establishing a comprehensive ethical framework. This includes protocols for data privacy, minimizing the environmental impact of field operations, and a commitment to active stakeholder engagement. We will prioritize collaboration with local and indigenous communities, ensuring our research respects their rights, knowledge, and contributes positively to their environment.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <ArrowPathRoundedSquareIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Data Science Lifecycle (DSLP)
+                </h3>
+                <p className="text-sm text-gray-400">
+                    We are adopting the Data Science Lifecycle Process (DSLP) framework to ensure a structured and rigorous approach to all AI/ML development. This multi-phase process covers everything from initial scientific understanding and data acquisition to model deployment, monitoring, and iteration, ensuring our results are robust and reproducible.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <BuildingLibraryIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Project Governance & Coordination
+                </h3>
+                <p className="text-sm text-gray-400">
+                    A formal governance model is being established to guide the project's strategic direction and ensure effective collaboration. This includes defining roles for Core Maintainers, establishing a Scientific Advisory Board for expert review, and creating clear protocols for communication and decision-making across interdisciplinary teams.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <ShieldAlertIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Risk Management Framework
+                </h3>
+                <p className="text-sm text-gray-400">
+                    To ensure project resilience, we are implementing a proactive risk management framework. This involves maintaining a formal risk register to systematically identify, assess, and mitigate potential technical, scientific, and operational risks throughout the project lifecycle, from data acquisition ethics to model validation.
                 </p>
             </div>
              <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
@@ -236,7 +266,7 @@ const RoadmapModule: React.FC = () => {
                     Geospatial Data Standards & Interoperability
                 </h3>
                 <p className="text-sm text-gray-400">
-                    Implement and document support for global geospatial standards. This includes ensuring all data services adhere to OGC protocols (WMS, WFS) for seamless integration, standardizing on WGS84/UTM spatial references, and producing standard-compliant outputs like GeoTIFF, LAS 1.4, and netCDF. We will facilitate easy data exchange with leading platforms (QGIS, CloudCompare, PDAL) and enrich all datasets with comprehensive metadata.
+                    Implement and document support for global geospatial standards. This includes ensuring all data services adhere to OGC protocols (WMS, WFS), standardizing on WGS84/UTM spatial references, and producing standard-compliant outputs like GeoTIFF, LAS 1.4, and netCDF. We will facilitate easy data exchange with leading platforms (QGIS, CloudCompare, PDAL) by publishing our demo datasets as open data and providing example integration scripts and connectors. This approach ensures our data is not only standard-compliant but also highly accessible to the broader scientific community.
                 </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
@@ -305,10 +335,10 @@ const RoadmapModule: React.FC = () => {
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
                     <InfoIcon className="h-6 w-6 mr-3 text-cyan-400" />
-                    First Launch Experience & Design System
+                    Comprehensive Documentation
                 </h3>
                 <p className="text-sm text-gray-400">
-                    Prioritize a polished "first launch experience" with clear onboarding, a demo scan with annotated results front-and-center, and a consistent design system for all scientific outputs (overlays, heatmaps, scorecards). Enable rapid contextual help via tooltips for scientific and technical terms.
+                    To ensure accessibility for both scientists and developers, we are committed to creating comprehensive documentation. This includes detailed user guides for all modules, tutorials for common scientific workflows, and a formal API specification for the future plugin architecture. All documentation will be versioned and publicly accessible.
                 </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
