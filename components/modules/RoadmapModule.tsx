@@ -136,6 +136,24 @@ const RoadmapModule: React.FC = () => {
                     Our development is guided by a clear strategic vision: to create more than just a tool, but an intelligent, open, and responsible scientific platform. We will not compete on features alone, but on a seamless user experience that bridges the gap between field deployment and instant, actionable results. Our focus is on building an extensible ecosystem through robust API integrations, clear onboarding, and unwavering interoperability. The goal is to be the platform that democratizes access to advanced geospatial analysis and fosters ethical, collaborative science.
                 </p>
             </div>
+
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-orange-500/30">
+                <h3 className="text-xl font-semibold text-gray-100 mb-4 flex items-center">
+                    <UserGroupIcon className="h-6 w-6 mr-3 text-orange-400" />
+                    Immediate Core Team Expansion
+                </h3>
+                <p className="text-gray-300 mb-4">
+                    To de-risk the project and accelerate development, the immediate hiring of the following domain experts is critical:
+                </p>
+                <ul className="list-disc list-inside text-gray-300 space-y-2 mb-4">
+                    <li><span className="font-bold">Geospatial Scientist:</span> 10+ years of hands-on LiDAR experience.</li>
+                    <li><span className="font-bold">Machine Learning Engineer:</span> Proven track record of shipping production models.</li>
+                    <li><span className="font-bold">Cloud Architect:</span> Expertise in designing and managing petabyte-scale data systems.</li>
+                </ul>
+                <div className="bg-orange-900/50 border-l-4 border-orange-500 text-orange-300 p-4 rounded-r-lg">
+                    <p className="font-bold">This quadruples the initial budget projection but is non-negotiable for success.</p>
+                </div>
+            </div>
             
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h2 className="text-xl font-semibold text-gray-200 mb-4">Q3 Milestones</h2>
@@ -246,6 +264,15 @@ const RoadmapModule: React.FC = () => {
                 </h3>
                 <p className="text-sm text-gray-400">
                     To ensure project resilience, we are implementing a proactive risk management framework. This involves maintaining a formal risk register to systematically identify, assess, and mitigate potential technical, scientific, and operational risks throughout the project lifecycle, from data acquisition ethics to model validation.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <ScaleIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Revenue & Sustainability Model
+                </h3>
+                <p className="text-sm text-gray-400">
+                    To ensure long-term viability and continuous development, we are committed to a multi-faceted revenue model. This strategy avoids relying on a single income stream and includes: SaaS subscriptions for cloud hosting and advanced features, dedicated Enterprise support contracts, securing grant funding for scientific research, and establishing corporate sponsorships. This approach ensures the project remains sustainable without compromising its open-source core.
                 </p>
             </div>
              <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
