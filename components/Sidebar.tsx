@@ -7,11 +7,15 @@ import { ClipboardListIcon } from './icons/ClipboardListIcon';
 import { useUIStateContext } from './contexts/UIStateContext';
 import { ClipboardDocumentCheckIcon } from './icons/ClipboardDocumentCheckIcon';
 import { DownloadIcon } from './icons/DownloadIcon';
+import { SparklesIcon } from './icons/SparklesIcon';
+import { ViewfinderCircleIcon } from './icons/ViewfinderCircleIcon';
+import { BugAntIcon } from './icons/BugAntIcon';
 
 const navItems = [
   { module: Module.ROADMAP, icon: ClipboardListIcon, label: 'Roadmap' },
-  { module: Module.MEASUREMENT, icon: CubeIcon, label: 'Measurement' },
+  { module: Module.SCAN_CALIBRATE, icon: ViewfinderCircleIcon, label: 'Scan & Calibrate' },
   { module: Module.TOPOGRAPHY, icon: GlobeIcon, label: 'Topography' },
+  { module: Module.AI_DISCOVERY, icon: SparklesIcon, label: 'AI Discovery' },
   { module: Module.EXPORT_SHARE, icon: DownloadIcon, label: 'Export & Share' },
   { module: Module.VALIDATION, icon: ClipboardDocumentCheckIcon, label: 'Validation' },
 ];
@@ -42,6 +46,21 @@ const Sidebar: React.FC = () => {
           <item.icon className="h-6 w-6" />
         </button>
       ))}
+       <div className="flex-grow"></div>
+        <button
+          onClick={() => setActiveModule(Module.DEBUG)}
+          className={`relative flex h-12 w-12 flex-col items-center justify-center rounded-sm transition-colors duration-200
+            ${activeModule === Module.DEBUG
+              ? 'bg-green-dark text-green-bright'
+              : 'text-green-muted hover:bg-bg-secondary hover:text-green-bright'
+            }`}
+          title="Debug"
+        >
+          {activeModule === Module.DEBUG && (
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-bright"></div>
+          )}
+          <BugAntIcon className="h-6 w-6" />
+        </button>
     </nav>
   );
 };

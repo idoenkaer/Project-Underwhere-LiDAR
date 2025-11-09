@@ -13,6 +13,7 @@ import { CogIcon } from '../icons/CogIcon';
 import { CodeFileIcon } from '../icons/CodeFileIcon';
 import { MapPinCheckIcon } from '../icons/MapPinCheckIcon';
 import ConsentDialog from '../common/ConsentDialog';
+import { useUIStateContext } from '../contexts/UIStateContext';
 
 const SensorFeedCard: React.FC<{ title: string; imageUrl: string; details: string; imageFilter?: string }> = ({ title, imageUrl, details, imageFilter = '' }) => {
     return (
@@ -158,6 +159,7 @@ const ProcessingVisualizer: React.FC<{ title?: string }> = ({ title = "Preproces
 
 
 const ScanCalibrateModule: React.FC = () => {
+    const { addLog } = useUIStateContext();
     const [state, setState] = useState<'idle' | 'validating' | 'processing' | 'processed' | 'error'>('idle');
     const [error, setError] = useState<{title: string, message: string} | null>(null);
     const [processingTitle, setProcessingTitle] = useState("Preprocessing Scan...");
@@ -167,6 +169,7 @@ const ScanCalibrateModule: React.FC = () => {
 
     const handleUploadRequest = async (file: File) => {
         const action = async () => {
+            addLog(`File upload initiated: ${file.name}`);
             setState('validating');
             setError(null);
             setProcessingTitle("Preprocessing Scan...");
@@ -176,16 +179,20 @@ const ScanCalibrateModule: React.FC = () => {
                 setState('processing');
                 const result = await processScanFile(file);
                 setState(result);
+                addLog(`File processed successfully: ${file.name}`);
             } catch (e) {
                 const message = (e as Error).message;
+                const errorPayload = { title: 'Processing Error', message: 'An unknown error occurred.' };
                 if (message === 'Invalid File Format') {
-                     setError({ title: 'Invalid File Format', message: 'Please upload a valid .LAS, .XYZ or .CSV point cloud file.'});
+                     errorPayload.title = 'Invalid File Format';
+                     errorPayload.message = 'Please upload a valid .LAS, .XYZ or .CSV point cloud file.';
                 } else if (message === 'Data Out of Range') {
-                     setError({ title: 'Data Out of Range', message: 'File size exceeds 10MB. Scan may contain points outside the expected geophysical area.'});
-                } else {
-                     setError({ title: 'Processing Error', message: 'An unknown error occurred.'});
+                     errorPayload.title = 'Data Out of Range';
+                     errorPayload.message = 'File size exceeds 10MB. Scan may contain points outside the expected geophysical area.';
                 }
+                setError(errorPayload);
                 setState('error');
+                addLog(`Processing Error: ${errorPayload.title} - ${errorPayload.message}`);
             }
         };
         setPendingAction(() => action);
@@ -194,11 +201,13 @@ const ScanCalibrateModule: React.FC = () => {
     
     const handleLoadMockRequest = async () => {
         const action = async () => {
+            addLog('Load mock scan requested.');
             setProcessingTitle("Loading Mock Scan...");
             setState('processing');
             setError(null);
             const result = await loadMockScan();
             setState(result);
+            addLog('Mock scan loaded successfully.');
         };
         setPendingAction(() => action);
         setShowConsent(true);
@@ -206,17 +215,20 @@ const ScanCalibrateModule: React.FC = () => {
     
     const handleImportRequest = async (source: string) => {
         const action = async () => {
+            addLog(`Import from ${source} requested.`);
             setProcessingTitle(`Importing from ${source}...`);
             setState('processing');
             setError(null);
             const result = await importExternalDataset();
             setState(result);
+            addLog(`Import from ${source} successful.`);
         };
         setPendingAction(() => action);
         setShowConsent(true);
     };
 
     const handleConsentConfirm = () => {
+        addLog('Data processing consent confirmed.');
         if (pendingAction) {
             pendingAction();
         }
@@ -225,12 +237,14 @@ const ScanCalibrateModule: React.FC = () => {
     };
 
     const handleConsentCancel = () => {
+        addLog('Data processing consent cancelled.');
         setShowConsent(false);
         setPendingAction(null);
     };
 
 
     const handleReset = () => {
+        addLog('Scan & Calibrate module reset.');
         setState('idle');
         setError(null);
     };

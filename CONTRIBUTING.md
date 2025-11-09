@@ -1,6 +1,6 @@
 # Contributing to Project Underwhere
 
-First off, thank you for considering contributing! This project is an ambitious concept, and your help is invaluable in making it a reality.
+First off, thank you for considering contributing! This project is a community-driven, open-source initiative, and your help is invaluable in making our ambitious vision a reality.
 
 ## How to Contribute
 

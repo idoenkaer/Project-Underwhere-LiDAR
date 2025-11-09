@@ -15,9 +15,17 @@ If your only advantage is "easier to use," you've already lost.
 
 ---
 
-## CURRENT STATUS
-**Phase:** MVP Development & Core Team Hiring.
-**Priority Action:** Actively sourcing candidates for the three core technical roles.
+## DEVELOPMENT MODEL: COMMUNITY-LED & OPEN SOURCE
+
+Given that the project operates without a dedicated budget for hiring, we are fully embracing a **community-led development model**. This is not a compromise, but a strategic choice to build a resilient, transparent, and truly open platform.
+
+**Our strategy shifts from hiring experts to empowering them.**
+
+-   **Focus on Contributor Experience:** Our highest priority is making it exceptionally easy for new contributors to understand the codebase, set up their environment, and make their first meaningful contribution. See [CONTRIBUTING.md](CONTRIBUTING.md).
+-   **Pillar 6 as the Foundation:** The "Open API for Community Extension" is no longer just a feature; it is the core of our development philosophy. We build the scaffolding, and the community builds the future.
+-   **Organic Growth:** The 3-month MVP timeline will be adapted to reflect a more organic, contribution-based pace. The focus remains on shipping the core workflow, which will serve as the foundation for community plugins and enhancements.
+
+This model makes the project's long-term success dependent on the strength of its community, which aligns perfectly with our open-source ethos.
 
 ---
 

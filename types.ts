@@ -3,10 +3,12 @@
 // FIX: Added missing type definitions for various modules and updated ScientificDatabase.
 export enum Module {
   ROADMAP = 'Roadmap',
-  MEASUREMENT = 'Measurement',
+  SCAN_CALIBRATE = 'Scan & Calibrate',
   TOPOGRAPHY = 'Topography',
+  AI_DISCOVERY = 'AI Discovery',
   EXPORT_SHARE = 'Export & Share',
   VALIDATION = 'Validation',
+  DEBUG = 'Debug',
 }
 
 // Universal Recommendation structure

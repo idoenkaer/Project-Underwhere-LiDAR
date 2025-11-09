@@ -1,6 +1,9 @@
 import React from 'react';
 import { useUIStateContext } from './contexts/UIStateContext';
 import { useDataContext } from './contexts/DataContext';
+import { isConfigured, configurationError } from '../services/geminiService';
+import { ExclamationTriangleIcon } from './icons/ExclamationTriangleIcon';
+import Tooltip from './common/Tooltip';
 
 const Header: React.FC = () => {
   const { activeModule, isLiveData, setIsLiveData } = useUIStateContext();
@@ -15,6 +18,11 @@ const Header: React.FC = () => {
         </p>
       </div>
       <div className="ml-auto flex items-center space-x-6">
+         {!isConfigured && (
+          <Tooltip text={`Gemini AI Service Error: ${configurationError}`}>
+            <ExclamationTriangleIcon className="h-6 w-6 text-error" />
+          </Tooltip>
+         )}
          <div className="flex items-center space-x-3">
             <span className="relative flex h-3 w-3">
               <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isLiveData ? 'bg-green-primary' : 'bg-data-blue'}`}></span>

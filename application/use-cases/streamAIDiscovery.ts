@@ -1,16 +1,26 @@
 import { streamFromGemini } from '../../infrastructure/ai/GeminiService';
 
 export const streamAIDiscovery = async (userInput: string) => {
-  const prompt = `You are a world-class scientific research assistant AI. You are analyzing a complex, multi-layered Lidar scan of an area. Based on this (hypothetical) data, provide a structured and insightful answer to the following user query.
+  const prompt = `You are a world-class geospatial analyst AI. Your task is to analyze the results from a Lidar scan and provide a semantic report.
 
-User Query: "${userInput}"
+**Scan Context:**
+- **File:** \`scan_dataset_0A4F.las\`
+- **Location:** Coastal Range, CA
+- **Simulated Segmentation Output:** The scan has been processed, revealing distinct clusters corresponding to:
+    1.  **Dense Coniferous Forest:** High point density, significant canopy structure.
+    2.  **Exposed Silicate Rock:** High reflectivity, low vegetation signature.
+    3.  **Topographical Anomaly:** A sharp, linear depression consistent with a fault line.
+    4.  **Moisture Concentration Zone:** High spectral absorption indicative of a potential spring or water flow path.
 
-Your response MUST be formatted in markdown and MUST include the following sections:
-1.  **Direct Analysis:** A concise interpretation of the scan data relevant to the query.
-2.  **Suggested Hypotheses:** 2-3 novel research hypotheses that could be investigated based on the analysis.
-3.  **Relevant Literature (Hypothetical):** A list of 2-3 fictional but plausible-sounding academic paper titles that would be relevant to this research. For example: "Smith, J. (2022). 'Advanced Spectral Analysis of Subsurface Geological Formations.' Journal of Geophysical Research."
+**User Query:** "${userInput}"
 
-Structure your entire response clearly using markdown headings for each section.`;
+Based on the scan context and the user query, generate a concise, publication-ready report in markdown. The report MUST include these sections:
+1.  **Key Feature Segmentation:** Briefly describe the main classified features from the scan.
+2.  **Direct Answer to Query:** Directly address the user's question based on the data.
+3.  **Potential Scientific Insights:** Propose 2-3 novel insights or hypotheses that emerge from combining the segmented features.
+4.  **Recommended Next Steps:** Suggest 2 concrete actions a field researcher could take to validate these insights.
+
+Structure your entire response clearly using markdown headings for each section. Be concise and professional.`;
 
   return streamFromGemini(prompt);
 };

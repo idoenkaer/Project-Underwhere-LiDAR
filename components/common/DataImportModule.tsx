@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { DocumentArrowUpIcon } from '../icons/DocumentArrowUpIcon';
 import { SatelliteIcon } from '../icons/SatelliteIcon';
 import { MountainIcon } from '../icons/MountainIcon';
-import { ExclamationCircleIcon } from '../icons/ExclamationCircleIcon';
+import { InfoIcon } from '../icons/InfoIcon';
 import { GoogleDriveIcon } from '../icons/GoogleDriveIcon';
 import { CloudArrowUpIcon } from '../icons/CloudArrowUpIcon';
 import { CubeIcon } from '../icons/CubeIcon';
@@ -216,7 +216,7 @@ export const DataImportModule: React.FC<DataImportModuleProps> = ({ onUpload, on
     return (
         <div className="max-w-2xl mx-auto">
             <div className="bg-bg-secondary p-4 rounded-sm border-l-4 border-green-bright mb-6 flex items-start space-x-3">
-                <ExclamationCircleIcon className="h-6 w-6 text-green-bright flex-shrink-0" />
+                <InfoIcon className="h-6 w-6 text-green-bright flex-shrink-0" />
                 <div className="flex-1">
                     <h3 className="font-bold text-green-bright">Responsible Scanning Notice</h3>
                     <p className="text-xs text-green-muted">

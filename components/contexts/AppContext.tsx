@@ -29,7 +29,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const handleCloseOnboarding = () => {
     sessionStorage.setItem('onboardingComplete', 'true');
     setShowOnboarding(false);
-    setActiveModule(Module.MEASUREMENT);
+    // FIX: Replaced Module.MEASUREMENT with Module.SCAN_CALIBRATE, as MEASUREMENT is not a valid module.
+    setActiveModule(Module.SCAN_CALIBRATE);
   };
 
   const value = {

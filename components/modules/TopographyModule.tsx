@@ -4,6 +4,11 @@ import { useDataContext } from '../contexts/DataContext';
 import { useUIStateContext } from '../contexts/UIStateContext';
 import { ControlToggle } from '../common/ControlToggle';
 import { Card } from '../common/Card';
+import { MetricCard } from '../common/MetricCard';
+import { ChartTrendingUpIcon } from '../icons/ChartTrendingUpIcon';
+import { CompassIcon } from '../icons/CompassIcon';
+import { LeafIcon } from '../icons/LeafIcon';
+import { ExclamationTriangleIcon } from '../icons/ExclamationTriangleIcon';
 
 const AnomalyMarker: React.FC<{ top: string; left: string; delay?: string; label: string }> = ({ top, left, delay = '0s', label }) => (
     <div className="absolute animate-fadeIn" style={{ top, left, animationDelay: delay }}>
@@ -19,15 +24,32 @@ const AnomalyMarker: React.FC<{ top: string; left: string; delay?: string; label
 
 type BaseLayer = 'terrain' | 'satellite' | 'dark';
 
+const QuickAnalysisResults: React.FC = () => (
+    <div className="grid grid-cols-2 gap-4 animate-fadeInUp">
+        <MetricCard label="Max Slope" value="34.2" unit="°" icon={ChartTrendingUpIcon} />
+        <MetricCard label="Dominant Aspect" value="NW" unit="295°" icon={CompassIcon} />
+        <MetricCard label="Vegetation Density" value="68" unit="%" icon={LeafIcon} />
+        <MetricCard label="Anomaly Confidence" value="82" unit="%" status="warning" icon={ExclamationTriangleIcon} />
+    </div>
+);
+
 const TopographyModule: React.FC = () => {
     const { database } = useDataContext();
     const { isLiveData } = useUIStateContext();
     const analysis = database.topography;
     const [overlays, setOverlays] = useState({ faultLines: true, erosion: true, waterFlow: true });
     const [baseLayer, setBaseLayer] = useState<BaseLayer>('terrain');
+    const [analysisState, setAnalysisState] = useState<'idle' | 'running' | 'complete'>('idle');
 
     const toggleOverlay = (key: keyof typeof overlays) => {
         setOverlays(prev => ({ ...prev, [key]: !prev[key] }));
+    };
+
+    const runQuickAnalysis = () => {
+        setAnalysisState('running');
+        setTimeout(() => {
+            setAnalysisState('complete');
+        }, 1500);
     };
     
     const baseLayerImages: Record<BaseLayer, string> = {
@@ -38,8 +60,8 @@ const TopographyModule: React.FC = () => {
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
-            <div className="lg:col-span-2">
-                <h2 className="text-lg font-mono font-semibold text-text-primary mb-4">Interactive Terrain Map</h2>
+            <div className="lg:col-span-2 space-y-6">
+                <h2 className="text-lg font-mono font-semibold text-text-primary">Interactive Terrain Map</h2>
                 <div className="relative aspect-video w-full rounded-sm bg-black border border-green-dark overflow-hidden">
                     <img src={baseLayerImages[baseLayer]} alt="Topographical Map" className="object-cover w-full h-full transition-opacity duration-500 opacity-50" />
                     
@@ -47,6 +69,23 @@ const TopographyModule: React.FC = () => {
                     {overlays.erosion && <AnomalyMarker top="65%" left="60%" label="Erosion Zone" />}
                     {overlays.waterFlow && <AnomalyMarker top="50%" left="25%" label="Water Flow Path" />}
                 </div>
+                 <Card>
+                    <h3 className="text-lg font-mono font-semibold text-text-accent mb-4">In-Situ Quick Analysis</h3>
+                    {analysisState === 'idle' && (
+                        <>
+                            <p className="text-sm text-text-primary mb-4">Run an instant, on-device analysis to get immediate feedback on key terrain characteristics.</p>
+                            <button onClick={runQuickAnalysis} className="w-full p-3 bg-green-muted text-bg-primary rounded-sm hover:bg-green-bright transition font-bold">
+                                Run Instant Analysis
+                            </button>
+                        </>
+                    )}
+                    {analysisState === 'running' && (
+                        <div className="flex items-center justify-center h-24">
+                            <div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin border-green-bright"></div>
+                        </div>
+                    )}
+                    {analysisState === 'complete' && <QuickAnalysisResults />}
+                 </Card>
             </div>
             <div className="space-y-6">
                 <Card>

@@ -9,6 +9,10 @@ import { ShieldCheckIcon } from '../icons/ShieldCheckIcon';
 import { CodeBracketIcon } from '../icons/CodeBracketIcon';
 import { StopwatchIcon } from '../icons/StopwatchIcon';
 import { GlobeAmericasIcon } from '../icons/GlobeAmericasIcon';
+import { ChatBubbleIcon } from '../icons/ChatBubbleIcon';
+import { BuildingLibraryIcon } from '../icons/BuildingLibraryIcon';
+import { AcademicCapIcon } from '../icons/AcademicCapIcon';
+import { ServerStackIcon } from '../icons/ServerStackIcon';
 
 const FeatureListItem: React.FC<{ children: React.ReactNode; inScope: boolean }> = ({ children, inScope }) => (
     <li className="flex items-center space-x-3">
@@ -28,6 +32,20 @@ const BenefitCard: React.FC<{ icon: React.FC<any>; title: string; children: Reac
         <Icon className="h-8 w-8 mb-4 text-green-bright" />
         <h3 className="text-lg font-semibold font-mono text-text-accent mb-2">{title}</h3>
         <p className="text-sm text-text-primary">{children}</p>
+    </div>
+);
+
+const StrategyCard: React.FC<{ icon: React.FC<any>; title: string; description: string; targets: string[] }> = ({ icon: Icon, title, description, targets }) => (
+    <div className="bg-bg-secondary p-6 rounded-sm border border-green-dark h-full flex flex-col">
+        <Icon className="h-8 w-8 mb-4 text-green-bright" />
+        <h3 className="text-lg font-semibold font-mono text-text-accent mb-2">{title}</h3>
+        <p className="text-sm text-text-primary flex-grow">{description}</p>
+        <div className="mt-4 border-t border-green-dark pt-3">
+            <h4 className="text-xs font-bold text-green-muted uppercase mb-2 font-mono">TARGETS</h4>
+            <ul className="text-sm text-text-primary space-y-1 font-mono">
+                {targets.map(target => <li key={target}>- {target}</li>)}
+            </ul>
+        </div>
     </div>
 );
 
@@ -102,18 +120,48 @@ const RoadmapModule: React.FC = () => {
             <div className="bg-bg-secondary p-6 rounded-sm border border-green-bright/30">
                 <h3 className="text-xl font-semibold font-mono text-text-accent mb-4 flex items-center">
                     <UserGroupIcon className="h-6 w-6 mr-3 text-green-bright" />
-                    Core Team Expansion: HIRING NOW
+                    Community-Led Development
                 </h3>
                 <p className="text-text-primary mb-4">
-                    To de-risk the project and ensure the 3-month MVP timeline is met, the hiring process for the following domain experts is now underway:
+                    This project is a community-driven, open-source initiative. Our success depends on contributions from scientists, engineers, and designers like you. We are building in the open and invite you to help shape the future of field-ready scientific tools.
                 </p>
-                <ul className="list-disc list-inside text-text-primary space-y-2 mb-4">
-                    <li><span className="font-bold">Open Position:</span> Geospatial Scientist (10+ years LiDAR).</li>
-                    <li><span className="font-bold">Open Position:</span> Machine Learning Engineer (Shipped Models).</li>
-                    <li><span className="font-bold">Open Position:</span> Cloud Architect (Petabyte-Scale Systems).</li>
-                </ul>
-                <div className="bg-green-dark/50 border-l-4 border-green-bright text-green-bright p-4 rounded-r-sm">
-                    <p className="font-bold">Budget approved. Sourcing candidates for these non-negotiable roles is our top priority.</p>
+                <div className="flex flex-col md:flex-row gap-4">
+                    <a href="CONTRIBUTING.md" target="_blank" className="flex-1 p-3 bg-bg-primary text-green-bright font-mono rounded-sm border-2 border-green-dark hover:border-green-bright transition text-center flex items-center justify-center space-x-2">
+                        <CodeBracketIcon className="h-5 w-5" />
+                        <span>Contribution Guide</span>
+                    </a>
+                    <a href="#" className="flex-1 p-3 bg-bg-primary text-green-bright font-mono rounded-sm border-2 border-green-dark hover:border-green-bright transition text-center flex items-center justify-center space-x-2">
+                        <ChatBubbleIcon className="h-5 w-5" />
+                        <span>Join the Community</span>
+                    </a>
+                </div>
+                <div className="mt-4 bg-green-dark/50 border-l-4 border-green-bright text-green-bright p-4 rounded-r-sm">
+                    <p className="font-bold">Your expertise is our most valuable resource. Help us build the future of scientific intelligence.</p>
+                </div>
+            </div>
+
+            <div>
+                <h2 className="text-3xl font-bold text-center font-mono text-green-bright mb-4 text-glow">Ecosystem & Partnership Strategy</h2>
+                <p className="text-center text-text-primary mb-8 max-w-3xl mx-auto">To ensure long-term viability and accelerate development, we are actively seeking partnerships with organizations that share our open-source vision.</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <StrategyCard
+                        icon={BuildingLibraryIcon}
+                        title="Open Source Incubation"
+                        description="Seeking mentorship and support from established foundations to grow our community and ensure project longevity."
+                        targets={['OSGeo', 'Apache Foundation', 'Linux Foundation']}
+                    />
+                    <StrategyCard
+                        icon={AcademicCapIcon}
+                        title="Academic Collaboration"
+                        description="Collaborating with university labs and research institutions to drive adoption, validate our science, and gather expert feedback."
+                        targets={['Stanford University', 'MIT Media Lab', 'ETH Zürich']}
+                    />
+                    <StrategyCard
+                        icon={ServerStackIcon}
+                        title="Grants & Sponsorship"
+                        description="Applying for grants and seeking corporate sponsorship to support infrastructure costs, bounties, and community events."
+                        targets={['Sloan Foundation', 'CZI Science', 'Planet Labs']}
+                    />
                 </div>
             </div>
             
