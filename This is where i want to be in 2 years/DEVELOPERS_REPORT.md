@@ -39,20 +39,20 @@ Your app is **technically sound** but requires **sophisticated execution**:
 - **Output:** Functional geospatial analysis tool
 - **Team:** 6-8 engineers
 
-**PHASE 2 (Months 4-9): Expansion**
+**PHASE 2 (Months 4-9): Expansion & Data Generation**
 - Environmental/anomaly detection
-- Additional sensors, real-time collaboration
+- **Human-in-the-Loop Annotation Tools (Ecological)**
 - PDAL/QGIS/CloudCompare integration
 - Extensive testing & optimization
-- **Output:** Production-ready platform
+- **Output:** Production-ready platform with expert annotation capabilities
 - **Team:** Add 2-3 data scientists
 
-**PHASE 3 (Months 10-18): Specialization**
-- Physics simulation, biological/ecological analysis
+**PHASE 3 (Months 10-18): Specialization & Intelligence**
+- Physics simulation integration (External Solver)
+- **AI-Assisted Annotation & Ecological Analysis**
 - Advanced collaboration (CRDT)
 - OGC compliance, publications
-- Open-source community
-- **Output:** Recognized scientific tool
+- **Output:** Recognized scientific tool with proprietary AI models
 
 ***
 
@@ -99,6 +99,7 @@ Your app is **technically sound** but requires **sophisticated execution**:
 | Security/Privacy | Consult CISO+lawyer early; GDPR/CCPA built-in |
 | Tech Debt | SonarQube gates; 80%+ coverage requirement |
 | Community Fragmentation | Clear governance; contributor ladder |
+| Unrealistic AI goals / Lack of training data | Human-in-the-Loop annotation strategy to generate proprietary dataset; build annotation tools first. |
 
 ---
 

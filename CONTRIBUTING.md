@@ -31,6 +31,8 @@ We adhere to the **Clean Architecture** pattern to ensure a clear separation of 
 
 Dependencies must always point inwards (UI -> Application -> Infrastructure abstractions).
 
+**A Note on Imports:** To ensure consistent module resolution and prevent build issues, this project uses **relative import paths only** (`./`, `../`). Please do not use absolute or alias imports (e.g., `@/components/...`) as they are not configured in the project's environment.
+
 ## Code of Conduct
 
 Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms. We are committed to fostering an open and welcoming environment.

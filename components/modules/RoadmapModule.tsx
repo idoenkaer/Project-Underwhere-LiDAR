@@ -38,6 +38,11 @@ import { WrenchScrewdriverIcon } from '../icons/WrenchScrewdriverIcon';
 import { BuildingLibraryIcon } from '../icons/BuildingLibraryIcon';
 import { ArrowPathRoundedSquareIcon } from '../icons/ArrowPathRoundedSquareIcon';
 import { ShieldAlertIcon } from '../icons/ShieldAlertIcon';
+import { DocumentSparklesIcon } from '../icons/DocumentSparklesIcon';
+import { ViewfinderCircleIcon } from '../icons/ViewfinderCircleIcon';
+import { MicroscopeIcon } from '../icons/MicroscopeIcon';
+import { CompassIcon } from '../icons/CompassIcon';
+import { PencilSquareIcon } from '../icons/PencilSquareIcon';
 
 
 enum Status {
@@ -121,6 +126,16 @@ const RoadmapModule: React.FC = () => {
     return (
         <div className="animate-fadeIn p-4 md:p-6 lg:p-8 space-y-8">
             <h1 className="text-3xl font-bold text-cyan-300 mb-6">Project Underwhere: Roadmap & Status</h1>
+
+            <div className="bg-gradient-to-br from-gray-800 to-gray-800/50 p-6 rounded-lg border border-cyan-500/30 ring-1 ring-cyan-500/20">
+                <h3 className="text-xl font-semibold text-gray-100 mb-4 flex items-center">
+                    <CompassIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Guiding Vision & Strategy
+                </h3>
+                <p className="text-gray-300">
+                    Our development is guided by a clear strategic vision: to create more than just a tool, but an intelligent, open, and responsible scientific platform. We will not compete on features alone, but on a seamless user experience that bridges the gap between field deployment and instant, actionable results. Our focus is on building an extensible ecosystem through robust API integrations, clear onboarding, and unwavering interoperability. The goal is to be the platform that democratizes access to advanced geospatial analysis and fosters ethical, collaborative science.
+                </p>
+            </div>
             
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h2 className="text-xl font-semibold text-gray-200 mb-4">Q3 Milestones</h2>
@@ -134,8 +149,8 @@ const RoadmapModule: React.FC = () => {
                         <p className="text-sm text-gray-400">Connect UI to Gemini API for streaming analysis of scan data.</p>
                     </ChecklistItem>
                     <ChecklistItem status={Status.IN_PROGRESS}>
-                        <h3 className="font-bold">Physics Simulation Module</h3>
-                        <p className="text-sm text-gray-400">Implement FEA for wind and seismic stress on scanned structures. Backend finalization in progress.</p>
+                        <h3 className="font-bold">Physics Simulation Module (Integration)</h3>
+                        <p className="text-sm text-gray-400">Build API connector for external FEA solvers (e.g., Ansys, CalculiX). Backend finalization in progress.</p>
                     </ChecklistItem>
                     <ChecklistItem status={Status.PLANNED}>
                         <h3 className="font-bold">Quantum Simulation Module</h3>
@@ -145,11 +160,29 @@ const RoadmapModule: React.FC = () => {
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
-                    <WorkflowIcon className="h-6 w-6 mr-3 text-cyan-400" />
-                    Architectural Design Pattern
+                    <ViewfinderCircleIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Seamless End-to-End Workflow
                 </h3>
                 <p className="text-sm text-gray-400">
-                    The application is structured using the **Clean Architecture** pattern to ensure maintainability and separation of concerns. This creates clear boundaries: the **UI Layer** (`/components`) is decoupled from the **Application Layer** (`/application/use-cases`), which contains all business logic. The Application Layer, in turn, depends on abstract repository interfaces, with concrete implementations (like data access and external API calls) residing in the **Infrastructure Layer** (`/infrastructure`). This design makes the system independently testable and adaptable to future changes in technology or requirements.
+                    To deliver a frictionless experience, we are committed to building a guided, end-to-end workflow from scan to publication. This initiative will focus on eliminating the need for users to switch tools or manually manage files. Future work will include real-time collaboration features like shared annotations and live scan reviews, creating a 'Google Docs for spatial science'.
+                </p>
+            </div>
+             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <DocumentSparklesIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Unique Intelligence & Automation
+                </h3>
+                <p className="text-sm text-gray-400">
+                    To differentiate from standard tools, our strategy focuses on unique, AI-powered automation. This includes developing advanced features like automated segmentation, anomaly detection, and the auto-generation of semantic, field-ready scientific summaries, complete with error metrics and visual annotations tailored for decision support and publication.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <MicroscopeIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Domain Expert & Scientific Advisory Board
+                </h3>
+                <p className="text-sm text-gray-400">
+                    To mitigate the risk of building a tool that doesn't meet real-world scientific needs, we will form a Scientific Advisory Board. This board will consist of domain experts in geospatial science, ecology, and physics. Their role will be to validate architectural decisions, guide feature development, and ensure our methodologies are scientifically sound, preventing costly rework and ensuring market relevance.
                 </p>
             </div>
              <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
@@ -185,7 +218,7 @@ const RoadmapModule: React.FC = () => {
                     Ethical Framework & Community Engagement
                 </h3>
                 <p className="text-sm text-gray-400">
-                    To ensure responsible innovation, we are establishing a comprehensive ethical framework. This includes protocols for data privacy, minimizing the environmental impact of field operations, and a commitment to active stakeholder engagement. We will prioritize collaboration with local and indigenous communities, ensuring our research respects their rights, knowledge, and contributes positively to their environment.
+                    To ensure responsible innovation, we have established a comprehensive ethical framework through user-facing documentation (`ETHICS.md`) and in-app educational features. This includes protocols for data privacy, minimizing environmental impact, and a commitment to active stakeholder engagement, particularly with local and indigenous communities.
                 </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
@@ -280,11 +313,11 @@ const RoadmapModule: React.FC = () => {
             </div>
              <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
-                    <TagIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    <PencilSquareIcon className="h-6 w-6 mr-3 text-cyan-400" />
                     AI/ML Training & Supervision Strategy
                 </h3>
                 <p className="text-sm text-gray-400">
-                    Acknowledging the resource-intensive nature of manual Lidar annotation, our strategy is to mitigate this bottleneck by adopting advanced training methodologies. We will investigate and implement weak supervision, semi-supervised, and self-supervised learning approaches to effectively leverage unlabeled data and reduce dependency on fully annotated datasets.
+                    Our strategy pivots to a 'Human-in-the-Loop' approach to de-risk AI development. First, we will build best-in-class annotation tools that provide immediate value to field ecologists. This allows us to ethically collect the high-quality, labeled data needed, generated by experts in their natural workflow. Only then will we develop the fully automated AI models, using our own proprietary dataset.
                 </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
@@ -357,6 +390,15 @@ const RoadmapModule: React.FC = () => {
                 </h3>
                 <p className="text-sm text-gray-400">
                     To ensure the platform meets the real-world needs of scientists, we are launching a dedicated user research initiative. This involves creating detailed user personas (e.g., Field Geologist, Lab Analyst), mapping their end-to-end workflows from data acquisition to publication, and conducting iterative usability testing sessions. The goal is to refine the UI/UX to directly support and accelerate established scientific processes, preventing user frustration and ensuring high adoption.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <WorkflowIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Architectural Design Pattern
+                </h3>
+                <p className="text-sm text-gray-400">
+                    The application is structured using the **Clean Architecture** pattern to ensure maintainability and separation of concerns. This creates clear boundaries: the **UI Layer** (`/components`) is decoupled from the **Application Layer** (`/application/use-cases`), which contains all business logic. The Application Layer, in turn, depends on abstract repository interfaces, with concrete implementations (like data access and external API calls) residing in the **Infrastructure Layer** (`/infrastructure`). This design makes the system independently testable and adaptable to future changes in technology or requirements.
                 </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
