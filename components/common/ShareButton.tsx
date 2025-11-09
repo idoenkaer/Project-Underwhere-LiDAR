@@ -52,10 +52,21 @@ interface ShareButtonContainerProps {
     isGeneratingLink: boolean;
     demoLink: string;
     onCopyLink: () => void;
-    linkCopied: boolean;
+    copyStatus: 'idle' | 'success' | 'error';
 }
 
 export const ShareButton: React.FC<ShareButtonContainerProps> = (props) => {
+    const copyButtonText = {
+        idle: 'Copy',
+        success: 'Copied!',
+        error: 'Failed',
+    };
+    const copyButtonStyles = {
+        idle: 'bg-cyan-600 hover:bg-cyan-500',
+        success: 'bg-green-600',
+        error: 'bg-red-600',
+    };
+
     return (
         <Card icon={ShareIcon} title="Sharing & Integration">
             <div className="space-y-3">
@@ -69,8 +80,8 @@ export const ShareButton: React.FC<ShareButtonContainerProps> = (props) => {
                {props.demoLink && (
                    <div className="flex items-center space-x-2 bg-gray-900/50 p-2 rounded-lg">
                        <input type="text" readOnly value={props.demoLink} className="flex-1 bg-transparent text-xs text-cyan-300 font-mono focus:outline-none"/>
-                       <button onClick={props.onCopyLink} className="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 rounded text-xs font-bold">
-                           {props.linkCopied ? 'Copied!' : 'Copy'}
+                       <button onClick={props.onCopyLink} className={`px-3 py-1 rounded text-xs font-bold transition ${copyButtonStyles[props.copyStatus]}`}>
+                           {copyButtonText[props.copyStatus]}
                        </button>
                    </div>
                )}

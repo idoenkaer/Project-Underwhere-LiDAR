@@ -6,6 +6,7 @@ import { useDataContext } from '../contexts/DataContext';
 import { BenchmarkResultsCard } from '../common/BenchmarkResultsCard';
 import { runPhysicsSimulation } from '../../application/use-cases/runPhysicsSimulation';
 import { MockDataRepository } from '../../infrastructure/data/MockDataRepository';
+import { ExclamationTriangleIcon } from '../icons/ExclamationTriangleIcon';
 
 const PhysicsModule: React.FC = () => {
     const { database } = useDataContext();
@@ -14,23 +15,29 @@ const PhysicsModule: React.FC = () => {
     const [selectedScenarioId, setSelectedScenarioId] = useState<string>(analysis.scenarios[0].id);
     const [isRunning, setIsRunning] = useState(false);
     const [results, setResults] = useState<PhysicsScenario | null>(null);
+    const [error, setError] = useState<string | null>(null);
     const repoRef = useRef(new MockDataRepository());
 
     useEffect(() => {
-        // Reset results if scenario changes
+        // Reset results and errors if scenario changes
         setResults(null);
+        setError(null);
     }, [selectedScenarioId]);
 
     const runSimulation = async () => {
         if (selectedScenarioId) {
             setIsRunning(true);
             setResults(null);
+            setError(null);
             try {
                 const scenario = await runPhysicsSimulation(repoRef.current, selectedScenarioId);
+                if (!scenario) {
+                    throw new Error("Scenario data could not be loaded.");
+                }
                 setResults(scenario);
             } catch (error) {
                 console.error("Simulation failed:", error);
-                // Optionally set an error state here to show in the UI
+                setError("The simulation failed to run. Please check the console for details and try again.");
             } finally {
                 setIsRunning(false);
             }
@@ -120,6 +127,12 @@ const PhysicsModule: React.FC = () => {
                         {isRunning ? 'Simulating...' : 'Run Simulation'}
                     </button>
                 </div>
+                {error && (
+                    <div className="mt-4 bg-red-900/50 border border-red-500/50 text-red-300 p-4 rounded-lg flex items-center space-x-3 animate-fadeIn">
+                        <ExclamationTriangleIcon className="h-6 w-6 flex-shrink-0 text-red-400" />
+                        <p>{error}</p>
+                    </div>
+                )}
                 {results && (
                     <div className="space-y-4 animate-fadeIn">
                         <h3 className="text-lg font-semibold text-gray-300">Analysis Results</h3>

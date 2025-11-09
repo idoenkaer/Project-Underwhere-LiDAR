@@ -6,6 +6,9 @@ import { CheckBadgeIcon } from '../icons/CheckBadgeIcon';
 import { Card } from '../common/Card';
 import { ExportButton } from '../common/ExportButton';
 import { ShareButton } from '../common/ShareButton';
+import { SatelliteIcon } from '../icons/SatelliteIcon';
+import { MountainIcon } from '../icons/MountainIcon';
+import { ArchiveBoxIcon } from '../icons/ArchiveBoxIcon';
 
 const ChecklistItem: React.FC<{ isChecked: boolean, onToggle: () => void, children: React.ReactNode }> = ({ isChecked, onToggle, children }) => (
     <li className="flex items-center space-x-3 cursor-pointer" onClick={onToggle}>
@@ -13,6 +16,18 @@ const ChecklistItem: React.FC<{ isChecked: boolean, onToggle: () => void, childr
         <span className={`text-gray-300 transition ${isChecked ? 'line-through text-gray-500' : ''}`}>{children}</span>
     </li>
 );
+
+const IntegrationButton: React.FC<{ label: string; description: string; icon: React.FC<React.SVGProps<SVGSVGElement>>; href: string }> = ({ label, description, icon: Icon, href }) => (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="flex items-center w-full p-3 text-left bg-gray-700/50 hover:bg-gray-700 rounded-lg transition group">
+        <Icon className="h-8 w-8 mr-4 text-gray-300 flex-shrink-0" />
+        <div className="flex-1">
+            <p className="font-bold text-gray-200 group-hover:text-cyan-300 transition">{label}</p>
+            <p className="text-xs text-gray-400">{description}</p>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500 group-hover:text-cyan-400 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+    </a>
+);
+
 
 const ResearchModule: React.FC = () => {
     const [comments, setComments] = useState([
@@ -22,7 +37,7 @@ const ResearchModule: React.FC = () => {
     const [newComment, setNewComment] = useState('');
     const [demoLink, setDemoLink] = useState('');
     const [isGeneratingLink, setIsGeneratingLink] = useState(false);
-    const [linkCopied, setLinkCopied] = useState(false);
+    const [copyStatus, setCopyStatus] = useState<'idle' | 'success' | 'error'>('idle');
     
     const [checklist, setChecklist] = useState({
         resources: false,
@@ -42,6 +57,7 @@ const ResearchModule: React.FC = () => {
     const handleGenerateDemoLink = () => {
         setIsGeneratingLink(true);
         setDemoLink('');
+        setCopyStatus('idle');
         setTimeout(() => {
             const uniqueId = Math.random().toString(36).substring(2, 10);
             setDemoLink(`https://sci-research-suite.dev/demo/${uniqueId}`);
@@ -49,11 +65,17 @@ const ResearchModule: React.FC = () => {
         }, 1500);
     };
 
-    const handleCopyLink = () => {
-        if (!demoLink) return;
-        navigator.clipboard.writeText(demoLink);
-        setLinkCopied(true);
-        setTimeout(() => setLinkCopied(false), 2000);
+    const handleCopyLink = async () => {
+        if (!demoLink || copyStatus !== 'idle') return;
+        try {
+            await navigator.clipboard.writeText(demoLink);
+            setCopyStatus('success');
+        } catch (err) {
+            console.error('Failed to copy link:', err);
+            setCopyStatus('error');
+        } finally {
+            setTimeout(() => setCopyStatus('idle'), 2500);
+        }
     };
 
     const handleAddComment = () => {
@@ -67,7 +89,14 @@ const ResearchModule: React.FC = () => {
             {/* Left Panel: Export, Share, and Ethics */}
             <div className="lg:col-span-1 space-y-8">
                 <ExportButton />
-                <ShareButton onGenerateDemoLink={handleGenerateDemoLink} isGeneratingLink={isGeneratingLink} demoLink={demoLink} onCopyLink={handleCopyLink} linkCopied={linkCopied} />
+                <ShareButton onGenerateDemoLink={handleGenerateDemoLink} isGeneratingLink={isGeneratingLink} demoLink={demoLink} onCopyLink={handleCopyLink} copyStatus={copyStatus} />
+                <Card icon={SatelliteIcon} title="Data Federation & Archival">
+                    <div className="space-y-3">
+                        <IntegrationButton label="NASA Earthdata" description="Search public satellite imagery" icon={SatelliteIcon} href="https://search.earthdata.nasa.gov/" />
+                        <IntegrationButton label="OpenTopography" description="Access public Lidar datasets" icon={MountainIcon} href="https://opentopography.org/" />
+                        <IntegrationButton label="Zenodo Archive" description="Publish dataset & get a DOI" icon={ArchiveBoxIcon} href="https://zenodo.org/" />
+                    </div>
+                </Card>
                 <Card icon={ShieldCheckIcon} title="Ethics & Open Science">
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">

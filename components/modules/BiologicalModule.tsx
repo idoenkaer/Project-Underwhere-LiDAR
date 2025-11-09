@@ -5,6 +5,7 @@ import { RecommendationsCard } from '../common/RecommendationsCard';
 import { useDataContext } from '../contexts/DataContext';
 import { useUIStateContext } from '../contexts/UIStateContext';
 import { runBiologicalAnalysis } from '../../application/use-cases/runBiologicalAnalysis';
+import { ExclamationTriangleIcon } from '../icons/ExclamationTriangleIcon';
 
 interface DataSheetProps {
     title: string;
@@ -26,13 +27,40 @@ const BiologicalModule: React.FC = () => {
     const { database } = useDataContext();
     const { isLiveData } = useUIStateContext();
     const data = database.biological;
-    const [analysisState, setAnalysisState] = useState<'idle' | 'processing' | 'complete'>('idle');
+    const [analysisState, setAnalysisState] = useState<'idle' | 'processing' | 'complete' | 'error'>('idle');
+    const [error, setError] = useState<string | null>(null);
 
     const handleRunAnalysis = async () => {
         setAnalysisState('processing');
-        const result = await runBiologicalAnalysis();
-        setAnalysisState(result);
+        setError(null);
+        try {
+            const result = await runBiologicalAnalysis();
+            setAnalysisState(result);
+        } catch (e) {
+            setError('The analysis failed to run due to an unexpected error. Please try again.');
+            setAnalysisState('error');
+        }
     };
+
+    const handleReset = () => {
+        setAnalysisState('idle');
+        setError(null);
+    };
+
+    if (analysisState === 'error') {
+        return (
+            <div className="flex flex-col items-center justify-center h-full text-center animate-fadeIn">
+                <div className="bg-red-900/50 border border-red-500/50 text-red-300 p-8 rounded-lg max-w-md">
+                    <ExclamationTriangleIcon className="h-16 w-16 mx-auto text-red-400" />
+                    <h2 className="text-2xl font-bold text-red-300 mt-4">Analysis Failed</h2>
+                    <p className="mt-2">{error}</p>
+                    <button onClick={handleReset} className="mt-6 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition font-semibold">
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     if (analysisState === 'idle') {
         return (

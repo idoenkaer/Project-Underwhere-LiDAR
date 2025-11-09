@@ -3,6 +3,10 @@ import { ExclamationTriangleIcon } from '../icons/ExclamationTriangleIcon';
 import { MetricCard } from '../common/MetricCard';
 import { CheckIcon } from '../icons/CheckIcon';
 import { processScanFile, loadMockScan } from '../../application/use-cases/processScanFile';
+import { CheckBadgeIcon } from '../icons/CheckBadgeIcon';
+import { GlobeIcon } from '../icons/GlobeIcon';
+import { TagIcon } from '../icons/TagIcon';
+import { CircleStackIcon } from '../icons/CircleStackIcon';
 
 const SensorFeedCard: React.FC<{ title: string; imageUrl: string; details: string; imageFilter?: string }> = ({ title, imageUrl, details, imageFilter = '' }) => {
     return (
@@ -52,6 +56,31 @@ const ProcessedView: React.FC = () => {
                     <SensorFeedCard title="RGB Camera" imageUrl="https://picsum.photos/seed/rgb/800/450" details="4K UHD @ 30FPS" />
                     <SensorFeedCard title="Time-of-Flight Feed" imageUrl="https://picsum.photos/seed/tof/800/450" details="DEPTH MAPPING" imageFilter="grayscale" />
                  </div>
+            </div>
+            <div className="animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
+                <h2 className="text-lg font-semibold text-gray-300 mb-4">Geospatial Referencing & Metadata</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><CheckBadgeIcon className="h-5 w-5 mr-2 text-cyan-400" /> Geolocation Precision</h3>
+                        <p className="font-mono text-lg text-green-400">RTK LOCK ACQUIRED</p>
+                        <p className="text-xs text-gray-500 mt-1">Survey-Grade Accuracy (&lt;2cm)</p>
+                    </div>
+                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><GlobeIcon className="h-5 w-5 mr-2 text-cyan-400" /> Coordinate System</h3>
+                        <p className="font-mono text-lg text-cyan-300">WGS 84 / UTM 10N</p>
+                        <p className="text-xs text-gray-500 mt-1">EPSG:32610</p>
+                    </div>
+                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><TagIcon className="h-5 w-5 mr-2 text-cyan-400" /> Embedded Metadata</h3>
+                        <p className="font-mono text-lg text-cyan-300">3 Tags Embedded</p>
+                        <p className="text-xs text-gray-500 mt-1">MissionID, Operator, Platform</p>
+                    </div>
+                    <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                        <h3 className="text-sm font-medium text-gray-400 flex items-center mb-2"><CircleStackIcon className="h-5 w-5 mr-2 text-cyan-400" /> Archival Status</h3>
+                        <p className="font-mono text-lg text-cyan-300">Ready for Archive</p>
+                        <p className="text-xs text-gray-500 mt-1">STANAG 4545 Compliant</p>
+                    </div>
+                </div>
             </div>
         </div>
     );

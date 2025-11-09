@@ -28,6 +28,7 @@ import { AcademicCapIcon } from '../icons/AcademicCapIcon';
 import { TagIcon } from '../icons/TagIcon';
 import { StopwatchIcon } from '../icons/StopwatchIcon';
 import { Square2StackIcon } from '../icons/Square2StackIcon';
+import { CloudArrowUpIcon } from '../icons/CloudArrowUpIcon';
 
 
 enum Status {
@@ -144,6 +145,15 @@ const RoadmapModule: React.FC = () => {
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <CloudArrowUpIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Open Science & Data Federation
+                </h3>
+                <p className="text-sm text-gray-400">
+                    Enhance the project's scientific impact by integrating with key external platforms. This includes building connectors to NASA Earthdata for satellite imagery comparison, OpenTopography for accessing public high-resolution terrain data, and open science archives like Zenodo to ensure research outputs are citable, discoverable, and preserved for the long term.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
                     <StopwatchIcon className="h-6 w-6 mr-3 text-cyan-400" />
                     Comprehensive Performance Benchmarking
                 </h3>
@@ -248,6 +258,15 @@ const RoadmapModule: React.FC = () => {
                 </h3>
                 <p className="text-sm text-gray-400">
                     Utilize the PDAL (Point Data Abstraction Library) for robust backend Lidar, LAS, and point cloud processing pipelines. Implement support for direct data imports from public APIs like the USGS Lidar Explorer Map and OpenTopography to leverage historical and public datasets for comparative analysis.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <CircleStackIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Mission-Grade Geolocation & Metadata
+                </h3>
+                <p className="text-sm text-gray-400">
+                    Implement mission-grade data protocols by integrating RTK/PPK for survey-level positional accuracy. This initiative includes adopting standardized metadata schemas (e.g., ISO 19115) for all captured data, ensuring robust spatial referencing, and preparing datasets for long-term, interoperable archival in accordance with industry standards like STANAG 4545.
                 </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
