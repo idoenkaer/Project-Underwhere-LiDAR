@@ -1,21 +1,18 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import { Module, ScientificDatabase, ScanMetadata } from '../../types';
-import { db } from '../../services/mockDb';
+import { Module } from '../../types';
 
-interface AppContextType {
+interface UIStateContextType {
   activeModule: Module;
   setActiveModule: (module: Module) => void;
   isLiveData: boolean;
   setIsLiveData: (isLive: boolean) => void;
   showOnboarding: boolean;
   handleCloseOnboarding: () => void;
-  database: ScientificDatabase;
-  scanMeta: ScanMetadata;
 }
 
-const AppContext = createContext<AppContextType | undefined>(undefined);
+const UIStateContext = createContext<UIStateContextType | undefined>(undefined);
 
-export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const UIStateProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [activeModule, setActiveModule] = useState<Module>(Module.ROADMAP);
   const [isLiveData, setIsLiveData] = useState<boolean>(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -39,17 +36,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setIsLiveData,
     showOnboarding,
     handleCloseOnboarding,
-    database: db,
-    scanMeta: db.scanMeta,
   };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return <UIStateContext.Provider value={value}>{children}</UIStateContext.Provider>;
 };
 
-export const useAppContext = (): AppContextType => {
-  const context = useContext(AppContext);
+export const useUIStateContext = (): UIStateContextType => {
+  const context = useContext(UIStateContext);
   if (context === undefined) {
-    throw new Error('useAppContext must be used within an AppProvider');
+    throw new Error('useUIStateContext must be used within a UIStateProvider');
   }
   return context;
 };

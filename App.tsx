@@ -2,7 +2,8 @@ import React, { Suspense, lazy } from 'react';
 import { Module } from './types';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import { AppProvider, useAppContext } from './components/contexts/AppContext';
+import { UIStateProvider, useUIStateContext } from './components/contexts/UIStateContext';
+import { DataProvider } from './components/contexts/DataContext';
 
 // Lazy load all modules
 const RoadmapModule = lazy(() => import('./components/modules/RoadmapModule'));
@@ -24,7 +25,7 @@ const LoadingSpinner: React.FC = () => (
 );
 
 const AppContent: React.FC = () => {
-  const { activeModule, setActiveModule, showOnboarding, handleCloseOnboarding } = useAppContext();
+  const { activeModule, showOnboarding, handleCloseOnboarding } = useUIStateContext();
 
   const renderActiveModule = () => {
     switch (activeModule) {
@@ -55,7 +56,7 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="flex h-screen w-full bg-gray-900 font-sans">
-      <Sidebar activeModule={activeModule} setActiveModule={setActiveModule} />
+      <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header />
         <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 blueprint-bg">
@@ -71,9 +72,11 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <DataProvider>
+        <UIStateProvider>
+            <AppContent />
+        </UIStateProvider>
+    </DataProvider>
   );
 };
 

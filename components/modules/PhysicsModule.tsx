@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { MetricCard } from '../common/MetricCard';
 import { PhysicsScenario } from '../../types';
 import { RecommendationsCard } from '../common/RecommendationsCard';
-import { useAppContext } from '../contexts/AppContext';
+import { useDataContext } from '../contexts/DataContext';
 import { BenchmarkResultsCard } from '../common/BenchmarkResultsCard';
 
 const PhysicsModule: React.FC = () => {
-    const { database } = useAppContext();
+    const { database } = useDataContext();
     const analysis = database.physics;
 
     const [selectedScenarioId, setSelectedScenarioId] = useState<string>(analysis.scenarios[0].id);

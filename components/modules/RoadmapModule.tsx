@@ -27,6 +27,7 @@ import { FunnelIcon } from '../icons/FunnelIcon';
 import { AcademicCapIcon } from '../icons/AcademicCapIcon';
 import { TagIcon } from '../icons/TagIcon';
 import { StopwatchIcon } from '../icons/StopwatchIcon';
+import { Square2StackIcon } from '../icons/Square2StackIcon';
 
 
 enum Status {
@@ -211,6 +212,15 @@ const RoadmapModule: React.FC = () => {
                 </h3>
                 <p className="text-sm text-gray-400">
                     Implement fail-safe data imports with clear validation and error feedback. Enhance visual hierarchy by accentuating primary actions and improving separation between UI sections. Controls for maps and visualizations will be persistent and intuitive. Add subtle micro-interactions to provide feedback on loading, errors, and task completion.
+                </p>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                <h3 className="text-lg font-semibold text-gray-200 mb-4 flex items-center">
+                    <Square2StackIcon className="h-6 w-6 mr-3 text-cyan-400" />
+                    Scalable State Management
+                </h3>
+                <p className="text-sm text-gray-400">
+                    Refactored the application's core state management by splitting the global `AppContext` into two distinct, focused contexts: `UIStateContext` for dynamic interface state and `DataContext` for stable scientific data. This separation improves performance by reducing unnecessary re-renders and establishes a more scalable and maintainable architecture for future feature development using libraries like Zustand or Jotai.
                 </p>
             </div>
             <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">

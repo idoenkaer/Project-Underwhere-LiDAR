@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RecommendationsCard } from '../common/RecommendationsCard';
-import { useAppContext } from '../contexts/AppContext';
+import { useDataContext } from '../contexts/DataContext';
+import { useUIStateContext } from '../contexts/UIStateContext';
 import { ControlToggle } from '../common/ControlToggle';
 import { Card } from '../common/Card';
 
@@ -19,7 +20,8 @@ const AnomalyMarker: React.FC<{ top: string; left: string; delay?: string; label
 type BaseLayer = 'terrain' | 'satellite' | 'dark';
 
 const TopographyModule: React.FC = () => {
-    const { database, isLiveData } = useAppContext();
+    const { database } = useDataContext();
+    const { isLiveData } = useUIStateContext();
     const analysis = database.topography;
     const [overlays, setOverlays] = useState({ faultLines: true, erosion: true, waterFlow: true });
     const [baseLayer, setBaseLayer] = useState<BaseLayer>('terrain');

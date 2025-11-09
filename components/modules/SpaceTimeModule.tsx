@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PlayIcon, PauseIcon } from '../icons/PlayerIcons';
 import { SpaceTimeEvent } from '../../types';
-import { useAppContext } from '../contexts/AppContext';
+import { useDataContext } from '../contexts/DataContext';
 
 const EventAnnotation: React.FC<{ event: SpaceTimeEvent, isActive: boolean }> = ({ event, isActive }) => {
     const position = {
@@ -31,7 +31,7 @@ const EventAnnotation: React.FC<{ event: SpaceTimeEvent, isActive: boolean }> = 
 
 
 const SpaceTimeModule: React.FC = () => {
-    const { database } = useAppContext();
+    const { database } = useDataContext();
     const events = database.spacetime.events;
     const [currentMonth, setCurrentMonth] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);

@@ -10,11 +10,7 @@ import { SparklesIcon } from './icons/SparklesIcon';
 import { ChartBarIcon } from './icons/ChartBarIcon';
 import { BookOpenIcon } from './icons/BookOpenIcon';
 import { ClipboardListIcon } from './icons/ClipboardListIcon';
-
-interface SidebarProps {
-  activeModule: Module;
-  setActiveModule: (module: Module) => void;
-}
+import { useUIStateContext } from './contexts/UIStateContext';
 
 const navItems = [
   { module: Module.ROADMAP, icon: ClipboardListIcon, label: 'Roadmap' },
@@ -29,7 +25,8 @@ const navItems = [
   { module: Module.QUANTUM, icon: AtomIcon, label: 'Quantum' },
 ];
 
-const Sidebar: React.FC<SidebarProps> = ({ activeModule, setActiveModule }) => {
+const Sidebar: React.FC = () => {
+  const { activeModule, setActiveModule } = useUIStateContext();
   return (
     <nav className="flex flex-col items-center space-y-2 border-r border-gray-700 bg-gray-900 p-2 sm:p-3">
       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400 mb-4">

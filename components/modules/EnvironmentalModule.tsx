@@ -3,7 +3,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, L
 import { MetricCard } from '../common/MetricCard';
 import Tooltip from '../common/Tooltip';
 import { SparklesIcon } from '../icons/SparklesIcon';
-import { useAppContext } from '../contexts/AppContext';
+import { useDataContext } from '../contexts/DataContext';
 
 const renderActiveShape = (props: any) => {
   const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props;
@@ -32,7 +32,7 @@ const renderActiveShape = (props: any) => {
 const COLORS = ['#06b6d4', '#22c55e', '#3b82f6', '#f59e0b']; // cyan, green, blue, amber
 
 const EnvironmentalModule: React.FC = () => {
-    const { database } = useAppContext();
+    const { database } = useDataContext();
     const data = database.environmental;
     const [activeIndex, setActiveIndex] = useState<number | null>(0);
     const materialData = data.materialComposition;

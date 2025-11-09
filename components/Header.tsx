@@ -1,8 +1,10 @@
 import React from 'react';
-import { useAppContext } from './contexts/AppContext';
+import { useUIStateContext } from './contexts/UIStateContext';
+import { useDataContext } from './contexts/DataContext';
 
 const Header: React.FC = () => {
-  const { activeModule, isLiveData, setIsLiveData, scanMeta } = useAppContext();
+  const { activeModule, isLiveData, setIsLiveData } = useUIStateContext();
+  const { scanMeta } = useDataContext();
 
   return (
     <header className="flex h-16 w-full flex-shrink-0 items-center border-b border-gray-700 bg-gray-800/50 px-6 backdrop-blur-sm">

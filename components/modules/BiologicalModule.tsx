@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Stat } from '../../types';
 import { MetricCard } from '../common/MetricCard';
 import { RecommendationsCard } from '../common/RecommendationsCard';
-import { useAppContext } from '../contexts/AppContext';
+import { useDataContext } from '../contexts/DataContext';
+import { useUIStateContext } from '../contexts/UIStateContext';
 
 interface DataSheetProps {
     title: string;
@@ -21,7 +22,8 @@ const DataSheetCard: React.FC<DataSheetProps> = ({ title, stats }) => (
 );
 
 const BiologicalModule: React.FC = () => {
-    const { database, isLiveData } = useAppContext();
+    const { database } = useDataContext();
+    const { isLiveData } = useUIStateContext();
     const data = database.biological;
     const [analysisState, setAnalysisState] = useState<'idle' | 'processing' | 'complete'>('idle');
 
